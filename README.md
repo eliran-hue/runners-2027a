@@ -19,4 +19,4 @@
 
 ## פריסה (Cloudways + GitHub Actions)
 
-כל `push` ל-`main` מפעיל את `.github/workflows/cloudways-deploy.yml`, שקורא ל-API של Cloudways כדי למשוך (`git pull`) את הקוד העדכני לאפליקציה. הסודות הנדרשים (`CLOUDWAYS_API_KEY`, `CLOUDWAYS_SERVER_ID`, `CLOUDWAYS_APP_ID`, `CLOUDWAYS_BRANCH_NAME`, `CLOUDWAYS_DEPLOY_PATH`) מוגדרים ב-Settings → Secrets and variables → Actions של הריפו.
+כל `push` ל-`main` מפעיל את `.github/workflows/cloudways-deploy.yml`, שקורא ל-API של Cloudways כדי למשוך (`git pull`) את הקוד העדכני לאפליקציה. הענף (`main`) ותיקיית היעד (`public_html`) קבועים בקובץ. שלושת הסודות הנדרשים (`CLOUDWAYS_API_KEY`, ובו Access Token של Cloudways, `CLOUDWAYS_SERVER_ID` ו-`CLOUDWAYS_APP_ID`) מוגדרים ב-Settings → Secrets and variables → Actions של הריפו.

@@ -19,6 +19,6 @@ jobs:
               "server_id": "${{ secrets.CLOUDWAYS_SERVER_ID }}",
               "app_id": "${{ secrets.CLOUDWAYS_APP_ID }}",
               "git_url": "git@github.com:eliran-hue/runners-2027a.git",
-              "branch_name": "${{ secrets.CLOUDWAYS_BRANCH_NAME }}",
-              "deploy_path": "${{ secrets.CLOUDWAYS_DEPLOY_PATH }}"
+              "branch_name": "main",
+              "deploy_path": ""
             }'
