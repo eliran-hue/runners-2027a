@@ -1,0 +1,24 @@
+name: Deploy to Cloudways
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Trigger Cloudways Git Pull
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Git Pull via Cloudways API
+        run: |
+          curl --fail --show-error -X POST https://api.cloudways.com/api/v1/git/pull \
+            -H "Authorization: Bearer ${{ secrets.CLOUDWAYS_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "server_id": "${{ secrets.CLOUDWAYS_SERVER_ID }}",
+              "app_id": "${{ secrets.CLOUDWAYS_APP_ID }}",
+              "git_url": "git@github.com:eliran-hue/runners-2027a.git",
+              "branch_name": "${{ secrets.CLOUDWAYS_BRANCH_NAME }}",
+              "deploy_path": "${{ secrets.CLOUDWAYS_DEPLOY_PATH }}"
+            }'
