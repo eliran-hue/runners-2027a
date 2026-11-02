@@ -7,7 +7,8 @@
 <style>
 :root{--bg:#EEF2F4;--paper:#FFFFFF;--ink:#13232E;--muted:#56687A;--line:#D3DCE3;--accent:#1F5FD6;--accent-soft:#E2EBFB;--ok:#1F8A55;--bone:#F7F2E4;--boneInk:#6B5521;--d1:#D23F4D;--d2:#2C6AD6;
 --display:"Secular One","Assistant",system-ui,sans-serif;--body:"Assistant",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#0F171D;--paper:#17222B;--ink:#E6EDF2;--muted:#93A4B3;--line:#2A3946;--accent:#7FA8FF;--accent-soft:#1B2C47;--ok:#5CCB92;--bone:#2A2618;--boneInk:#E3CD92;--d1:#FF7783;--d2:#82AAFF;color-scheme:dark}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F171D;--paper:#17222B;--ink:#E6EDF2;--muted:#93A4B3;--line:#2A3946;--accent:#7FA8FF;--accent-soft:#1B2C47;--ok:#5CCB92;--bone:#2A2618;--boneInk:#E3CD92;--d1:#FF7783;--d2:#82AAFF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F171D;--paper:#17222B;--ink:#E6EDF2;--muted:#93A4B3;--line:#2A3946;--accent:#7FA8FF;--accent-soft:#1B2C47;--ok:#5CCB92;--bone:#2A2618;--boneInk:#E3CD92;--d1:#FF7783;--d2:#82AAFF;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;padding-bottom:env(safe-area-inset-bottom,0px)}
 .wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -33,7 +34,7 @@ a.topic:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .tip b{color:var(--boneInk)}
 footer{color:var(--muted);font-size:14px;padding-block:28px 34px}
 @media (prefers-reduced-motion:reduce){a.topic{transition:none}a.topic:hover{transform:none}}
-</style><script src="sync.js" defer></script></head><body>
+</style><script src="theme.js"></script><script src="sync.js" defer></script></head><body>
 <header class="wrap">
   <div id="acct" style="display:flex;min-height:30px;margin-bottom:8px"></div>
   <div class="eyebrow">סמסטר 2027א</div>

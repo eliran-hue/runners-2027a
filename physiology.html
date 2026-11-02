@@ -16,11 +16,16 @@
   --latin:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0F171D; --paper:#17222B; --ink:#E6EDF2; --muted:#93A4B3; --line:#2A3946;
   --accent:#7FA8FF; --accent-soft:#1B2C47; --bone:#2A2618; --boneInk:#E3CD92;
   --ok:#5CCB92; --okSoft:#14301F; --bad:#FF8089; --badSoft:#3A1A1E; --plate:#F1F3F5; --boneFill:#3B3527;
   --d1:#FF7783; --d2:#82AAFF; --d3:#5ECC93; --d4:#C29CFF; --grid:#22303B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F171D; --paper:#17222B; --ink:#E6EDF2; --muted:#93A4B3; --line:#2A3946;
+  --accent:#7FA8FF; --accent-soft:#1B2C47; --bone:#2A2618; --boneInk:#E3CD92;
+  --ok:#5CCB92; --okSoft:#14301F; --bad:#FF8089; --badSoft:#3A1A1E; --plate:#F1F3F5; --boneFill:#3B3527;
+  --d1:#FF7783; --d2:#82AAFF; --d3:#5ECC93; --d4:#C29CFF; --grid:#22303B; color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;direction:rtl;padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -172,7 +177,7 @@ details.more[open] summary::before{content:"−"}
 .sb .sep{color:var(--line)}
 @media (max-width:560px){.sb .sep{display:none}.sb a.home{flex-basis:100%}}
 .sb a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-</style><script src="sync.js" defer></script></head><body>
+</style><script src="theme.js"></script><script src="sync.js" defer></script></head><body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="index.html">→ האתר למדריכי ריצות ארוכות · 2027א</a><span class="sep">|</span><a href="anatomy.html">אנטומיה</a><a href="physiology.html" aria-current="page">פיזיולוגיה</a></nav>
   <h1>הפיזיולוגיה של הריצה</h1>
