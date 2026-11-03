@@ -39,3 +39,12 @@
 ## פריסה (Cloudways + GitHub Actions)
 
 כל `push` ל-`main` מפעיל את `.github/workflows/cloudways-deploy.yml`, שקורא ל-API של Cloudways כדי למשוך (`git pull`) את הקוד העדכני לאפליקציה. הענף (`main`) ותיקיית היעד (`public_html`) קבועים בקובץ. שלושת הסודות הנדרשים (`CLOUDWAYS_API_KEY`, ובו Access Token של Cloudways, `CLOUDWAYS_SERVER_ID` ו-`CLOUDWAYS_APP_ID`) מוגדרים ב-Settings → Secrets and variables → Actions של הריפו.
+
+## חסימת מנועי חיפוש
+
+האתר לא מיועד לאינדוקס. יש שלוש שכבות:
+- `<meta name="robots" content="noindex, nofollow, ...">` בכל עמוד HTML.
+- כותרת `X-Robots-Tag` לכל קובץ, דרך `.htaccess`.
+- `robots.txt` עם `Disallow: /`.
+
+כל עמוד חדש שמוסיפים חייב לכלול את תגית ה-meta.

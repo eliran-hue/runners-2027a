@@ -1,1 +1,6 @@
 DirectoryIndex index.html index.php
+
+# האתר לא מיועד למנועי חיפוש: מבקשים מכולם לא לאנדקס שום קובץ.
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet, noimageindex"
+</IfModule>
