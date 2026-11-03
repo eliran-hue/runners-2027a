@@ -5,10 +5,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
 <style>
-:root{--bg:#EEF2F4;--paper:#FFFFFF;--ink:#13232E;--muted:#56687A;--line:#D3DCE3;--accent:#1F5FD6;--accent-soft:#E2EBFB;--ok:#1F8A55;--bone:#F7F2E4;--boneInk:#6B5521;--d1:#D23F4D;--d2:#2C6AD6;
+:root{--d3:#1C9461;--bg:#EEF2F4;--paper:#FFFFFF;--ink:#13232E;--muted:#56687A;--line:#D3DCE3;--accent:#1F5FD6;--accent-soft:#E2EBFB;--ok:#1F8A55;--bone:#F7F2E4;--boneInk:#6B5521;--d1:#D23F4D;--d2:#2C6AD6;
 --display:"Secular One","Assistant",system-ui,sans-serif;--body:"Assistant",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F171D;--paper:#17222B;--ink:#E6EDF2;--muted:#93A4B3;--line:#2A3946;--accent:#7FA8FF;--accent-soft:#1B2C47;--ok:#5CCB92;--bone:#2A2618;--boneInk:#E3CD92;--d1:#FF7783;--d2:#82AAFF;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0F171D;--paper:#17222B;--ink:#E6EDF2;--muted:#93A4B3;--line:#2A3946;--accent:#7FA8FF;--accent-soft:#1B2C47;--ok:#5CCB92;--bone:#2A2618;--boneInk:#E3CD92;--d1:#FF7783;--d2:#82AAFF;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F171D;--paper:#17222B;--ink:#E6EDF2;--muted:#93A4B3;--line:#2A3946;--accent:#7FA8FF;--accent-soft:#1B2C47;--ok:#5CCB92;--bone:#2A2618;--boneInk:#E3CD92;--d1:#FF7783;--d2:#82AAFF;--d3:#5ECC93;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F171D;--paper:#17222B;--ink:#E6EDF2;--muted:#93A4B3;--line:#2A3946;--accent:#7FA8FF;--accent-soft:#1B2C47;--ok:#5CCB92;--bone:#2A2618;--boneInk:#E3CD92;--d1:#FF7783;--d2:#82AAFF;--d3:#5ECC93;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;padding-bottom:env(safe-area-inset-bottom,0px)}
 .wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -32,6 +32,24 @@ a.topic:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .go{font-weight:700;color:var(--c)}
 .tip{margin-top:22px;background:var(--bone);border:1px dashed var(--boneInk);border-radius:10px;padding:14px 18px}
 .tip b{color:var(--boneInk)}
+.tools{margin-top:34px}
+.tools h2.sec{font-family:var(--display);font-weight:400;font-size:clamp(24px,4.5vw,30px);margin:0 0 4px}
+.tools .sub{color:var(--muted);margin:0 0 14px}
+.tool{background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--d3,#1C9461);border-radius:14px;padding:20px 22px}
+.tool h3{font-size:20px;margin:0 0 4px}
+.tool .desc{color:var(--muted);font-size:15.5px;margin:0}
+.tool .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 14px;margin-top:12px}
+.tool label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:15px}
+.tool input,.tool select{font:inherit;font-size:17px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+.tool input:focus-visible,.tool select:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.tool .out{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:14px}
+.tool .res{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tool .res.key{border-color:var(--accent)}
+.tool .res .big{font-family:var(--display);font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tool .res .how{font-size:14px;color:var(--muted);margin-top:4px}
+.tool .m{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.tool .note{font-size:14px;color:var(--muted);margin:10px 0 0}
+.tool .note a{color:var(--accent)}
 footer{color:var(--muted);font-size:14px;padding-block:28px 34px}
 @media (prefers-reduced-motion:reduce){a.topic{transition:none}a.topic:hover{transform:none}}
 </style><script src="theme.js"></script><script src="sync.js" defer></script></head><body>
@@ -59,6 +77,28 @@ footer{color:var(--muted);font-size:14px;padding-block:28px 34px}
     </a>
   </div>
   <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס כאן מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> לוחצים על "שמירת התקדמות" למעלה, מזינים כתובת מייל ומקבלים קוד כניסה.</div>
+  <section class="tools" aria-labelledby="toolsH">
+    <h2 class="sec" id="toolsH">מחשבונים וכלי עזר</h2>
+    <p class="sub">כלים לשימוש מהיר, בלי לחפש בתוך הפרקים.</p>
+    <div class="tool" id="hrCalc">
+      <h3>מחשבון דופק מטרה</h3>
+      <p class="desc">שתי שיטות זו לצד זו: אחוז מהדופק המרבי, ונוסחת קרבונן (אחוז מרזרבת הדופק), שמתחשבת גם בדופק המנוחה.</p>
+      <div class="row">
+        <label>גיל<input type="number" id="cAge" min="10" max="90" inputmode="numeric"></label>
+        <label>מין<select id="cSex"><option value="220">גבר (220 − גיל)</option><option value="226">אישה (226 − גיל)</option></select></label>
+        <label>דופק מנוחה<input type="number" id="cRest" min="30" max="110" inputmode="numeric"></label>
+        <label>דופק מרבי (אם נמדד)<input type="number" id="cMax" placeholder="השאר ריק לחיזוי" inputmode="numeric"></label>
+      </div>
+      <div class="row">
+        <label>% מדופק מרבי: מ-<input type="number" id="cP1" min="30" max="100" inputmode="numeric"></label>
+        <label>עד<input type="number" id="cP2" min="30" max="100" inputmode="numeric"></label>
+        <label>% מרזרבת דופק: מ-<input type="number" id="cK1" min="20" max="100" inputmode="numeric"></label>
+        <label>עד<input type="number" id="cK2" min="20" max="100" inputmode="numeric"></label>
+      </div>
+      <div class="out" id="cOut" aria-live="polite"></div>
+      <p class="note">החיזוי לפי גיל הוא הערכה גסה. אם יש דופק מרבי ממבדק, עדיף להזין אותו. ההסבר המלא נמצא בפרק <a href="physiology.html">"לב ודופק" בפיזיולוגיה</a>, והערכים שמוזנים כאן משותפים למחשבון שבפרק.</p>
+    </div>
+  </section>
 </main>
 <footer class="wrap">מבוסס על המצגות של קורס מדריכי ריצות ארוכות של המכללה האקדמית לוינסקי-וינגייט.</footer>
 <script>
@@ -68,5 +108,27 @@ document.querySelectorAll(".prog").forEach(p=>{
   p.querySelector(".bar i").style.width=Math.min(100,n/t*100)+"%";
   if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;p.querySelector(".go").textContent=n>=t?"לחזרה ←":"להמשיך ←"}
 });
+
+/* מחשבון דופק מטרה. אותו מפתח שמירה כמו בפרק "לב ודופק" (phys.calc), כך שהערכים משותפים ונשמרים גם בחשבון. */
+(function(){
+  const $=id=>document.getElementById(id);
+  const def={cAge:20,cSex:"220",cRest:50,cMax:"",cP1:60,cP2:70,cK1:40,cK2:60};
+  let saved=def;try{saved=Object.assign({},def,JSON.parse(localStorage.getItem("phys.calc")||"{}"))}catch(e){}
+  const m=t=>`<span class="m">${t}</span>`;
+  Object.keys(def).forEach(k=>{$(k).value=saved[k]??def[k];$(k).addEventListener("input",calc);$(k).addEventListener("change",calc)});
+  function calc(){
+    const v={};Object.keys(def).forEach(k=>v[k]=$(k).value);
+    try{localStorage.setItem("phys.calc",JSON.stringify(v))}catch(e){}
+    const age=+v.cAge,rest=+v.cRest,base=+v.cSex,mx=v.cMax?+v.cMax:base-age,res=mx-rest;
+    const p=a=>Math.round(mx*a/100),k=a=>Math.round(rest+res*a/100);
+    if(!(age>0&&rest>0&&mx>rest)){$("cOut").innerHTML=`<div class="res">בדוק את הנתונים: הדופק המרבי צריך להיות גבוה מדופק המנוחה.</div>`;return}
+    $("cOut").innerHTML=
+     `<div class="res"><div>דופק מרבי ${v.cMax?"(נמדד)":"(חזוי)"}</div><div class="big">${mx}</div><div class="how">${v.cMax?"הוזן ידנית":m(`${base} − ${age} = ${mx}`)}</div></div>`+
+     `<div class="res"><div>רזרבת דופק</div><div class="big">${res}</div><div class="how">${m(`${mx} − ${rest} = ${res}`)}</div></div>`+
+     `<div class="res"><div>${m(`${v.cP1}–${v.cP2}%`)} מהדופק המרבי</div><div class="big">${m(`${p(+v.cP1)}–${p(+v.cP2)}`)}</div><div class="how">${m(`${mx} × ${v.cP1}% = ${p(+v.cP1)}`)} · ${m(`${mx} × ${v.cP2}% = ${p(+v.cP2)}`)}</div></div>`+
+     `<div class="res key"><div>${m(`${v.cK1}–${v.cK2}%`)} מרזרבת הדופק (קרבונן)</div><div class="big">${m(`${k(+v.cK1)}–${k(+v.cK2)}`)}</div><div class="how">${m(`${rest} + ${res} × ${v.cK1}% = ${k(+v.cK1)}`)} · ${m(`${rest} + ${res} × ${v.cK2}% = ${k(+v.cK2)}`)}</div></div>`;
+  }
+  calc();
+})();
 </script>
 </body></html>
