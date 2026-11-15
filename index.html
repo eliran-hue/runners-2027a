@@ -5,7 +5,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/site.css">
-<script src="/theme.js"></script><script src="/sync.js" defer></script></head><body>
+<script src="/theme.js"></script><script src="/sync.js" defer></script><style>
+.lockcard{display:flex;flex-direction:column;gap:10px;background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:14px;padding:20px 22px}
+.lockcard[hidden]{display:none}
+.lockcard .lock{font-size:22px;vertical-align:middle}
+.lockcard .contact{display:flex;flex-wrap:wrap;gap:8px}
+.lockcard .cbtn{font:600 15px var(--body);text-decoration:none;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:7px 14px;background:var(--accent-soft)}
+.lockcard .cbtn.wa{color:#fff;background:#1F8A55;border-color:#1F8A55}
+.lockcard .cbtn:hover{filter:brightness(1.08)}
+.lockcard .cbtn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.lockcard .small{font-size:14.5px}
+.lockcard.flash{box-shadow:0 0 0 3px var(--accent)}
+</style></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"></nav>
   <div class="eyebrow">סמסטר 2027א</div>
@@ -24,8 +35,17 @@
       <div class="prog" data-keys="sci.anat:8"><div class="bar"><i></i></div><div class="t"><span class="st">8 פרקים</span><span class="go">לקורס ←</span></div></div>
     </a>
 
+    <div class="topic lockcard" id="sciLockCard" style="--c:var(--d2)">
+      <div class="num">קורס 2</div><h2>קורס מדעי <span class="lock" aria-hidden="true">🔒</span></h2>
+      <p>הגישה לקורס הזה פתוחה רק למשתתפי הקורס המדעי. כדי לקבל גישה, יש ליצור קשר עם מנהל האתר:</p>
+      <div class="contact">
+        <a class="cbtn wa" href="https://wa.me/972537748421?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A9%D7%AA%D7%AA%D7%A3%2F%D7%AA%20%D7%91%D7%A7%D7%95%D7%A8%D7%A1%20%D7%94%D7%9E%D7%93%D7%A2%D7%99%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%92%D7%99%D7%A9%D7%94%20%D7%9C%D7%90%D7%AA%D7%A8" target="_blank" rel="noopener">וואטסאפ</a>
+        <a class="cbtn" href="mailto:eliranh84@gmail.com?subject=%D7%92%D7%99%D7%A9%D7%94%20%D7%9C%D7%A7%D7%95%D7%A8%D7%A1%20%D7%94%D7%9E%D7%93%D7%A2%D7%99">מייל: eliranh84@gmail.com</a>
+      </div>
+      <p class="small">כבר קיבלת אישור? לוחצים על "שמירת התקדמות" למעלה ומתחברים עם כתובת המייל שאושרה.</p>
+    </div>
+
   </div>
-  <div class="notice" id="sciLocked" hidden><b>הקורס המדעי פתוח רק למשתתפים שאושרו.</b> אם קיבלת אישור, לוחצים על "שמירת התקדמות" למעלה ומתחברים עם אותה כתובת מייל. אם עדיין לא, פנה למנהל האתר.</div>
   <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> לוחצים על "שמירת התקדמות" למעלה, מזינים כתובת מייל ומקבלים קוד כניסה.</div>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
@@ -42,9 +62,9 @@ document.querySelectorAll(".prog").forEach(p=>{
 
 /* הקורס המדעי מוצג רק למי שאושר (או למנהל). ההרשאה האמיתית נבדקת בשרת, בכל בקשה ל-/science/. */
 (function(){
-  const card=document.getElementById("sciCard"),lock=document.getElementById("sciLocked");
+  const card=document.getElementById("sciCard"),lock=document.getElementById("sciLockCard");
   const locked=new URLSearchParams(location.search).get("science")==="locked";
-  function apply(a){const ok=!!(a&&(a.science||a.admin));card.hidden=!ok;lock.hidden=ok||!locked}
+  function apply(a){const ok=!!(a&&(a.science||a.admin));card.hidden=!ok;lock.hidden=ok;lock.classList.toggle("flash",locked&&!ok)}
   document.addEventListener("runners:auth",e=>apply(e.detail));
   apply(window.runnersAuth||null);
 })();
