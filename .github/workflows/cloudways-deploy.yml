@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Git Pull via Cloudways API
+        id: pull
         run: |
-          curl --fail --show-error -X POST https://api.cloudways.com/api/v1/git/pull \
+          RESP=$(curl --fail --show-error -s -X POST https://api.cloudways.com/api/v1/git/pull \
             -H "Authorization: Bearer ${{ secrets.CLOUDWAYS_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -21,4 +23,33 @@ jobs:
               "git_url": "git@github.com:eliran-hue/runners-2027a.git",
               "branch_name": "main",
               "deploy_path": ""
-            }'
+            }')
+          echo "$RESP"
+          echo "op=$(echo "$RESP" | jq -r '.operation_id // empty')" >> "$GITHUB_OUTPUT"
+
+      # Cloudways runs the pull in the background. Wait for it and fail the job if the pull failed on the server.
+      - name: Wait for the pull to finish on the server
+        if: steps.pull.outputs.op != ''
+        run: |
+          for i in $(seq 1 24); do
+            sleep 5
+            R=$(curl -s -w '\n%{http_code}' https://api.cloudways.com/api/v1/operation/${{ steps.pull.outputs.op }} \
+              -H "Authorization: Bearer ${{ secrets.CLOUDWAYS_API_KEY }}")
+            CODE=$(echo "$R" | tail -1); BODY=$(echo "$R" | sed '$d')
+            if [ "$CODE" != "200" ]; then
+              echo "::warning::Could not read the operation status (HTTP $CODE). The access token may lack permission for operations. Check Deployment via Git in Cloudways."
+              echo "$BODY"; exit 0
+            fi
+            DONE=$(echo "$BODY" | jq -r '.operation.is_completed // empty')
+            echo "attempt $i: is_completed=$DONE status=$(echo "$BODY" | jq -r '.operation.status // empty')"
+            if [ "$DONE" = "1" ] || [ "$DONE" = "true" ]; then
+              echo "$BODY" | jq .
+              STATUS=$(echo "$BODY" | jq -r '.operation.status // empty')
+              MSG=$(echo "$BODY" | jq -r '.operation.message // empty')
+              if echo "$STATUS $MSG" | grep -qiE 'fail|error|conflict|abort'; then
+                echo "::error::The pull failed on the server: $MSG"; exit 1
+              fi
+              exit 0
+            fi
+          done
+          echo "::warning::The pull is still running after 2 minutes."
