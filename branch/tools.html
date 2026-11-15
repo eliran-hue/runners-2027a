@@ -10,7 +10,7 @@
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מחשבונים וכלי עזר</span></nav>
   <div class="eyebrow">קורס ענפי</div>
   <h1>מחשבונים וכלי עזר</h1>
-  <p class="lead">כלים לשימוש מהיר, בלי לחפש בתוך הפרקים: דופק מטרה ואזורי אימון.</p>
+  <p class="lead">כלים לשימוש מהיר, בלי לחפש בתוך הפרקים: דופק מטרה, אזורי אימון ואחוז קצב.</p>
 </header>
 <main class="wrap">
 <section class="tools" style="margin-top:22px" aria-label="מחשבונים">
@@ -41,6 +41,17 @@
       </div>
       <div id="zOut" aria-live="polite"></div>
       <p class="note">הקצבים לפי אחוז מקצב הטסט (פרייל), והדופק לפי אחוז מדופק הסף שבמצגת. ההסבר המלא בפרק <a href="/branch/training.html">"אזורי אימון" בתורת האימון</a>.</p>
+    </div>
+    <div class="tool" id="pCalc" style="margin-top:18px;border-top-color:var(--d2)">
+      <h3>מחשבון אחוז קצב מטסט</h3>
+      <p class="desc">מזינים קצב ייחוס (למשל הקצב מטסט 30 דקות) ואחוז, ומקבלים את הקצב לאימון.</p>
+      <div class="row">
+        <label>קצב ייחוס: דקות<input type="number" id="pMin" min="2" max="15" inputmode="numeric"></label>
+        <label>שניות<input type="number" id="pSec" min="0" max="59" inputmode="numeric"></label>
+        <label>אחוזים מהקצב<input type="number" id="pPct" min="50" max="130" step="0.5" inputmode="decimal"></label>
+      </div>
+      <div id="pOut" aria-live="polite"></div>
+      <p class="note">החישוב זהה לגיליון "מחשבון אחוז קצב מטסט": הקצב המחושב = קצב הייחוס ÷ האחוז, ומעגלים כלפי מטה לשנייה שלמה. האחוז הוא אחוז מה<b>מהירות</b>, ולכן 90% נותן קצב <b>איטי</b> יותר ו-105% קצב <b>מהיר</b> יותר. זה שונה מטבלת הזונים של פרייל, שבה מכפילים את <b>זמן</b> הקצב באחוז.</p>
     </div>
 </section>
 </main>
@@ -93,6 +104,27 @@ document.querySelectorAll(".prog").forEach(p=>{
       `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${z[3]?m(`${mmss(p*z[2])}–${mmss(p*z[3])}`):"איטי מ-"+m(mmss(p*z[2]))}</div><div class="how">דופק ${m(`${Math.round(hr*z[4])}–${Math.round(hr*z[5])}`)}</div></div>`).join("")+`</div>`;
   }
   ["zDist","zHr"].forEach(k=>{$(k).addEventListener("input",calc);$(k).addEventListener("change",calc)});calc();
+})();
+
+/* מחשבון אחוז קצב מטסט: כמו בגיליון, INT(שניות הייחוס / (אחוז/100)). */
+(function(){
+  const $=id=>document.getElementById(id);
+  const mmss=x=>Math.floor(x/60)+":"+String(x%60).padStart(2,"0");
+  const m=t=>`<span class="m">${t}</span>`;
+  const pace=(ref,p)=>Math.floor(ref/(p/100));
+  let v={pMin:4,pSec:0,pPct:90};try{v=Object.assign(v,JSON.parse(localStorage.getItem("train.pcalc")||"{}"))}catch(e){}
+  ["pMin","pSec","pPct"].forEach(k=>$(k).value=v[k]);
+  function calc(){
+    const mi=+$("pMin").value||0,se=+$("pSec").value||0,p=+$("pPct").value;
+    try{localStorage.setItem("train.pcalc",JSON.stringify({pMin:$("pMin").value,pSec:$("pSec").value,pPct:$("pPct").value}))}catch(e){}
+    const ref=mi*60+se;
+    if(!(ref>0&&p>0)){$("pOut").innerHTML='<div class="out"><div class="res">הזן קצב ייחוס ואחוז.</div></div>';return}
+    const r=pace(ref,p);
+    const list=[80,85,90,95,100,105,110].map(q=>`<div class="res"${q===p?' style="border-color:var(--accent)"':''}><div>${m(q+"%")}</div><div class="big" style="font-size:22px">${m(mmss(pace(ref,q)))}</div></div>`).join("");
+    $("pOut").innerHTML=`<div class="out"><div class="res key"><div>הקצב המחושב (${m(p+"%")} מ-${m(mmss(ref))})</div><div class="big">${m(mmss(r))}</div><div class="how">דקות לק״מ · ${m(`${ref} ÷ ${p/100} = ${(ref/(p/100)).toFixed(1)}`)} ← ${r} שניות</div></div></div>`+
+      `<div class="note" style="margin-top:12px">אחוזים נפוצים מאותו קצב ייחוס:</div><div class="out" style="grid-template-columns:repeat(auto-fit,minmax(90px,1fr));margin-top:6px">${list}</div>`;
+  }
+  ["pMin","pSec","pPct"].forEach(k=>{$(k).addEventListener("input",calc);$(k).addEventListener("change",calc)});calc();
 })();
 </script>
 </body></html>
