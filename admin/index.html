@@ -21,6 +21,7 @@ form.add input{flex:1 1 240px;font:inherit;font-size:16px;padding:8px 12px;borde
 .msg.err{color:var(--d1)}
 .tools-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
 .tools-row input{flex:1 1 220px;font:inherit;font-size:15.5px;padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+body .wrap{max-width:1040px}
 .tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin-top:10px}
 table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px}
 th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -29,6 +30,10 @@ tr:last-child td{border-bottom:0}
 td.em{direction:ltr;text-align:right;font-weight:600;overflow-wrap:anywhere;min-width:170px}
 td.dt,td.num{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted)}
 td.num{color:var(--ink)}
+.del{font:600 13px var(--body);padding:3px 10px;border-radius:8px;border:1px solid #c0392b;background:transparent;color:#c0392b;cursor:pointer;white-space:nowrap}
+.del:hover{background:#c0392b;color:#fff}
+.del:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .rst{font:600 12px var(--body);margin-inline-start:6px;padding:1px 8px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
 .rst:hover{color:#c0392b;border-color:#c0392b}
 .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;border:1px solid var(--line);color:var(--muted);direction:rtl}
@@ -65,7 +70,7 @@ td.num{color:var(--ink)}
     </div>
     <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי מייל" aria-label="חיפוש לפי מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
     <div class="tbl"><table>
-      <thead><tr><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th></tr></thead>
+      <thead><tr><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th><th><span class="sr">פעולות</span></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
@@ -101,9 +106,18 @@ td.num{color:var(--ink)}
       return `<tr><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
         <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>
         <td class="num">${b} / ${BRANCH_TOTAL} פרקים${u.progress_at?` <button class="rst" type="button" data-reset="${esc(u.email)}">איפוס</button>`:""}</td>
-        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label></td></tr>`}).join("")
-      :`<tr><td colspan="5" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
+        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label></td>
+        <td>${u.admin?"":`<button class="del" type="button" data-del="${esc(u.email)}" aria-label="מחיקת ${esc(u.email)}">מחיקה</button>`}</td></tr>`}).join("")
+      :`<tr><td colspan="6" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
     $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,cb.checked,cb));
+    $("rows").querySelectorAll("[data-del]").forEach(bt=>bt.onclick=()=>{
+      const em=bt.dataset.del;
+      if(!confirm(`למחוק את ${em} לצמיתות?\nיימחקו המשתמש, ההתקדמות השמורה, ההרשאה לקורס המדעי והחיבורים הפעילים שלו. אי אפשר לבטל את זה.`))return;
+      bt.disabled=true;
+      fetch("/api/admin_delete.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:em})})
+        .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);users=users.filter(x=>x.email!==em);render()})
+        .catch(()=>{bt.disabled=false;alert("המחיקה נכשלה. נסה שוב.")});
+    });
     $("rows").querySelectorAll("[data-reset]").forEach(bt=>bt.onclick=()=>{
       const em=bt.dataset.reset;
       if(!confirm(`למחוק את כל ההתקדמות השמורה בשרת של ${em}?`))return;
