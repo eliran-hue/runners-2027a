@@ -5,7 +5,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/site.css">
-<script src="/theme.js"></script><script src="/sync.js" defer></script></head><body>
+<script src="/theme.js"></script><script src="/sync.js" defer></script><style>
+.tools{display:flex;flex-direction:column;gap:14px}
+details.tool{padding:0}
+details.tool>summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:center;padding:18px 22px;border-radius:14px}
+details.tool>summary::-webkit-details-marker{display:none}
+details.tool>summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+details.tool>summary:hover h3{color:var(--accent)}
+details.tool .sumt{flex:1;min-width:0}
+details.tool .chev{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;transition:transform .2s}
+details.tool .chev::before{content:"";width:8px;height:8px;border-right:2.5px solid var(--accent);border-bottom:2.5px solid var(--accent);transform:translateY(-2px) rotate(45deg)}
+details.tool[open] .chev{transform:rotate(180deg)}
+details.tool[open]>summary{padding-bottom:4px}
+details.tool>:not(summary){margin-inline:22px}
+details.tool>:last-child{margin-bottom:20px}
+.usage{display:inline-block;color:var(--ink);background:var(--accent-soft);border-radius:6px;padding:1px 8px;margin-inline-end:4px}
+</style></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מחשבונים וכלי עזר</span></nav>
   <div class="eyebrow">קורס ענפי</div>
@@ -14,9 +29,8 @@
 </header>
 <main class="wrap">
 <section class="tools" style="margin-top:22px" aria-label="מחשבונים">
-        <div class="tool" id="hrCalc">
-      <h3>מחשבון דופק מטרה</h3>
-      <p class="desc">שתי שיטות זו לצד זו: אחוז מהדופק המרבי, ונוסחת קרבונן (אחוז מרזרבת הדופק), שמתחשבת גם בדופק המנוחה.</p>
+        <details class="tool" id="hrCalc">
+      <summary><span class="sumt"><h3>מחשבון דופק מטרה</h3><p class="desc">שתי שיטות זו לצד זו: אחוז מהדופק המרבי, ונוסחת קרבונן (אחוז מרזרבת הדופק), שמתחשבת גם בדופק המנוחה.</p></span><span class="chev" aria-hidden="true"></span></summary>
       <div class="row">
         <label>גיל<input type="number" id="cAge" min="10" max="90" inputmode="numeric"></label>
         <label>מין<select id="cSex"><option value="220">גבר (220 − גיל)</option><option value="226">אישה (226 − גיל)</option></select></label>
@@ -31,20 +45,18 @@
       </div>
       <div class="out" id="cOut" aria-live="polite"></div>
       <p class="note">החיזוי לפי גיל הוא הערכה גסה. אם יש דופק מרבי ממבדק, עדיף להזין אותו. ההסבר המלא נמצא בפרק <a href="/branch/physiology.html">"לב ודופק" בפיזיולוגיה</a>, והערכים שמוזנים כאן משותפים למחשבון שבפרק.</p>
-    </div>
-      <div class="tool" id="zCalc" style="margin-top:18px;border-top-color:var(--d4)">
-      <h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3>
-      <p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים.</p>
+    </details>
+      <details class="tool" id="zCalc" style="border-top-color:var(--d4)">
+      <summary><span class="sumt"><h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3><p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים.</p></span><span class="chev" aria-hidden="true"></span></summary>
       <div class="row">
         <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" id="zDist" min="2" max="12" step="0.01" inputmode="decimal"></label>
         <label>דופק ממוצע ב-20 הדק׳ האחרונות<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
       </div>
       <div id="zOut" aria-live="polite"></div>
       <p class="note">הקצבים לפי אחוז מקצב הטסט (פרייל), והדופק לפי אחוז מדופק הסף שבמצגת. ההסבר המלא בפרק <a href="/branch/training.html">"אזורי אימון" בתורת האימון</a>.</p>
-    </div>
-    <div class="tool" id="pCalc" style="margin-top:18px;border-top-color:var(--d2)">
-      <h3>מחשבון אחוז קצב מטסט</h3>
-      <p class="desc">מזינים קצב ייחוס (למשל הקצב מטסט 30 דקות) ואחוז, ומקבלים את הקצב לאימון.</p>
+    </details>
+    <details class="tool" id="pCalc" style="border-top-color:var(--d2)">
+      <summary><span class="sumt"><h3>מחשבון אחוז קצב מטסט</h3><p class="desc"><b class="usage">מיועד לתרגול אימוני עליות.</b> מזינים קצב ייחוס (למשל הקצב מטסט 30 דקות) ואחוז, ומקבלים את הקצב לאימון.</p></span><span class="chev" aria-hidden="true"></span></summary>
       <div class="row">
         <label>קצב ייחוס: דקות<input type="number" id="pMin" min="2" max="15" inputmode="numeric"></label>
         <label>שניות<input type="number" id="pSec" min="0" max="59" inputmode="numeric"></label>
@@ -52,7 +64,7 @@
       </div>
       <div id="pOut" aria-live="polite"></div>
       <p class="note">החישוב זהה לגיליון "מחשבון אחוז קצב מטסט": הקצב המחושב = קצב הייחוס ÷ האחוז, ומעגלים כלפי מטה לשנייה שלמה. האחוז הוא אחוז מה<b>מהירות</b>, ולכן 90% נותן קצב <b>איטי</b> יותר ו-105% קצב <b>מהיר</b> יותר. זה שונה מטבלת הזונים של פרייל, שבה מכפילים את <b>זמן</b> הקצב באחוז.</p>
-    </div>
+    </details>
 </section>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
