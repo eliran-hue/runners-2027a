@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ניהול משתמשים · האתר למדריכי ריצות ארוכות</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/site.css">
+<style>
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:18px}
+.panel h2{font-size:19px;margin:0 0 4px}
+.panel p{margin:0;color:var(--muted);font-size:15.5px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:130px}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:14px}
+form.add{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+form.add input{flex:1 1 240px;font:inherit;font-size:16px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);direction:ltr;text-align:right}
+.btn{font:600 15px var(--body);border-radius:8px;padding:8px 16px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--paper)}
+.btn:focus-visible,form.add input:focus-visible,.sw input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.msg{min-height:1.3em;margin-top:8px;font-size:15px}
+.msg.err{color:var(--d1)}
+.tools-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.tools-row input{flex:1 1 220px;font:inherit;font-size:15.5px;padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin-top:10px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{background:var(--accent-soft);font-size:13.5px;font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.em{direction:ltr;text-align:right;font-weight:600;overflow-wrap:anywhere;min-width:170px}
+td.dt,td.num{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted)}
+td.num{color:var(--ink)}
+.tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;border:1px solid var(--line);color:var(--muted);direction:rtl}
+.sw{position:relative;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw span{width:40px;height:22px;border-radius:999px;background:var(--line);position:relative;transition:background .15s;flex:0 0 auto}
+.sw span::after{content:"";position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:var(--paper);transition:right .15s}
+.sw input:checked+span{background:var(--ok)}
+.sw input:checked+span::after{right:21px}
+.sw input:disabled+span{opacity:.5}
+.sw em{font-style:normal;color:var(--muted);min-width:4.5em}
+.empty{padding:22px;text-align:center;color:var(--muted)}
+</style>
+<script src="/theme.js"></script><script src="/sync.js" defer></script></head><body>
+<header class="wrap">
+  <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
+  <div class="eyebrow">למנהל האתר בלבד</div>
+  <h1>ניהול משתמשים</h1>
+  <p class="lead">מי נרשם לאתר, כמה התקדם, ולמי פתוח הקורס המדעי.</p>
+</header>
+<main class="wrap">
+  <div id="gate" class="notice" hidden></div>
+  <div id="app" hidden>
+    <div class="stats">
+      <div class="stat"><b id="sTotal">0</b><span>משתמשים</span></div>
+      <div class="stat"><b id="sSci">0</b><span>עם גישה לקורס המדעי</span></div>
+      <div class="stat"><b id="sWeek">0</b><span>נכנסו בשבוע האחרון</span></div>
+    </div>
+    <div class="panel">
+      <h2>אישור מראש לקורס המדעי</h2>
+      <p>מזינים כתובת מייל של משתתף. אם הוא עוד לא נרשם, הגישה תחכה לו, וכשיתחבר עם המייל הזה הקורס המדעי ייפתח לו מיד.</p>
+      <form class="add" id="addForm" novalidate><input id="addEmail" type="email" placeholder="name@example.com" aria-label="כתובת מייל לאישור" autocomplete="off"><button class="btn" type="submit">אישור גישה</button></form>
+      <div class="msg" id="addMsg" role="status"></div>
+    </div>
+    <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי מייל" aria-label="חיפוש לפי מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </div>
+</main>
+<footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const BRANCH_TOTAL=12; /* anat 5 + phys 7 */
+  let users=[];
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const fmt=s=>{if(!s)return"—";const d=new Date(s.replace(" ","T"));return isNaN(d)?s:d.toLocaleDateString("he-IL",{day:"numeric",month:"numeric",year:"2-digit"})+" "+d.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})};
+  function gate(html){$("gate").innerHTML=html;$("gate").hidden=false;$("app").hidden=true}
+  function load(){
+    fetch("/api/admin_users.php",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json().then(j=>[r.status,j])).then(([st,j])=>{
+      if(st===401){gate('<b>צריך להתחבר.</b> לוחצים על "שמירת התקדמות" למעלה ומתחברים עם כתובת המייל של המנהל.');return}
+      if(st===403){gate('<b>אין לך הרשאה לעמוד הזה.</b> רק מנהל האתר יכול לצפות ברשימת המשתמשים.');return}
+      if(!j.ok){gate("משהו השתבש בטעינת הרשימה. נסה לרענן.");return}
+      users=j.users;$("gate").hidden=true;$("app").hidden=false;render();
+    }).catch(()=>gate("אין חיבור לשרת. נסה לרענן."));
+  }
+  function render(){
+    const q=$("q").value.trim().toLowerCase();
+    const list=users.filter(u=>!q||u.email.includes(q));
+    const week=Date.now()-7*864e5;
+    $("sTotal").textContent=users.length;
+    $("sSci").textContent=users.filter(u=>u.science).length;
+    $("sWeek").textContent=users.filter(u=>u.last_login_at&&new Date(u.last_login_at.replace(" ","T"))>week).length;
+    $("shown").textContent=q?`מוצגים ${list.length} מתוך ${users.length}`:"";
+    $("rows").innerHTML=list.length?list.map((u,i)=>{
+      const b=(u.done.anat||0)+(u.done.phys||0);
+      const pending=!u.last_login_at;
+      return `<tr><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
+        <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>
+        <td class="num">${b} / ${BRANCH_TOTAL} פרקים</td>
+        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label></td></tr>`}).join("")
+      :`<tr><td colspan="5" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
+    $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,cb.checked,cb));
+  }
+  function setAccess(email,on,cb){
+    if(cb)cb.disabled=true;
+    return fetch("/api/admin_access.php",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,science:on})})
+      .then(r=>r.json()).then(j=>{
+        if(!j.ok)throw new Error(j.error);
+        const u=users.find(x=>x.email===j.email);
+        if(u)u.science=j.science;else users.unshift({email:j.email,created_at:new Date().toISOString().slice(0,19).replace("T"," "),last_login_at:null,done:{},science:j.science,admin:false});
+        render();return j;
+      }).catch(e=>{if(cb){cb.checked=!on;cb.disabled=false}throw e});
+  }
+  $("q").oninput=render;
+  $("addForm").onsubmit=e=>{
+    e.preventDefault();
+    const em=$("addEmail").value.trim().toLowerCase(),m=$("addMsg");
+    if(!/^\S+@\S+\.\S+$/.test(em)){m.className="msg err";m.textContent="כתובת המייל לא נראית תקינה.";return}
+    m.className="msg";m.textContent="שומר...";
+    setAccess(em,true).then(()=>{m.textContent=`${em} אושר לקורס המדעי.`;$("addEmail").value=""}).catch(()=>{m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
+  };
+  /* נטען מחדש אחרי התחברות או התנתקות דרך כפתור "שמירת התקדמות". */
+  document.addEventListener("runners:auth",load);
+  load();
+})();
+</script>
+</body></html>

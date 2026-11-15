@@ -4,7 +4,7 @@
   "use strict";
   var API = "/api/";
   var PREFIXES = ["anat.", "phys.", "train.", "sci."];
-  var state = {email:null, ready:false, saving:null};
+  var state = {email:null, science:false, admin:false, ready:false, saving:null};
   var ls; try { ls = window.localStorage; ls.getItem("x"); } catch(e) { return; }
 
   function isOurs(k){ return PREFIXES.some(function(p){ return k.indexOf(p) === 0; }); }
@@ -39,6 +39,13 @@
       return r.json().catch(function(){ throw new Error("no_api"); });
     });
   }
+  /* Lets each page react to who is logged in (e.g. show the science course card). */
+  function announce(r){
+    state.science = !!(r && r.science); state.admin = !!(r && r.admin);
+    window.runnersAuth = {email:state.email, science:state.science, admin:state.admin};
+    document.dispatchEvent(new CustomEvent("runners:auth", {detail:window.runnersAuth}));
+    adminLink.hidden = !state.admin;
+  }
   function save(){
     if (!state.email) return;
     clearTimeout(state.saving);
@@ -70,6 +77,8 @@
 
   /* ---------- UI ---------- */
   var css = ""
+   + ".admin-link{font:600 14px 'Assistant',system-ui,sans-serif;color:var(--accent);margin-inline-start:auto;margin-inline-end:4px;text-decoration:none}.admin-link[hidden]{display:none}.admin-link:hover{text-decoration:underline}"
+   + ".admin-link:not([hidden]) ~ .theme-btn, .admin-link:not([hidden]) ~ .acct-btn{margin-inline-start:8px}"
    + ".acct-btn{margin-inline-start:auto;font:600 14px 'Assistant',system-ui,sans-serif;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);border-radius:999px;padding:4px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}"
    + ".acct-btn.in{color:var(--ok,#1F8A55);border-color:currentColor;background:transparent}"
    + ".acct-btn .dot{width:8px;height:8px;border-radius:50%;background:currentColor}"
@@ -107,6 +116,8 @@
   btn.type = "button"; btn.className = "acct-btn"; btn.hidden = true;
   btn.onclick = open;
   var dlg = document.createElement("dialog"); dlg.className = "acct";
+  var adminLink = document.createElement("a");
+  adminLink.href = "/admin/"; adminLink.className = "admin-link"; adminLink.textContent = "ניהול"; adminLink.hidden = true;
   var pendingEmail = "";
 
   function paint(){
@@ -155,7 +166,7 @@
       busy(form, true); err.textContent = "";
       api("verify_code.php", {email:pendingEmail, code:inp.value}).then(function(r){
         if (!r.ok) { busy(form, false); err.textContent = msg(r.error); inp.select(); return; }
-        state.email = r.email; paint();
+        state.email = r.email; paint(); announce(r);
         sessionStorage.removeItem("sync.reload");
         var before = readLocal();
         adopt(r.progress, false);
@@ -173,7 +184,7 @@
       + '<p>בהתנתקות, ההתקדמות נשארת גם בשרת וגם בדפדפן הזה.</p>'
       + '<div class="row"><button class="pri" type="button" data-close>סגירה</button><button type="button" data-out>התנתקות</button></div>');
     dlg.querySelector("[data-out]").onclick = function(){
-      api("logout.php", {}).catch(function(){}).then(function(){ state.email = null; paint(); dlg.close(); });
+      api("logout.php", {}).catch(function(){}).then(function(){ state.email = null; paint(); announce(null); dlg.close(); });
     };
   }
   function open(){
@@ -185,11 +196,11 @@
 
   function mount(){
     var host = document.getElementById("acct") || document.querySelector("nav.sb");
-    if (host) host.appendChild(btn);
+    if (host) { host.appendChild(adminLink); host.appendChild(btn); }
     paint();
     api("me.php").then(function(r){
       if (!r || r.ok !== true) return;
-      state.ready = true; state.email = r.email || null; paint();
+      state.ready = true; state.email = r.email || null; paint(); announce(r);
       if (state.email) adopt(r.progress, true);
     }).catch(function(){ /* no API here: keep the button hidden */ });
   }

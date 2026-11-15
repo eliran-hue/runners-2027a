@@ -38,4 +38,7 @@ $pdo->prepare('INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?
 $pdo->prepare('DELETE FROM sessions WHERE expires_at < ?')->execute([now_sql()]);
 set_session_cookie($token, SESSION_DAYS);
 
-json_out_with_progress(load_progress($userId), ['email' => $email]);
+ensure_schema();
+$q = $pdo->prepare('SELECT id, email, science_access FROM users WHERE id = ?');
+$q->execute([$userId]);
+json_out_with_progress(load_progress($userId), auth_fields($q->fetch()));

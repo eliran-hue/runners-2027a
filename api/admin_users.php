@@ -1,0 +1,30 @@
+<?php
+declare(strict_types=1);
+require __DIR__ . '/_helpers.php';
+
+/* רשימת המשתמשים לעמוד הניהול: מייל, תאריכים, פרקים שהושלמו, וגישה לקורס המדעי. */
+require_admin();
+$rows = get_pdo()->query('SELECT u.id, u.email, u.created_at, u.last_login_at, u.science_access, p.data, p.updated_at
+    FROM users u LEFT JOIN progress p ON p.user_id = u.id ORDER BY u.created_at DESC')->fetchAll();
+
+$out = [];
+foreach ($rows as $r) {
+    $done = [];
+    $keys = json_decode((string)($r['data'] ?? '{}'), true)['keys'] ?? [];
+    foreach ($keys as $k => $v) {
+        if (substr($k, -5) !== '.done') continue;
+        $d = json_decode((string)$v, true);
+        $done[substr($k, 0, -5)] = is_array($d) ? count(array_filter($d)) : 0;
+    }
+    $u = ['email' => $r['email'], 'science_access' => $r['science_access']];
+    $out[] = [
+        'email' => $r['email'],
+        'created_at' => $r['created_at'],
+        'last_login_at' => $r['last_login_at'],
+        'progress_at' => $r['updated_at'],
+        'done' => (object)$done,
+        'science' => has_science($u),
+        'admin' => is_admin($u),
+    ];
+}
+json_out(['ok' => true, 'users' => $out]);

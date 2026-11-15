@@ -13,4 +13,6 @@ return [
     // כתובת השולח. חייבת להיות בדומיין שמאומת ב-Elastic Email.
     'mail_from' => 'noreply@runners2027.fyi',
     'mail_from_name' => 'מדריכי ריצות ארוכות 2027א',
+    // מי רואה את עמוד הניהול (/admin/) ואת הקורס המדעי תמיד.
+    'admin_emails' => ['eliranh84@gmail.com'],
 ];

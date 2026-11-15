@@ -10,7 +10,7 @@
   <nav class="sb" id="acct" aria-label="ניווט באתר"></nav>
   <div class="eyebrow">סמסטר 2027א</div>
   <h1>האתר למדריכי ריצות ארוכות</h1>
-  <p class="lead">כל חומר הלימוד במקום אחד, בשפה פשוטה. בוחרים קורס ונושא, לומדים פרק אחר פרק, ובסוף כל פרק עונים על בוחן קצר.</p>
+  <p class="lead">כל חומר הלימוד במקום אחד, בשפה פשוטה. בוחרים נושא, לומדים פרק אחר פרק, ובסוף כל פרק עונים על בוחן קצר.</p>
 </header>
 <main class="wrap">
   <div class="grid">
@@ -19,12 +19,13 @@
       <div class="prog" data-keys="anat:5,phys:7"><div class="bar"><i></i></div><div class="t"><span class="st">12 פרקים</span><span class="go">לקורס ←</span></div></div>
     </a>
 
-    <a class="topic" href="/science/" style="--c:var(--d2)">
+    <a class="topic" href="/science/" id="sciCard" hidden style="--c:var(--d2)">
       <div class="num">קורס 2</div><h2>קורס מדעי</h2><p>יסודות מדעי התנועה והמאמץ.</p><ul><li>אנטומיה</li><li>פיזיולוגיה</li><li>קניזיולוגיה</li></ul>
       <div class="prog-none" style="margin-top:auto;padding-top:8px;text-align:left"><span class="go">לקורס ←</span></div>
     </a>
 
   </div>
+  <div class="notice" id="sciLocked" hidden><b>הקורס המדעי פתוח רק למשתתפים שאושרו.</b> אם קיבלת אישור, לוחצים על "שמירת התקדמות" למעלה ומתחברים עם אותה כתובת מייל. אם עדיין לא, פנה למנהל האתר.</div>
   <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> לוחצים על "שמירת התקדמות" למעלה, מזינים כתובת מייל ומקבלים קוד כניסה.</div>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
@@ -38,5 +39,14 @@ document.querySelectorAll(".prog").forEach(p=>{
   if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;const g=p.querySelector(".go");if(g)g.textContent=n>=t?"לחזרה ←":"להמשיך ←"}
 });
 
+
+/* הקורס המדעי מוצג רק למי שאושר (או למנהל). ההרשאה האמיתית נבדקת בשרת, בכל בקשה ל-/science/. */
+(function(){
+  const card=document.getElementById("sciCard"),lock=document.getElementById("sciLocked");
+  const locked=new URLSearchParams(location.search).get("science")==="locked";
+  function apply(a){const ok=!!(a&&(a.science||a.admin));card.hidden=!ok;lock.hidden=ok||!locked}
+  document.addEventListener("runners:auth",e=>apply(e.detail));
+  apply(window.runnersAuth||null);
+})();
 </script>
 </body></html>

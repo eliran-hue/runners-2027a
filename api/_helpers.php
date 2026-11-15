@@ -66,12 +66,52 @@ function client_ip(): string {
 }
 
 /** Returns the logged-in user row (id, email) or null. */
+/** Adds columns introduced after the first release, so no manual SQL is needed on the server. */
+function ensure_schema(): void {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    $pdo = get_pdo();
+    try {
+        $pdo->query('SELECT science_access FROM users LIMIT 1');
+    } catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE users ADD COLUMN science_access INT NOT NULL DEFAULT 0');
+    }
+}
+
+/** Admins come from config.php ('admin_emails'); this is the fallback. */
+function admin_emails(): array {
+    $list = config()['admin_emails'] ?? ['eliranh84@gmail.com'];
+    return array_map('normalize_email', $list);
+}
+
+function is_admin(?array $u): bool {
+    return $u !== null && in_array(normalize_email((string)$u['email']), admin_emails(), true);
+}
+
+function has_science(?array $u): bool {
+    return $u !== null && (is_admin($u) || (int)($u['science_access'] ?? 0) === 1);
+}
+
+/** Returns the logged-in user row (id, email, science_access) or null. */
 function current_user(): ?array {
     $token = $_COOKIE['runners_session'] ?? '';
     if (!preg_match('/^[a-f0-9]{64}$/', $token)) return null;
-    $stmt = get_pdo()->prepare('SELECT u.id, u.email FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ? AND s.expires_at > ?');
+    ensure_schema();
+    $stmt = get_pdo()->prepare('SELECT u.id, u.email, u.science_access FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ? AND s.expires_at > ?');
     $stmt->execute([$token, now_sql()]);
     return $stmt->fetch() ?: null;
+}
+
+function require_admin(): array {
+    $u = require_user();
+    if (!is_admin($u)) json_error('forbidden', 403);
+    return $u;
+}
+
+/** Fields every auth response carries, so the pages know what to show. */
+function auth_fields(?array $u): array {
+    return ['email' => $u['email'] ?? null, 'science' => has_science($u), 'admin' => is_admin($u)];
 }
 
 function require_user(): array {
