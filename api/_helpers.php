@@ -40,7 +40,8 @@ function json_input(): array {
 function json_out(array $data, int $status = 200): void {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
-    header('Cache-Control: no-store');
+    header('Cache-Control: private, no-store, no-cache, max-age=0');
+    header('Vary: Cookie');
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -141,7 +142,8 @@ function load_progress(int $userId): string {
 /** Echoes {"ok":true, ...$extra, "progress": <raw json>} without a decode/encode round trip. */
 function json_out_with_progress(string $raw, array $extra = []): void {
     header('Content-Type: application/json; charset=utf-8');
-    header('Cache-Control: no-store');
+    header('Cache-Control: private, no-store, no-cache, max-age=0');
+    header('Vary: Cookie');
     $extra = ['ok' => true] + $extra;
     $env = json_encode($extra, JSON_UNESCAPED_UNICODE);
     echo substr($env, 0, -1) . ',"progress":' . $raw . '}';

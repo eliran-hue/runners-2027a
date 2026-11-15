@@ -2,3 +2,9 @@
 <FilesMatch "\.(sql|md)$|^config|^_helpers">
   Require all denied
 </FilesMatch>
+
+# Responses depend on the session cookie: never cache them anywhere (Varnish, Cloudflare, browser).
+<IfModule mod_headers.c>
+  Header always set Cache-Control "private, no-store, no-cache, max-age=0"
+  Header always merge Vary "Cookie"
+</IfModule>

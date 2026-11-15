@@ -33,7 +33,7 @@
   function sortKeys(o){ var r = {}; Object.keys(o).sort().forEach(function(k){ r[k] = o[k]; }); return r; }
 
   function api(path, body){
-    var opt = {credentials:"same-origin", headers:{"Content-Type":"application/json"}};
+    var opt = {credentials:"same-origin", cache:"no-store", headers:{"Content-Type":"application/json"}};
     if (body !== undefined) { opt.method = "POST"; opt.body = JSON.stringify(body); }
     return fetch(API + path, opt).then(function(r){
       return r.json().catch(function(){ throw new Error("no_api"); });
@@ -54,6 +54,16 @@
         if (!r.ok && r.error === "not_authenticated") { state.email = null; paint(); }
       }).catch(function(){});
     }, 800);
+  }
+  /* Who the progress in this browser belongs to. Kept outside PREFIXES, so it is never synced. */
+  var OWNER = "sync.owner";
+  function clearLocal(){ Object.keys(readLocal()).forEach(function(k){ ls.removeItem(k); }); }
+  /* Before adopting an account's progress: if this browser holds another account's progress, drop it.
+     Progress made here before any login (no owner yet) is merged into the first account that logs in. */
+  function claim(email){
+    var owner = ls.getItem(OWNER);
+    if (owner && owner !== email) clearLocal();
+    origSet.call(ls, OWNER, email);
   }
   /* Apply server progress; reload once if this device's view changed. */
   function adopt(progress, thenReload){
@@ -169,6 +179,7 @@
         state.email = r.email; paint(); announce(r);
         sessionStorage.removeItem("sync.reload");
         var before = readLocal();
+        claim(r.email);
         adopt(r.progress, false);
         api("progress_save.php", {v:1, keys:readLocal()}).catch(function(){});
         var changed = !same(before, readLocal());
@@ -181,10 +192,10 @@
   }
   function stepAccount(){
     view('<h2>ההתקדמות נשמרת</h2><p>מחובר בתור <span class="who">' + esc(state.email) + '</span>. כל פרק שתסיים נשמר אוטומטית, ואפשר להמשיך מכל מכשיר.</p>'
-      + '<p>בהתנתקות, ההתקדמות נשארת גם בשרת וגם בדפדפן הזה.</p>'
+      + '<p>ההתקדמות שמורה בשרת. בהתנתקות היא נמחקת מהדפדפן הזה, כך שמי שמשתמש בו אחריך לא יראה אותה.</p>'
       + '<div class="row"><button class="pri" type="button" data-close>סגירה</button><button type="button" data-out>התנתקות</button></div>');
     dlg.querySelector("[data-out]").onclick = function(){
-      api("logout.php", {}).catch(function(){}).then(function(){ state.email = null; paint(); announce(null); dlg.close(); });
+      api("logout.php", {}).catch(function(){}).then(function(){ clearLocal(); ls.removeItem(OWNER); location.reload(); });
     };
   }
   function open(){
@@ -201,7 +212,8 @@
     api("me.php").then(function(r){
       if (!r || r.ok !== true) return;
       state.ready = true; state.email = r.email || null; paint(); announce(r);
-      if (state.email) adopt(r.progress, true);
+      if (state.email) { var before = readLocal(); claim(state.email); adopt(r.progress, true); if (!same(before, readLocal()) && !sessionStorage.getItem("sync.reload")) location.reload(); }
+      else if (ls.getItem(OWNER)) { clearLocal(); ls.removeItem(OWNER); location.reload(); }
     }).catch(function(){ /* no API here: keep the button hidden */ });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
