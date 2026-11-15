@@ -14,7 +14,7 @@ jobs:
       - name: Trigger Git Pull via Cloudways API
         id: pull
         run: |
-          RESP=$(curl --fail --show-error -s -X POST https://api.cloudways.com/api/v1/git/pull \
+          RESP=$(curl -s -w '\n%{http_code}' -X POST https://api.cloudways.com/api/v1/git/pull \
             -H "Authorization: Bearer ${{ secrets.CLOUDWAYS_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -24,7 +24,9 @@ jobs:
               "branch_name": "main",
               "deploy_path": ""
             }')
-          echo "$RESP"
+          CODE=$(echo "$RESP" | tail -1); RESP=$(echo "$RESP" | sed '$d')
+          echo "HTTP $CODE"; echo "$RESP"
+          if [ "$CODE" != "200" ]; then echo "::error::Cloudways refused the pull request (HTTP $CODE): $RESP"; exit 1; fi
           echo "op=$(echo "$RESP" | jq -r '.operation_id // empty')" >> "$GITHUB_OUTPUT"
 
       # Cloudways runs the pull in the background. Wait for it and fail the job if the pull failed on the server.
