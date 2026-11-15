@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>מחשבונים וכלי עזר · קורס ענפי</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/site.css">
+<script src="/theme.js"></script><script src="/sync.js" defer></script></head><body>
+<header class="wrap">
+  <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מחשבונים וכלי עזר</span></nav>
+  <div class="eyebrow">קורס ענפי</div>
+  <h1>מחשבונים וכלי עזר</h1>
+  <p class="lead">כלים לשימוש מהיר, בלי לחפש בתוך הפרקים.</p>
+</header>
+<main class="wrap">
+<section class="tools" style="margin-top:22px" aria-label="מחשבונים">
+        <div class="tool" id="hrCalc">
+      <h3>מחשבון דופק מטרה</h3>
+      <p class="desc">שתי שיטות זו לצד זו: אחוז מהדופק המרבי, ונוסחת קרבונן (אחוז מרזרבת הדופק), שמתחשבת גם בדופק המנוחה.</p>
+      <div class="row">
+        <label>גיל<input type="number" id="cAge" min="10" max="90" inputmode="numeric"></label>
+        <label>מין<select id="cSex"><option value="220">גבר (220 − גיל)</option><option value="226">אישה (226 − גיל)</option></select></label>
+        <label>דופק מנוחה<input type="number" id="cRest" min="30" max="110" inputmode="numeric"></label>
+        <label>דופק מרבי (אם נמדד)<input type="number" id="cMax" placeholder="השאר ריק לחיזוי" inputmode="numeric"></label>
+      </div>
+      <div class="row">
+        <label>% מדופק מרבי: מ-<input type="number" id="cP1" min="30" max="100" inputmode="numeric"></label>
+        <label>עד<input type="number" id="cP2" min="30" max="100" inputmode="numeric"></label>
+        <label>% מרזרבת דופק: מ-<input type="number" id="cK1" min="20" max="100" inputmode="numeric"></label>
+        <label>עד<input type="number" id="cK2" min="20" max="100" inputmode="numeric"></label>
+      </div>
+      <div class="out" id="cOut" aria-live="polite"></div>
+      <p class="note">החיזוי לפי גיל הוא הערכה גסה. אם יש דופק מרבי ממבדק, עדיף להזין אותו. ההסבר המלא נמצא בפרק <a href="/branch/physiology.html">"לב ודופק" בפיזיולוגיה</a>, והערכים שמוזנים כאן משותפים למחשבון שבפרק.</p>
+    </div>
+  </section>
+</main>
+<footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
+<script>
+/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7"). */
+document.querySelectorAll(".prog").forEach(p=>{
+  let n=0,t=0;
+  p.dataset.keys.split(",").forEach(kv=>{const [k,c]=kv.split(":");t+=+c;
+    try{const d=JSON.parse(localStorage.getItem(k+".done")||"{}")||{};n+=Math.min(+c,Object.values(d).filter(Boolean).length)}catch(e){}});
+  p.querySelector(".bar i").style.width=(t?Math.min(100,n/t*100):0)+"%";
+  if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;const g=p.querySelector(".go");if(g)g.textContent=n>=t?"לחזרה ←":"להמשיך ←"}
+});
+/* מחשבון דופק מטרה. אותו מפתח שמירה כמו בפרק "לב ודופק" (phys.calc), כך שהערכים משותפים ונשמרים גם בחשבון. */
+(function(){
+  const $=id=>document.getElementById(id);
+  const def={cAge:20,cSex:"220",cRest:50,cMax:"",cP1:60,cP2:70,cK1:40,cK2:60};
+  let saved=def;try{saved=Object.assign({},def,JSON.parse(localStorage.getItem("phys.calc")||"{}"))}catch(e){}
+  const m=t=>`<span class="m">${t}</span>`;
+  Object.keys(def).forEach(k=>{$(k).value=saved[k]??def[k];$(k).addEventListener("input",calc);$(k).addEventListener("change",calc)});
+  function calc(){
+    const v={};Object.keys(def).forEach(k=>v[k]=$(k).value);
+    try{localStorage.setItem("phys.calc",JSON.stringify(v))}catch(e){}
+    const age=+v.cAge,rest=+v.cRest,base=+v.cSex,mx=v.cMax?+v.cMax:base-age,res=mx-rest;
+    const p=a=>Math.round(mx*a/100),k=a=>Math.round(rest+res*a/100);
+    if(!(age>0&&rest>0&&mx>rest)){$("cOut").innerHTML=`<div class="res">בדוק את הנתונים: הדופק המרבי צריך להיות גבוה מדופק המנוחה.</div>`;return}
+    $("cOut").innerHTML=
+     `<div class="res"><div>דופק מרבי ${v.cMax?"(נמדד)":"(חזוי)"}</div><div class="big">${mx}</div><div class="how">${v.cMax?"הוזן ידנית":m(`${base} − ${age} = ${mx}`)}</div></div>`+
+     `<div class="res"><div>רזרבת דופק</div><div class="big">${res}</div><div class="how">${m(`${mx} − ${rest} = ${res}`)}</div></div>`+
+     `<div class="res"><div>${m(`${v.cP1}–${v.cP2}%`)} מהדופק המרבי</div><div class="big">${m(`${p(+v.cP1)}–${p(+v.cP2)}`)}</div><div class="how">${m(`${mx} × ${v.cP1}% = ${p(+v.cP1)}`)} · ${m(`${mx} × ${v.cP2}% = ${p(+v.cP2)}`)}</div></div>`+
+     `<div class="res key"><div>${m(`${v.cK1}–${v.cK2}%`)} מרזרבת הדופק (קרבונן)</div><div class="big">${m(`${k(+v.cK1)}–${k(+v.cK2)}`)}</div><div class="how">${m(`${rest} + ${res} × ${v.cK1}% = ${k(+v.cK1)}`)} · ${m(`${rest} + ${res} × ${v.cK2}% = ${k(+v.cK2)}`)}</div></div>`;
+  }
+  calc();
+})();
+</script>
+</body></html>

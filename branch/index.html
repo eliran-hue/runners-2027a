@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>קורס ענפי · האתר למדריכי ריצות ארוכות</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/site.css">
+<script src="/theme.js"></script><script src="/sync.js" defer></script></head><body>
+<header class="wrap">
+  <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">קורס ענפי</span></nav>
+  <div class="eyebrow">קורס 1</div>
+  <h1>קורס ענפי</h1>
+  <p class="lead">הקורס ללימודי מדריכי ריצות ארוכות: כלי עזר, ושלושה נושאי לימוד לפי מצגות הקורס.</p>
+</header>
+<main class="wrap">
+  <div class="grid">
+    <a class="topic" href="/branch/tools.html" style="--c:var(--d3)">
+      <div class="num">כלי עזר</div><h2>מחשבונים וכלי עזר</h2><p>כלים לשימוש מהיר, בלי לחפש בתוך הפרקים.</p><ul><li>מחשבון דופק מטרה (אחוז מדופק מרבי וקרבונן)</li></ul>
+      <div class="prog-none" style="margin-top:auto;padding-top:8px;text-align:left"><span class="go">לכלים ←</span></div>
+    </a>
+
+    <a class="topic" href="/branch/anatomy.html" style="--c:var(--d1)">
+      <div class="num">נושא 1</div><h2>האנטומיה של הריצה</h2><p>מערכת השלד והשרירים, והיבטים קינזיולוגיים בריצה.</p><ul><li>עצמות ומפרקים: ירך, ברך, קרסול</li><li>מישורי תנועה וסוגי כיווץ</li><li>14 שרירים עיקריים, עם כרטיסיות</li><li>ניתוח צעד ריצה</li></ul>
+      <div class="prog" data-keys="anat:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">לנושא ←</span></div></div>
+    </a>
+
+    <a class="topic" href="/branch/physiology.html" style="--c:var(--d2)">
+      <div class="num">נושא 2</div><h2>הפיזיולוגיה של הריצה</h2><p>מושגי יסוד בפיזיולוגיה של המאמץ והשלכתם על הריצה.</p><ul><li>מסלולי האנרגיה ו-ATP</li><li>לב, דופק ומחשבון קרבונן</li><li>סיבי שריר, צח״מ וסף לקטאט</li><li>יעילות מכאנית ותחומי עצימות</li></ul>
+      <div class="prog" data-keys="phys:7"><div class="bar"><i></i></div><div class="t"><span class="st">7 פרקים</span><span class="go">לנושא ←</span></div></div>
+    </a>
+
+    <a class="topic soon" aria-disabled="true" style="--c:var(--d4)">
+      <div class="num">נושא 3</div><h2>תורת האימון</h2><p>עקרונות בניית תכנית אימונים לרצים.</p>
+      <span class="badge">בקרוב</span>
+    </a>
+
+  </div>
+  <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> לוחצים על "שמירת התקדמות" למעלה, מזינים כתובת מייל ומקבלים קוד כניסה.</div>
+</main>
+<footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
+<script>
+/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7"). */
+document.querySelectorAll(".prog").forEach(p=>{
+  let n=0,t=0;
+  p.dataset.keys.split(",").forEach(kv=>{const [k,c]=kv.split(":");t+=+c;
+    try{const d=JSON.parse(localStorage.getItem(k+".done")||"{}")||{};n+=Math.min(+c,Object.values(d).filter(Boolean).length)}catch(e){}});
+  p.querySelector(".bar i").style.width=(t?Math.min(100,n/t*100):0)+"%";
+  if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;const g=p.querySelector(".go");if(g)g.textContent=n>=t?"לחזרה ←":"להמשיך ←"}
+});
+
+</script>
+</body></html>

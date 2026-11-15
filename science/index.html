@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>קורס מדעי · האתר למדריכי ריצות ארוכות</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/site.css">
+<script src="/theme.js"></script><script src="/sync.js" defer></script></head><body>
+<header class="wrap">
+  <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">קורס מדעי</span></nav>
+  <div class="eyebrow">קורס 2</div>
+  <h1>קורס מדעי</h1>
+  <p class="lead">שלושה נושאים עיקריים. כל נושא ייפתח כאן ברגע שיעלו המצגות שלו.</p>
+</header>
+<main class="wrap">
+  <div class="grid">
+    <a class="topic soon" aria-disabled="true" style="--c:var(--d1)">
+      <div class="num">נושא 1</div><h2>אנטומיה</h2><p>מבנה הגוף: שלד, מפרקים ושרירים.</p>
+      <span class="badge">בקרוב</span>
+    </a>
+
+    <a class="topic soon" aria-disabled="true" style="--c:var(--d2)">
+      <div class="num">נושא 2</div><h2>פיזיולוגיה</h2><p>איך מערכות הגוף עובדות במנוחה ובמאמץ.</p>
+      <span class="badge">בקרוב</span>
+    </a>
+
+    <a class="topic soon" aria-disabled="true" style="--c:var(--d3)">
+      <div class="num">נושא 3</div><h2>קינזיולוגיה</h2><p>מדע התנועה: איך הגוף זז ולמה.</p>
+      <span class="badge">בקרוב</span>
+    </a>
+
+  </div>
+</main>
+<footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
+<script>
+/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7"). */
+document.querySelectorAll(".prog").forEach(p=>{
+  let n=0,t=0;
+  p.dataset.keys.split(",").forEach(kv=>{const [k,c]=kv.split(":");t+=+c;
+    try{const d=JSON.parse(localStorage.getItem(k+".done")||"{}")||{};n+=Math.min(+c,Object.values(d).filter(Boolean).length)}catch(e){}});
+  p.querySelector(".bar i").style.width=(t?Math.min(100,n/t*100):0)+"%";
+  if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;const g=p.querySelector(".go");if(g)g.textContent=n>=t?"לחזרה ←":"להמשיך ←"}
+});
+
+</script>
+</body></html>
