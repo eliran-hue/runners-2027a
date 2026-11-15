@@ -79,7 +79,7 @@ td.num{color:var(--ink)}
   function gate(html){$("gate").innerHTML=html;$("gate").hidden=false;$("app").hidden=true}
   function load(){
     fetch("/api/admin_users.php",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json().then(j=>[r.status,j])).then(([st,j])=>{
-      if(st===401){gate('<b>צריך להתחבר.</b> לוחצים על "שמירת התקדמות" למעלה ומתחברים עם כתובת המייל של המנהל.');return}
+      if(st===401){gate('<b>צריך להתחבר.</b> לוחצים על "התחברות / שמירת התקדמות" למעלה ומתחברים עם כתובת המייל של המנהל.');return}
       if(st===403){gate('<b>אין לך הרשאה לעמוד הזה.</b> רק מנהל האתר יכול לצפות ברשימת המשתמשים.');return}
       if(!j.ok){gate("משהו השתבש בטעינת הרשימה. נסה לרענן.");return}
       users=j.users;$("gate").hidden=true;$("app").hidden=false;render();
@@ -121,7 +121,7 @@ td.num{color:var(--ink)}
     m.className="msg";m.textContent="שומר...";
     setAccess(em,true).then(()=>{m.textContent=`${em} אושר לקורס המדעי.`;$("addEmail").value=""}).catch(()=>{m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
   };
-  /* נטען מחדש אחרי התחברות או התנתקות דרך כפתור "שמירת התקדמות". */
+  /* נטען מחדש אחרי התחברות או התנתקות דרך כפתור "התחברות / שמירת התקדמות". */
   document.addEventListener("runners:auth",load);
   load();
 })();

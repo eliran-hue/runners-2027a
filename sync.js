@@ -123,8 +123,8 @@
   function paint(){
     btn.hidden = !state.ready;
     btn.className = "acct-btn" + (state.email ? " in" : "");
-    btn.innerHTML = state.email ? '<span class="dot" aria-hidden="true"></span>ההתקדמות נשמרת' : "שמירת התקדמות";
-    btn.setAttribute("aria-label", state.email ? "מחובר בתור " + state.email + ". פתח הגדרות חשבון" : "שמירת התקדמות עם כתובת מייל");
+    btn.innerHTML = state.email ? '<span class="dot" aria-hidden="true"></span>ההתקדמות נשמרת' : "התחברות / שמירת התקדמות";
+    btn.setAttribute("aria-label", state.email ? "מחובר בתור " + state.email + ". פתח הגדרות חשבון" : "התחברות ושמירת התקדמות עם כתובת מייל");
   }
   function view(html, focusSel){
     dlg.innerHTML = '<form method="dialog" novalidate>' + html + "</form>";
@@ -134,7 +134,7 @@
   function busy(form, on){ Array.prototype.forEach.call(form.querySelectorAll("button,input"), function(x){ x.disabled = on; }); }
 
   function stepEmail(){
-    view('<h2>שמירת התקדמות</h2><p>מזינים כתובת מייל ומקבלים קוד בן 6 ספרות. ככה ההתקדמות נשמרת, ואפשר להמשיך מכל מכשיר.</p>'
+    view('<h2>התחברות / שמירת התקדמות</h2><p>מזינים כתובת מייל ומקבלים קוד בן 6 ספרות. ככה ההתקדמות נשמרת, ואפשר להמשיך מכל מכשיר.</p>'
       + '<label for="acE">כתובת מייל</label><input id="acE" type="email" autocomplete="email" inputmode="email" required value="' + (pendingEmail || "") + '">'
       + '<div class="err" role="alert"></div><div class="row"><button class="pri" type="submit">שליחת קוד</button><button type="button" data-close>ביטול</button></div>');
     var form = dlg.querySelector("form");
