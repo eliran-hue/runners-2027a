@@ -72,7 +72,7 @@ td.num{color:var(--ink)}
 <script>
 (function(){
   const $=id=>document.getElementById(id);
-  const BRANCH_TOTAL=12; /* anat 5 + phys 7 */
+  const BRANCH_TOTAL=20; /* anat 5 + phys 7 + train 8 */
   let users=[];
   const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const fmt=s=>{if(!s)return"—";const d=new Date(s.replace(" ","T"));return isNaN(d)?s:d.toLocaleDateString("he-IL",{day:"numeric",month:"numeric",year:"2-digit"})+" "+d.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})};
@@ -94,7 +94,7 @@ td.num{color:var(--ink)}
     $("sWeek").textContent=users.filter(u=>u.last_login_at&&new Date(u.last_login_at.replace(" ","T"))>week).length;
     $("shown").textContent=q?`מוצגים ${list.length} מתוך ${users.length}`:"";
     $("rows").innerHTML=list.length?list.map((u,i)=>{
-      const b=(u.done.anat||0)+(u.done.phys||0);
+      const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0);
       const pending=!u.last_login_at;
       return `<tr><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
         <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>

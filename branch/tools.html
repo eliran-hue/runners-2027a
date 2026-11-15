@@ -10,7 +10,7 @@
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מחשבונים וכלי עזר</span></nav>
   <div class="eyebrow">קורס ענפי</div>
   <h1>מחשבונים וכלי עזר</h1>
-  <p class="lead">כלים לשימוש מהיר, בלי לחפש בתוך הפרקים.</p>
+  <p class="lead">כלים לשימוש מהיר, בלי לחפש בתוך הפרקים: דופק מטרה ואזורי אימון.</p>
 </header>
 <main class="wrap">
 <section class="tools" style="margin-top:22px" aria-label="מחשבונים">
@@ -32,7 +32,17 @@
       <div class="out" id="cOut" aria-live="polite"></div>
       <p class="note">החיזוי לפי גיל הוא הערכה גסה. אם יש דופק מרבי ממבדק, עדיף להזין אותו. ההסבר המלא נמצא בפרק <a href="/branch/physiology.html">"לב ודופק" בפיזיולוגיה</a>, והערכים שמוזנים כאן משותפים למחשבון שבפרק.</p>
     </div>
-  </section>
+      <div class="tool" id="zCalc" style="margin-top:18px;border-top-color:var(--d4)">
+      <h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3>
+      <p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים.</p>
+      <div class="row">
+        <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" id="zDist" min="2" max="12" step="0.01" inputmode="decimal"></label>
+        <label>דופק ממוצע ב-20 הדק׳ האחרונות<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
+      </div>
+      <div id="zOut" aria-live="polite"></div>
+      <p class="note">הקצבים לפי אחוז מקצב הטסט (פרייל), והדופק לפי אחוז מדופק הסף שבמצגת. ההסבר המלא בפרק <a href="/branch/training.html">"אזורי אימון" בתורת האימון</a>.</p>
+    </div>
+</section>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
 <script>
@@ -64,6 +74,25 @@ document.querySelectorAll(".prog").forEach(p=>{
      `<div class="res key"><div>${m(`${v.cK1}–${v.cK2}%`)} מרזרבת הדופק (קרבונן)</div><div class="big">${m(`${k(+v.cK1)}–${k(+v.cK2)}`)}</div><div class="how">${m(`${rest} + ${res} × ${v.cK1}% = ${k(+v.cK1)}`)} · ${m(`${rest} + ${res} × ${v.cK2}% = ${k(+v.cK2)}`)}</div></div>`;
   }
   calc();
+})();
+
+/* מחשבון זונים לפי טסט 30 דקות. אותו מפתח שמירה כמו בפרק "אזורי אימון" (train.zcalc). */
+(function(){
+  const $=id=>document.getElementById(id);
+  const Z=[["1","התאוששות",1.29,null,.65,.84],["2","סבולת נרחבת",1.14,1.29,.85,.91],["3","סבולת עצימה",1.06,1.13,.92,.95],["4","סף אנאירובי",.99,1.05,.96,1],["5A","מעל הסף",.97,1,1,1.02],["5B","סבולת אנאירובית",.9,.96,1.03,1.05]];
+  const mmss=x=>{x=Math.round(x);return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
+  const m=t=>`<span class="m">${t}</span>`;
+  let v={zDist:6,zHr:170};try{v=Object.assign(v,JSON.parse(localStorage.getItem("train.zcalc")||"{}"))}catch(e){}
+  $("zDist").value=v.zDist;$("zHr").value=v.zHr;
+  function calc(){
+    const d=+$("zDist").value,hr=+$("zHr").value;
+    try{localStorage.setItem("train.zcalc",JSON.stringify({zDist:$("zDist").value,zHr:$("zHr").value}))}catch(e){}
+    if(!(d>0&&hr>0)){$("zOut").innerHTML='<div class="out"><div class="res">הזן מרחק ודופק.</div></div>';return}
+    const p=1800/d;
+    $("zOut").innerHTML=`<div class="out"><div class="res key"><div>קצב הטסט</div><div class="big">${m(mmss(p))}</div><div class="how">דקות לק״מ · ${m(`30 ÷ ${d} = ${mmss(p)}`)}</div></div></div>`+
+      `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${z[3]?m(`${mmss(p*z[2])}–${mmss(p*z[3])}`):"איטי מ-"+m(mmss(p*z[2]))}</div><div class="how">דופק ${m(`${Math.round(hr*z[4])}–${Math.round(hr*z[5])}`)}</div></div>`).join("")+`</div>`;
+  }
+  ["zDist","zHr"].forEach(k=>{$(k).addEventListener("input",calc);$(k).addEventListener("change",calc)});calc();
 })();
 </script>
 </body></html>
