@@ -52,6 +52,7 @@ td.num{color:var(--ink)}
 .vt .pp{font-size:12px;color:var(--muted);direction:ltr;text-align:right}
 .hb{display:inline-block;width:60px;height:6px;background:var(--line);border-radius:3px;margin-inline-end:8px;vertical-align:middle;overflow:hidden}
 .hb i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.sp{font-size:13.5px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
 .nmc{white-space:nowrap;font-weight:700}
 .nmc .none{color:var(--muted);font-weight:400}
 .ed{border:0;background:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 6px;margin-inline-start:4px;border-radius:6px}
@@ -121,6 +122,9 @@ td.num{color:var(--ink)}
 (function(){
   const $=id=>document.getElementById(id);
   const BRANCH_TOTAL=20; /* anat 5 + phys 7 + train 8 */
+  /* קורס מדעי: נושא -> [מפתח ההתקדמות, מספר פרקים]. נושא חדש = שורה חדשה כאן. */
+  const SCI_TOPICS=[["אנטומיה","sci.anat",8]];
+  const SCI_TOTAL=SCI_TOPICS.reduce((a,t)=>a+t[2],0);
   let users=[];
   const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const fmt=s=>{if(!s)return"—";const d=new Date(s.replace(" ","T"));return isNaN(d)?s:d.toLocaleDateString("he-IL",{day:"numeric",month:"numeric",year:"2-digit"})+" "+d.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})};
@@ -156,10 +160,12 @@ td.num{color:var(--ink)}
     $("rows").innerHTML=list.length?list.map((u,i)=>{
       const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0);
       const pending=!u.last_login_at;
+      const sd=SCI_TOPICS.reduce((a,t)=>a+Math.min(u.done[t[1]]||0,t[2]),0);
+      const sTitle=SCI_TOPICS.map(t=>`${t[0]}: ${u.done[t[1]]||0} מתוך ${t[2]}`).join(" · ");
       return `<tr><td class="nmc"><span class="nmv">${u.name?esc(u.name):'<span class="none">—</span>'}</span><button class="ed" type="button" data-name="${esc(u.email)}" aria-label="עריכת השם של ${esc(u.email)}" title="עריכת שם">✎</button></td><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
         <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>
         <td class="num">${b} / ${BRANCH_TOTAL} פרקים${u.progress_at?` <button class="rst" type="button" data-reset="${esc(u.email)}">איפוס</button>`:""}</td>
-        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label></td>
+        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label>${(u.science||sd)?`<div class="sp" title="${sTitle}">${sd} / ${SCI_TOTAL} פרקים</div>`:""}</td>
         <td>${u.admin?"":`<button class="del" type="button" data-del="${esc(u.email)}" aria-label="מחיקת ${esc(u.email)}">מחיקה</button>`}</td></tr>`}).join("")
       :`<tr><td colspan="7" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
     $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,cb.checked,cb));
