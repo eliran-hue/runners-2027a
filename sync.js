@@ -4,7 +4,7 @@
   "use strict";
   var API = "/api/";
   var PREFIXES = ["anat.", "phys.", "train.", "sci."];
-  var state = {email:null, science:false, admin:false, ready:false, saving:null};
+  var state = {email:null, name:null, science:false, admin:false, ready:false, saving:null};
   var ls; try { ls = window.localStorage; ls.getItem("x"); } catch(e) { return; }
 
   function isOurs(k){ return PREFIXES.some(function(p){ return k.indexOf(p) === 0; }); }
@@ -42,7 +42,8 @@
   /* Lets each page react to who is logged in (e.g. show the science course card). */
   function announce(r){
     state.science = !!(r && r.science); state.admin = !!(r && r.admin);
-    window.runnersAuth = {email:state.email, science:state.science, admin:state.admin};
+    state.name = (r && r.name) || null;
+    window.runnersAuth = {email:state.email, name:state.name, science:state.science, admin:state.admin};
     document.dispatchEvent(new CustomEvent("runners:auth", {detail:window.runnersAuth}));
     adminLink.hidden = !state.admin;
   }
@@ -183,17 +184,39 @@
         adopt(r.progress, false);
         api("progress_save.php", {v:1, keys:readLocal()}).catch(function(){});
         var changed = !same(before, readLocal());
+        if (r.first) stepName(true, function(){ loggedIn(changed); }); else loggedIn(changed);
+      }).catch(function(){ busy(form, false); err.textContent = msg("net"); });
+    };
+  }
+  function loggedIn(changed){
         view('<h2>מחובר</h2><p>מעכשיו כל פרק שתסיים יישמר אצלנו. בכל מכשיר אחר, נכנסים עם אותה כתובת מייל וממשיכים מאותה נקודה.</p>'
           + (changed ? '<p>טענו את ההתקדמות שכבר הייתה שמורה. העמוד ייטען מחדש.</p>' : "")
           + '<div class="row"><button class="pri" type="button" data-ok>מעולה</button></div>');
         dlg.querySelector("[data-ok]").onclick = function(){ dlg.close(); if (changed) location.reload(); };
+  }
+  /* Optional display name: offered once after the first login, and editable from the account dialog. */
+  function stepName(first, next){
+    view('<h2>' + (first ? "נעים להכיר!" : "השם שלך") + '</h2><p>' + (first ? "איך לקרוא לך? זה לא חובה. השם יופיע בדף הבית כשתתחבר." : "השם מופיע בדף הבית. אפשר להשאיר ריק.") + '</p>'
+      + '<label for="acN">שם (לא חובה)</label><input id="acN" type="text" autocomplete="given-name" maxlength="40" value="' + esc(state.name || "") + '">'
+      + '<div class="err" role="alert"></div><div class="row"><button class="pri" type="submit">שמירה</button><button type="button" data-skip>' + (first ? "דילוג" : "ביטול") + '</button></div>');
+    var form = dlg.querySelector("form"), err = form.querySelector(".err");
+    form.querySelector("[data-skip]").onclick = next;
+    form.onsubmit = function(ev){
+      ev.preventDefault();
+      busy(form, true); err.textContent = "";
+      api("set_name.php", {name: form.querySelector("#acN").value}).then(function(r){
+        busy(form, false);
+        if (!r.ok) { err.textContent = msg(r.error); return; }
+        announce({name:r.name, science:state.science, admin:state.admin});
+        next();
       }).catch(function(){ busy(form, false); err.textContent = msg("net"); });
     };
   }
   function stepAccount(){
-    view('<h2>ההתקדמות נשמרת</h2><p>מחובר בתור <span class="who">' + esc(state.email) + '</span>. כל פרק שתסיים נשמר אוטומטית, ואפשר להמשיך מכל מכשיר.</p>'
+    view('<h2>ההתקדמות נשמרת</h2><p>מחובר בתור ' + (state.name ? '<b>' + esc(state.name) + '</b> (<span class="who">' + esc(state.email) + '</span>)' : '<span class="who">' + esc(state.email) + '</span>') + '. כל פרק שתסיים נשמר אוטומטית, ואפשר להמשיך מכל מכשיר.</p>'
       + '<p>ההתקדמות שמורה בשרת. בהתנתקות היא נמחקת מהדפדפן הזה, כך שמי שמשתמש בו אחריך לא יראה אותה.</p>'
-      + '<div class="row"><button class="pri" type="button" data-close>סגירה</button><button type="button" data-out>התנתקות</button></div>');
+      + '<div class="row"><button class="pri" type="button" data-close>סגירה</button><button type="button" data-name>' + (state.name ? "שינוי שם" : "הוספת שם") + '</button><button type="button" data-out>התנתקות</button></div>');
+    dlg.querySelector("[data-name]").onclick = function(){ stepName(false, stepAccount); };
     dlg.querySelector("[data-out]").onclick = function(){
       api("logout.php", {}).catch(function(){}).then(function(){ clearLocal(); ls.removeItem(OWNER); location.reload(); });
     };

@@ -81,6 +81,11 @@ function ensure_schema(): void {
     } catch (PDOException $e) {
         $pdo->exec('ALTER TABLE users ADD COLUMN science_access INT NOT NULL DEFAULT 0');
     }
+    try {
+        $pdo->query('SELECT display_name FROM users LIMIT 1');
+    } catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE users ADD COLUMN display_name VARCHAR(60) NULL');
+    }
     ensure_views_table($pdo);
 }
 
@@ -126,7 +131,7 @@ function current_user(): ?array {
     $token = $_COOKIE['runners_session'] ?? '';
     if (!preg_match('/^[a-f0-9]{64}$/', $token)) return null;
     ensure_schema();
-    $stmt = get_pdo()->prepare('SELECT u.id, u.email, u.science_access FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ? AND s.expires_at > ?');
+    $stmt = get_pdo()->prepare('SELECT u.id, u.email, u.science_access, u.display_name FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ? AND s.expires_at > ?');
     $stmt->execute([$token, now_sql()]);
     return $stmt->fetch() ?: null;
 }
@@ -139,7 +144,7 @@ function require_admin(): array {
 
 /** Fields every auth response carries, so the pages know what to show. */
 function auth_fields(?array $u): array {
-    return ['email' => $u['email'] ?? null, 'science' => has_science($u), 'admin' => is_admin($u)];
+    return ['email' => $u['email'] ?? null, 'name' => ($u['display_name'] ?? null) ?: null, 'science' => has_science($u), 'admin' => is_admin($u)];
 }
 
 function require_user(): array {
@@ -175,6 +180,14 @@ function json_out_with_progress(string $raw, array $extra = []): void {
     $env = json_encode($extra, JSON_UNESCAPED_UNICODE);
     echo substr($env, 0, -1) . ',"progress":' . $raw . '}';
     exit;
+}
+
+/** Cleans a display name: single spaces, no control characters, at most 40 characters. Empty means none. */
+function clean_name(string $s): ?string {
+    $s = preg_replace('/[\x00-\x1F\x7F<>]+/u', '', $s) ?? '';
+    $s = trim(preg_replace('/\s+/u', ' ', $s) ?? '');
+    if ($s === '') return null;
+    return mb_substr($s, 0, 40);
 }
 
 /** Plain-text mail from the site address. */

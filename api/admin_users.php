@@ -4,7 +4,8 @@ require __DIR__ . '/_helpers.php';
 
 /* רשימת המשתמשים לעמוד הניהול: מייל, תאריכים, פרקים שהושלמו, וגישה לקורס המדעי. */
 require_admin();
-$rows = get_pdo()->query('SELECT u.id, u.email, u.created_at, u.last_login_at, u.science_access, p.data, p.updated_at
+ensure_schema();
+$rows = get_pdo()->query('SELECT u.id, u.email, u.display_name, u.created_at, u.last_login_at, u.science_access, p.data, p.updated_at
     FROM users u LEFT JOIN progress p ON p.user_id = u.id ORDER BY u.created_at DESC')->fetchAll();
 
 $out = [];
@@ -19,6 +20,7 @@ foreach ($rows as $r) {
     $u = ['email' => $r['email'], 'science_access' => $r['science_access']];
     $out[] = [
         'email' => $r['email'],
+        'name' => $r['display_name'] ?? null,
         'created_at' => $r['created_at'],
         'last_login_at' => $r['last_login_at'],
         'progress_at' => $r['updated_at'],

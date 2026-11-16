@@ -28,10 +28,12 @@ if (!$user) {
     $pdo->prepare('INSERT INTO users (email, created_at) VALUES (?, ?)')->execute([$email, now_sql()]);
     $userId = (int)$pdo->lastInsertId();
     notify_new_user($email, false, false);
+    $first = true;
 } else {
     $userId = (int)$user['id'];
     // Pre-approved by the admin but logging in for the first time: also a new user.
-    if (empty($user['last_login_at'])) notify_new_user($email, true, (int)$user['science_access'] === 1);
+    $first = empty($user['last_login_at']);
+    if ($first) notify_new_user($email, true, (int)$user['science_access'] === 1);
 }
 $pdo->prepare('UPDATE users SET last_login_at = ? WHERE id = ?')->execute([now_sql(), $userId]);
 
@@ -42,6 +44,8 @@ $pdo->prepare('DELETE FROM sessions WHERE expires_at < ?')->execute([now_sql()])
 set_session_cookie($token, SESSION_DAYS);
 
 ensure_schema();
-$q = $pdo->prepare('SELECT id, email, science_access FROM users WHERE id = ?');
+$q = $pdo->prepare('SELECT id, email, science_access, display_name FROM users WHERE id = ?');
 $q->execute([$userId]);
-json_out_with_progress(load_progress($userId), auth_fields($q->fetch()));
+$u = $q->fetch();
+// first: the client offers to set a name (optional) the first time someone logs in.
+json_out_with_progress(load_progress($userId), auth_fields($u) + ['first' => $first && empty($u['display_name'])]);

@@ -4,7 +4,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="/site.css?v=20261116a">
+<link rel="stylesheet" href="/site.css?v=20261116b">
 <style>
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:18px}
 .panel h2{font-size:19px;margin:0 0 4px}
@@ -52,6 +52,7 @@ td.num{color:var(--ink)}
 .vt .pp{font-size:12px;color:var(--muted);direction:ltr;text-align:right}
 .hb{display:inline-block;width:60px;height:6px;background:var(--line);border-radius:3px;margin-inline-end:8px;vertical-align:middle;overflow:hidden}
 .hb i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.nm{display:block;direction:rtl;font-weight:700;color:var(--ink)}
 .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;border:1px solid var(--line);color:var(--muted);direction:rtl}
 .sw{position:relative;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
 .sw input{position:absolute;opacity:0;width:1px;height:1px}
@@ -63,7 +64,7 @@ td.num{color:var(--ink)}
 .sw em{font-style:normal;color:var(--muted);min-width:4.5em}
 .empty{padding:22px;text-align:center;color:var(--muted)}
 </style>
-<script src="/theme.js?v=20261116a"></script><script src="/sync.js?v=20261116a" defer></script></head><body>
+<script src="/theme.js?v=20261116b"></script><script src="/sync.js?v=20261116b" defer></script></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -136,7 +137,7 @@ td.num{color:var(--ink)}
     $("rows").innerHTML=list.length?list.map((u,i)=>{
       const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0);
       const pending=!u.last_login_at;
-      return `<tr><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
+      return `<tr><td class="em">${u.name?`<span class="nm">${esc(u.name)}</span>`:""}${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
         <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>
         <td class="num">${b} / ${BRANCH_TOTAL} פרקים${u.progress_at?` <button class="rst" type="button" data-reset="${esc(u.email)}">איפוס</button>`:""}</td>
         <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label></td>

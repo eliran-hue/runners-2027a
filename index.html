@@ -4,8 +4,10 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="/site.css?v=20261116a">
-<script src="/theme.js?v=20261116a"></script><script src="/sync.js?v=20261116a" defer></script><style>
+<link rel="stylesheet" href="/site.css?v=20261116b">
+<script src="/theme.js?v=20261116b"></script><script src="/sync.js?v=20261116b" defer></script><style>
+.hello{font:400 26px var(--display);color:var(--accent);margin:6px 0 4px}
+.hello[hidden]{display:none}
 .lockcard{display:flex;flex-direction:column;gap:10px;background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:14px;padding:20px 22px}
 .lockcard[hidden]{display:none}
 .lockcard .lock{font-size:22px;vertical-align:middle}
@@ -20,6 +22,7 @@
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"></nav>
   <div class="eyebrow">סמסטר 2027א</div>
+  <p class="hello" id="hello" hidden></p>
   <h1>האתר למדריכי ריצות ארוכות</h1>
   <p class="lead">כל חומר הלימוד במקום אחד, בשפה פשוטה. בוחרים נושא, לומדים פרק אחר פרק, ובסוף כל פרק עונים על בוחן קצר.</p>
 </header>
@@ -66,6 +69,9 @@ document.querySelectorAll(".prog").forEach(p=>{
   const locked=new URLSearchParams(location.search).get("science")==="locked";
   function apply(a){const ok=!!(a&&(a.science||a.admin));card.hidden=!ok;lock.hidden=ok;lock.classList.toggle("flash",locked&&!ok)}
   document.addEventListener("runners:auth",e=>apply(e.detail));
+  const hello=document.getElementById("hello");
+  function greet(a){const n=a&&a.email&&a.name;hello.hidden=!n;if(n){hello.textContent=`שלום, ${n}! 👋`}}
+  document.addEventListener("runners:auth",e=>greet(e.detail));if(window.runnersAuth)greet(window.runnersAuth);
   apply(window.runnersAuth||null);
 })();
 </script>
