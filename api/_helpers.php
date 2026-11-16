@@ -177,6 +177,40 @@ function json_out_with_progress(string $raw, array $extra = []): void {
     exit;
 }
 
+/** Plain-text mail from the site address. */
+function send_site_mail(string $to, string $subject, string $body): bool {
+    $c = config();
+    $from = $c['mail_from'] ?? 'noreply@runners2027.fyi';
+    $fromName = $c['mail_from_name'] ?? 'מדריכי ריצות ארוכות 2027א';
+    $headers = [
+        'From' => '=?UTF-8?B?' . base64_encode($fromName) . '?= <' . $from . '>',
+        'Reply-To' => $from,
+        'MIME-Version' => '1.0',
+        'Content-Type' => 'text/plain; charset=UTF-8',
+        'Content-Transfer-Encoding' => '8bit',
+    ];
+    return mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers, '-f' . $from);
+}
+
+/** Tells the admins that someone logged in to the site for the first time. Never blocks the login. */
+function notify_new_user(string $email, bool $preApproved, bool $science): void {
+    $admins = admin_emails();
+    if (in_array($email, $admins, true)) return;
+    $c = config();
+    $site = $c['site_url'] ?? 'https://runners2027.fyi';
+    $subject = 'משתמש חדש באתר: ' . $email;
+    $body = "שלום,\n\n"
+          . "משתמש חדש התחבר לאתר מדריכי ריצות ארוכות 2027א בפעם הראשונה:\n\n"
+          . "    $email\n\n"
+          . "זמן: " . (new DateTime())->format('d.m.Y H:i') . "\n"
+          . "גישה לקורס המדעי: " . ($science ? 'מאושרת' . ($preApproved ? ' (אישרת מראש)' : '') : 'אין') . "\n\n"
+          . "כדי לאשר לו גישה לקורס המדעי, או לראות את כל המשתמשים:\n"
+          . rtrim($site, '/') . "/admin/\n";
+    foreach ($admins as $a) {
+        try { send_site_mail($a, $subject, $body); } catch (Throwable $e) { error_log('[runners api] notify: ' . $e->getMessage()); }
+    }
+}
+
 function send_code_email(string $to, string $code): bool {
     $c = config();
     $from = $c['mail_from'] ?? 'noreply@runners2027.fyi';

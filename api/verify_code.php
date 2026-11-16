@@ -21,14 +21,17 @@ if (!password_verify($code, $row['code_hash'])) {
 // A code works once.
 $pdo->prepare('UPDATE login_codes SET expires_at = ? WHERE email = ?')->execute([now_sql('-1 second'), $email]);
 
-$q = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+$q = $pdo->prepare('SELECT id, last_login_at, science_access FROM users WHERE email = ?');
 $q->execute([$email]);
 $user = $q->fetch();
 if (!$user) {
     $pdo->prepare('INSERT INTO users (email, created_at) VALUES (?, ?)')->execute([$email, now_sql()]);
     $userId = (int)$pdo->lastInsertId();
+    notify_new_user($email, false, false);
 } else {
     $userId = (int)$user['id'];
+    // Pre-approved by the admin but logging in for the first time: also a new user.
+    if (empty($user['last_login_at'])) notify_new_user($email, true, (int)$user['science_access'] === 1);
 }
 $pdo->prepare('UPDATE users SET last_login_at = ? WHERE id = ?')->execute([now_sql(), $userId]);
 
