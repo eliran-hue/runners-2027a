@@ -52,7 +52,14 @@ td.num{color:var(--ink)}
 .vt .pp{font-size:12px;color:var(--muted);direction:ltr;text-align:right}
 .hb{display:inline-block;width:60px;height:6px;background:var(--line);border-radius:3px;margin-inline-end:8px;vertical-align:middle;overflow:hidden}
 .hb i{display:block;height:100%;background:var(--accent);border-radius:3px}
-.nm{display:block;direction:rtl;font-weight:700;color:var(--ink)}
+.nmc{white-space:nowrap;font-weight:700}
+.nmc .none{color:var(--muted);font-weight:400}
+.ed{border:0;background:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 6px;margin-inline-start:4px;border-radius:6px}
+.ed:hover,.ed:focus-visible{color:var(--accent);background:var(--accent-soft)}
+.nmf{display:flex;gap:4px;align-items:center}
+.nmf input{font:inherit;font-size:14.5px;width:130px;padding:4px 8px;border:1px solid var(--accent);border-radius:6px;background:var(--bg);color:var(--ink)}
+.nmf button{border:1px solid var(--line);background:var(--paper);border-radius:6px;cursor:pointer;padding:3px 8px;font-size:14px;color:var(--ink)}
+.nmf .ok{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;border:1px solid var(--line);color:var(--muted);direction:rtl}
 .sw{position:relative;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
 .sw input{position:absolute;opacity:0;width:1px;height:1px}
@@ -102,9 +109,9 @@ td.num{color:var(--ink)}
         <tbody id="vRows"></tbody>
       </table></div>
     </div>
-    <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי מייל" aria-label="חיפוש לפי מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
+    <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי שם או מייל" aria-label="חיפוש לפי שם או מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
     <div class="tbl"><table>
-      <thead><tr><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th><th><span class="sr">פעולות</span></th></tr></thead>
+      <thead><tr><th>שם</th><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th><th><span class="sr">פעולות</span></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
@@ -126,9 +133,21 @@ td.num{color:var(--ink)}
       users=j.users;$("gate").hidden=true;$("app").hidden=false;loadViews();render();
     }).catch(()=>gate("אין חיבור לשרת. נסה לרענן."));
   }
+  function editName(bt){
+    const em=bt.dataset.name,u=users.find(x=>x.email===em),td=bt.closest("td");
+    td.innerHTML=`<form class="nmf"><input type="text" maxlength="40" value="${esc(u.name||"")}" aria-label="שם עבור ${esc(em)}" placeholder="ללא שם"><button class="ok" type="submit" aria-label="שמירה">✓</button><button class="no" type="button" aria-label="ביטול">✕</button></form>`;
+    const f=td.querySelector("form"),inp=f.querySelector("input");inp.focus();inp.select();
+    f.querySelector(".no").onclick=render;
+    inp.onkeydown=e=>{if(e.key==="Escape")render()};
+    f.onsubmit=e=>{e.preventDefault();inp.disabled=true;
+      fetch("/api/admin_name.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:em,name:inp.value})})
+        .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);u.name=j.name;render()})
+        .catch(()=>{inp.disabled=false;alert("שמירת השם נכשלה. נסה שוב.")});
+    };
+  }
   function render(){
     const q=$("q").value.trim().toLowerCase();
-    const list=users.filter(u=>!q||u.email.includes(q));
+    const list=users.filter(u=>!q||u.email.includes(q)||(u.name||"").toLowerCase().includes(q));
     const week=Date.now()-7*864e5;
     $("sTotal").textContent=users.length;
     $("sSci").textContent=users.filter(u=>u.science).length;
@@ -137,13 +156,14 @@ td.num{color:var(--ink)}
     $("rows").innerHTML=list.length?list.map((u,i)=>{
       const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0);
       const pending=!u.last_login_at;
-      return `<tr><td class="em">${u.name?`<span class="nm">${esc(u.name)}</span>`:""}${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
+      return `<tr><td class="nmc"><span class="nmv">${u.name?esc(u.name):'<span class="none">—</span>'}</span><button class="ed" type="button" data-name="${esc(u.email)}" aria-label="עריכת השם של ${esc(u.email)}" title="עריכת שם">✎</button></td><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
         <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>
         <td class="num">${b} / ${BRANCH_TOTAL} פרקים${u.progress_at?` <button class="rst" type="button" data-reset="${esc(u.email)}">איפוס</button>`:""}</td>
         <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label></td>
         <td>${u.admin?"":`<button class="del" type="button" data-del="${esc(u.email)}" aria-label="מחיקת ${esc(u.email)}">מחיקה</button>`}</td></tr>`}).join("")
-      :`<tr><td colspan="6" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
+      :`<tr><td colspan="7" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
     $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,cb.checked,cb));
+    $("rows").querySelectorAll("[data-name]").forEach(bt=>bt.onclick=()=>editName(bt));
     $("rows").querySelectorAll("[data-del]").forEach(bt=>bt.onclick=()=>{
       const em=bt.dataset.del;
       if(!confirm(`למחוק את ${em} לצמיתות?\nיימחקו המשתמש, ההתקדמות השמורה, ההרשאה לקורס המדעי והחיבורים הפעילים שלו. אי אפשר לבטל את זה.`))return;
