@@ -205,7 +205,20 @@
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
 
+  /* Page-view counter: a random id for this browser (not tied to the email), plus the page path. */
+  function hit(){
+    try {
+      var vid = ls.getItem("rv.vid");
+      if (!/^[a-f0-9]{32}$/.test(vid || "")) {
+        var a = new Uint8Array(16); crypto.getRandomValues(a);
+        vid = Array.prototype.map.call(a, function(b){ return ("0" + b.toString(16)).slice(-2); }).join("");
+        origSet.call(ls, "rv.vid", vid);
+      }
+      api("hit.php", {path: location.pathname, v: vid}).catch(function(){});
+    } catch (e) {}
+  }
   function mount(){
+    hit();
     var host = document.getElementById("acct") || document.querySelector("nav.sb");
     if (host) { host.appendChild(adminLink); host.appendChild(btn); }
     paint();

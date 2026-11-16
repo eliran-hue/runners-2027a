@@ -4,7 +4,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="/site.css?v=20261115c">
+<link rel="stylesheet" href="/site.css?v=20261116a">
 <style>
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:18px}
 .panel h2{font-size:19px;margin:0 0 4px}
@@ -36,6 +36,22 @@ td.num{color:var(--ink)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .rst{font:600 12px var(--body);margin-inline-start:6px;padding:1px 8px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
 .rst:hover{color:#c0392b;border-color:#c0392b}
+.vhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.rng{font-size:14.5px;color:var(--muted);white-space:nowrap}.rng select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;margin-inline-start:4px}
+.vstats{margin-top:12px}.vh3{font-size:15.5px;margin:18px 0 6px;color:var(--muted)}
+.days{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;height:150px;direction:ltr;border-bottom:1px solid var(--line);padding-bottom:0}
+.day{position:relative;display:flex;flex-direction:column;align-items:stretch;outline:none}
+.day .col{flex:1;display:flex;align-items:flex-end;justify-content:center}
+.day .col i{display:block;width:min(70%,22px);background:var(--accent);border-radius:4px 4px 0 0}
+.day .dl{font-size:11px;color:var(--muted);text-align:center;padding-top:4px;margin-bottom:-20px}
+.day .tip{display:none;position:absolute;bottom:calc(100% - 20px);left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--ink);color:var(--paper);font-size:12.5px;padding:4px 8px;border-radius:6px;direction:rtl;z-index:2;pointer-events:none}
+.day:hover .tip,.day:focus .tip{display:block}.day:hover .col i,.day:focus .col i{filter:brightness(1.15)}
+.day:nth-child(-n+3) .tip{left:0;transform:none}.day:nth-last-child(-n+3) .tip{left:auto;right:0;transform:none}
+#vDaily{margin-bottom:26px}
+@media (max-width:600px){.day:nth-child(odd) .dl{visibility:hidden}}
+.vt .pp{font-size:12px;color:var(--muted);direction:ltr;text-align:right}
+.hb{display:inline-block;width:60px;height:6px;background:var(--line);border-radius:3px;margin-inline-end:8px;vertical-align:middle;overflow:hidden}
+.hb i{display:block;height:100%;background:var(--accent);border-radius:3px}
 .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;border:1px solid var(--line);color:var(--muted);direction:rtl}
 .sw{position:relative;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
 .sw input{position:absolute;opacity:0;width:1px;height:1px}
@@ -47,7 +63,7 @@ td.num{color:var(--ink)}
 .sw em{font-style:normal;color:var(--muted);min-width:4.5em}
 .empty{padding:22px;text-align:center;color:var(--muted)}
 </style>
-<script src="/theme.js?v=20261115c"></script><script src="/sync.js?v=20261115c" defer></script></head><body>
+<script src="/theme.js?v=20261116a"></script><script src="/sync.js?v=20261116a" defer></script></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">האתר למדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -67,6 +83,23 @@ td.num{color:var(--ink)}
       <p>מזינים כתובת מייל של משתתף. אם הוא עוד לא נרשם, הגישה תחכה לו, וכשיתחבר עם המייל הזה הקורס המדעי ייפתח לו מיד.</p>
       <form class="add" id="addForm" novalidate><input id="addEmail" type="email" placeholder="name@example.com" aria-label="כתובת מייל לאישור" autocomplete="off"><button class="btn" type="submit">אישור גישה</button></form>
       <div class="msg" id="addMsg" role="status"></div>
+    </div>
+    <div class="panel" id="views">
+      <div class="vhead"><div><h2>מונה כניסות</h2><p>כמה כניסות היו לכל עמוד. לא נספרות כניסות שלך, ורענון של אותו עמוד תוך 5 דקות נספר פעם אחת.</p></div>
+        <label class="rng">טווח: <select id="vDays"><option value="7">7 ימים</option><option value="30" selected>30 ימים</option><option value="90">90 ימים</option><option value="0">מההתחלה</option></select></label></div>
+      <div class="stats vstats">
+        <div class="stat"><b id="vViews">0</b><span>כניסות</span></div>
+        <div class="stat"><b id="vVisitors">0</b><span>מבקרים שונים</span></div>
+        <div class="stat"><b id="vUsers">0</b><span>משתמשים רשומים שנכנסו</span></div>
+        <div class="stat"><b id="vAnon">0</b><span>כניסות של אנונימיים</span></div>
+      </div>
+      <h3 class="vh3">כניסות ב-14 הימים האחרונים</h3>
+      <div class="days" id="vDaily" role="img"></div>
+      <h3 class="vh3">לפי עמוד</h3>
+      <div class="tbl"><table class="vt">
+        <thead><tr><th>עמוד</th><th>כניסות</th><th>מבקרים שונים</th><th>רשומים</th><th>אנונימיים</th><th>כניסה אחרונה</th></tr></thead>
+        <tbody id="vRows"></tbody>
+      </table></div>
     </div>
     <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי מייל" aria-label="חיפוש לפי מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
     <div class="tbl"><table>
@@ -89,7 +122,7 @@ td.num{color:var(--ink)}
       if(st===401){gate('<b>צריך להתחבר.</b> לוחצים על "התחברות / שמירת התקדמות" למעלה ומתחברים עם כתובת המייל של המנהל.');return}
       if(st===403){gate('<b>אין לך הרשאה לעמוד הזה.</b> רק מנהל האתר יכול לצפות ברשימת המשתמשים.');return}
       if(!j.ok){gate("משהו השתבש בטעינת הרשימה. נסה לרענן.");return}
-      users=j.users;$("gate").hidden=true;$("app").hidden=false;render();
+      users=j.users;$("gate").hidden=true;$("app").hidden=false;loadViews();render();
     }).catch(()=>gate("אין חיבור לשרת. נסה לרענן."));
   }
   function render(){
@@ -138,6 +171,26 @@ td.num{color:var(--ink)}
       }).catch(e=>{if(cb){cb.checked=!on;cb.disabled=false}throw e});
   }
   $("q").oninput=render;
+  /* ---------- מונה כניסות ---------- */
+  const PAGE_NAMES={"/":"דף הבית","/branch/":"קורס ענפי","/branch/tools.html":"מחשבונים וכלי עזר","/branch/anatomy.html":"האנטומיה של הריצה","/branch/physiology.html":"הפיזיולוגיה של הריצה","/branch/training.html":"תורת האימון","/science/":"קורס מדעי","/science/anatomy.html":"קורס מדעי · אנטומיה","/admin/":"ניהול"};
+  const nf=n=>Number(n||0).toLocaleString("he-IL");
+  function loadViews(){
+    fetch("/api/admin_stats.php?days="+$("vDays").value,{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{
+      if(!j.ok)return;
+      $("vViews").textContent=nf(j.total.views);$("vVisitors").textContent=nf(j.total.visitors);
+      $("vUsers").textContent=nf(j.total.users);$("vAnon").textContent=nf(j.total.anon_views);
+      const byDay=Object.fromEntries(j.daily.map(d=>[d.day,d]));const days=[];
+      for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*864e5);const k=d.toLocaleDateString("sv-SE");days.push({k,lab:d.toLocaleDateString("he-IL",{day:"numeric",month:"numeric"}),v:byDay[k]?byDay[k].views:0,u:byDay[k]?byDay[k].visitors:0})}
+      const mx=Math.max(1,...days.map(d=>d.v));
+      $("vDaily").setAttribute("aria-label","כניסות ביום, 14 הימים האחרונים: "+days.map(d=>d.lab+" "+d.v).join(", "));
+      $("vDaily").innerHTML=days.map(d=>`<div class="day" tabindex="0"><div class="col"><i style="height:${d.v?Math.max(3,d.v/mx*100):0}%"></i></div><span class="dl">${d.lab}</span><span class="tip"><bdi dir="ltr">${d.lab}</bdi> · <b>${nf(d.v)}</b> כניסות · ${nf(d.u)} מבקרים</span></div>`).join("");
+      const pm=Math.max(1,...j.pages.map(p=>p.views));
+      $("vRows").innerHTML=j.pages.length?j.pages.map(p=>`<tr><td><b>${esc(PAGE_NAMES[p.path]||p.path)}</b><div class="pp">${esc(p.path)}</div></td>
+        <td class="num"><span class="hb"><i style="width:${p.views/pm*100}%"></i></span>${nf(p.views)}</td><td class="num">${nf(p.visitors)}</td><td class="num">${nf(p.user_views)}${p.users?` <small>(${p.users===1?"משתמש אחד":nf(p.users)+" משתמשים"})</small>`:""}</td><td class="num">${nf(p.anon_views)}</td><td class="dt">${fmt(p.last_at)}</td></tr>`).join("")
+        :`<tr><td colspan="6" class="empty">עוד אין כניסות בטווח הזה.</td></tr>`;
+    }).catch(()=>{});
+  }
+  $("vDays").onchange=loadViews;
   $("addForm").onsubmit=e=>{
     e.preventDefault();
     const em=$("addEmail").value.trim().toLowerCase(),m=$("addMsg");

@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+/* All dates are stored and shown in Israel time (page-view counter buckets by local day). */
+date_default_timezone_set('Asia/Jerusalem');
+
 set_exception_handler(function (Throwable $e) {
     error_log('[runners api] ' . get_class($e) . ': ' . $e->getMessage());
     json_error('server_error', 500);
@@ -77,6 +80,30 @@ function ensure_schema(): void {
         $pdo->query('SELECT science_access FROM users LIMIT 1');
     } catch (PDOException $e) {
         $pdo->exec('ALTER TABLE users ADD COLUMN science_access INT NOT NULL DEFAULT 0');
+    }
+    ensure_views_table($pdo);
+}
+
+/** Page-view counter table (added after the first release). */
+function ensure_views_table(PDO $pdo): void {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    if ($pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+        $pdo->exec('CREATE TABLE IF NOT EXISTS page_views (id INTEGER PRIMARY KEY AUTOINCREMENT, path VARCHAR(100) NOT NULL, visitor CHAR(32) NOT NULL, user_id INT NULL, created_at DATETIME NOT NULL)');
+        $pdo->exec('CREATE INDEX IF NOT EXISTS pv_time ON page_views (created_at)');
+        $pdo->exec('CREATE INDEX IF NOT EXISTS pv_dedupe ON page_views (visitor, path, created_at)');
+    } else {
+        $pdo->exec('CREATE TABLE IF NOT EXISTS page_views (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            path VARCHAR(100) NOT NULL,
+            visitor CHAR(32) NOT NULL,
+            user_id INT NULL,
+            created_at DATETIME NOT NULL,
+            INDEX pv_time (created_at),
+            INDEX pv_dedupe (visitor, path, created_at),
+            INDEX pv_user (user_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     }
 }
 

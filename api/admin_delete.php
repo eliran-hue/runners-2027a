@@ -17,6 +17,8 @@ $pdo->beginTransaction();
 if ($u) {
     $pdo->prepare('DELETE FROM progress WHERE user_id = ?')->execute([$u['id']]);
     $pdo->prepare('DELETE FROM sessions WHERE user_id = ?')->execute([$u['id']]);
+    ensure_views_table($pdo);
+    $pdo->prepare('DELETE FROM page_views WHERE user_id = ?')->execute([$u['id']]);
     $pdo->prepare('DELETE FROM users WHERE id = ?')->execute([$u['id']]);
 }
 $pdo->prepare('DELETE FROM login_codes WHERE email = ?')->execute([$email]);

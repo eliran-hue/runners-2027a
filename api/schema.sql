@@ -33,3 +33,16 @@ CREATE TABLE IF NOT EXISTS progress (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Page-view counter (also created automatically by ensure_views_table()).
+-- No IP or browser details are stored: visitor is a random id kept in the visitor's browser.
+CREATE TABLE IF NOT EXISTS page_views (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    path VARCHAR(100) NOT NULL,
+    visitor CHAR(32) NOT NULL,
+    user_id INT NULL,
+    created_at DATETIME NOT NULL,
+    INDEX pv_time (created_at),
+    INDEX pv_dedupe (visitor, path, created_at),
+    INDEX pv_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
