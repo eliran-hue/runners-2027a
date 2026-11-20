@@ -213,7 +213,7 @@ function notify_new_user(string $email, bool $preApproved, bool $science): void 
     $site = $c['site_url'] ?? 'https://runners2027.fyi';
     $subject = 'משתמש חדש באתר: ' . $email;
     $body = "שלום,\n\n"
-          . "משתמש חדש התחבר לאתר מדריכי ריצות ארוכות 2027א בפעם הראשונה:\n\n"
+          . "משתמש חדש התחבר לאתר של קורס מדריכי ריצות ארוכות 2027א בפעם הראשונה:\n\n"
           . "    $email\n\n"
           . "זמן: " . (new DateTime())->format('d.m.Y H:i') . "\n"
           . "גישה לקורס המדעי: " . ($science ? 'מאושרת' . ($preApproved ? ' (אישרת מראש)' : '') : 'אין') . "\n\n"
@@ -230,7 +230,7 @@ function send_code_email(string $to, string $code): bool {
     $fromName = $c['mail_from_name'] ?? 'מדריכי ריצות ארוכות 2027א';
     $subject = 'קוד הכניסה שלך: ' . $code;
     $body = "שלום,\n\n"
-          . "קוד הכניסה שלך לאתר מדריכי ריצות ארוכות 2027א הוא:\n\n"
+          . "קוד הכניסה שלך לאתר של קורס מדריכי ריצות ארוכות 2027א הוא:\n\n"
           . "    $code\n\n"
           . "הקוד בתוקף ל-" . CODE_MINUTES . " דקות.\n"
           . "אם לא ביקשת את הקוד, אפשר להתעלם מהמייל הזה.\n";
