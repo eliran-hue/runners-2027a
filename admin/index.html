@@ -4,7 +4,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="/site.css?v=20261116b">
+<link rel="stylesheet" href="/site.css?v=20261121a">
 <style>
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:18px}
 .panel h2{font-size:19px;margin:0 0 4px}
@@ -72,7 +72,7 @@ td.num{color:var(--ink)}
 .sw em{font-style:normal;color:var(--muted);min-width:4.5em}
 .empty{padding:22px;text-align:center;color:var(--muted)}
 </style>
-<script src="/theme.js?v=20261116b"></script><script src="/sync.js?v=20261116b" defer></script></head><body>
+<script src="/theme.js?v=20261121a"></script><script src="/sync.js?v=20261121a" defer></script></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -121,7 +121,7 @@ td.num{color:var(--ink)}
 <script>
 (function(){
   const $=id=>document.getElementById(id);
-  const BRANCH_TOTAL=20; /* anat 5 + phys 7 + train 8 */
+  const BRANCH_TOTAL=27; /* anat 5 + phys 7 + train 10 + meth 5 */
   /* קורס מדעי: נושא -> [מפתח ההתקדמות, מספר פרקים]. נושא חדש = שורה חדשה כאן. */
   const SCI_TOPICS=[["אנטומיה","sci.anat",8]];
   const SCI_TOTAL=SCI_TOPICS.reduce((a,t)=>a+t[2],0);
@@ -158,7 +158,7 @@ td.num{color:var(--ink)}
     $("sWeek").textContent=users.filter(u=>u.last_login_at&&new Date(u.last_login_at.replace(" ","T"))>week).length;
     $("shown").textContent=q?`מוצגים ${list.length} מתוך ${users.length}`:"";
     $("rows").innerHTML=list.length?list.map((u,i)=>{
-      const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0);
+      const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0)+(u.done.meth||0);
       const pending=!u.last_login_at;
       const sd=SCI_TOPICS.reduce((a,t)=>a+Math.min(u.done[t[1]]||0,t[2]),0);
       const sTitle=SCI_TOPICS.map(t=>`${t[0]}: ${u.done[t[1]]||0} מתוך ${t[2]}`).join(" · ");
@@ -199,7 +199,7 @@ td.num{color:var(--ink)}
   }
   $("q").oninput=render;
   /* ---------- מונה כניסות ---------- */
-  const PAGE_NAMES={"/":"דף הבית","/branch/":"קורס ענפי","/branch/tools.html":"מחשבונים וכלי עזר","/branch/anatomy.html":"האנטומיה של הריצה","/branch/physiology.html":"הפיזיולוגיה של הריצה","/branch/training.html":"תורת האימון","/science/":"קורס מדעי","/science/anatomy.html":"קורס מדעי · אנטומיה","/admin/":"ניהול"};
+  const PAGE_NAMES={"/":"דף הבית","/branch/":"קורס ענפי","/branch/tools.html":"מחשבונים וכלי עזר","/branch/anatomy.html":"האנטומיה של הריצה","/branch/physiology.html":"הפיזיולוגיה של הריצה","/branch/training.html":"תורת האימון","/branch/methodology.html":"מתודיקה באימון","/science/":"קורס מדעי","/science/anatomy.html":"קורס מדעי · אנטומיה","/admin/":"ניהול"};
   const nf=n=>Number(n||0).toLocaleString("he-IL");
   function loadViews(){
     fetch("/api/admin_stats.php?days="+$("vDays").value,{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{

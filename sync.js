@@ -1,9 +1,9 @@
-/* שמירת התקדמות בשרת: כניסה עם קוד במייל, וסנכרון של מפתחות anat.*, phys.*, train.* ו-sci.* מ-localStorage.
+/* שמירת התקדמות בשרת: כניסה עם קוד במייל, וסנכרון של מפתחות anat.*, phys.*, train.*, meth.* ו-sci.* מ-localStorage.
    אם ה-API לא זמין (למשל כשפותחים את הקובץ מהמחשב), הכפתור פשוט לא מופיע והאתר עובד כרגיל. */
 (function(){
   "use strict";
   var API = "/api/";
-  var PREFIXES = ["anat.", "phys.", "train.", "sci."];
+  var PREFIXES = ["anat.", "phys.", "train.", "meth.", "sci."];
   var state = {email:null, name:null, science:false, admin:false, ready:false, saving:null};
   var ls; try { ls = window.localStorage; ls.getItem("x"); } catch(e) { return; }
 

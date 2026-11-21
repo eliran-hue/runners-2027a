@@ -4,8 +4,8 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="/site.css?v=20261116b">
-<script src="/theme.js?v=20261116b"></script><script src="/sync.js?v=20261116b" defer></script><style>
+<link rel="stylesheet" href="/site.css?v=20261121a">
+<script src="/theme.js?v=20261121a"></script><script src="/sync.js?v=20261121a" defer></script><style>
 .hello{font:400 26px var(--display);color:var(--accent);margin:6px 0 4px}
 .hello[hidden]{display:none}
 .lockcard{display:flex;flex-direction:column;gap:10px;background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:14px;padding:20px 22px}
@@ -29,8 +29,8 @@
 <main class="wrap">
   <div class="grid">
     <a class="topic" href="/branch/" style="--c:var(--d1)">
-      <div class="num">קורס 1</div><h2>קורס ענפי</h2><p>הקורס ללימודי מדריכי ריצות ארוכות.</p><ul><li>מחשבונים וכלי עזר</li><li>האנטומיה של הריצה</li><li>הפיזיולוגיה של הריצה</li><li>תורת האימון</li></ul>
-      <div class="prog" data-keys="anat:5,phys:7,train:8"><div class="bar"><i></i></div><div class="t"><span class="st">20 פרקים</span><span class="go">לקורס ←</span></div></div>
+      <div class="num">קורס 1</div><h2>קורס ענפי</h2><p>הקורס ללימודי מדריכי ריצות ארוכות.</p><ul><li>מחשבונים וכלי עזר</li><li>האנטומיה של הריצה</li><li>הפיזיולוגיה של הריצה</li><li>תורת האימון</li><li>מתודיקה באימון</li></ul>
+      <div class="prog" data-keys="anat:5,phys:7,train:10,meth:5"><div class="bar"><i></i></div><div class="t"><span class="st">27 פרקים</span><span class="go">לקורס ←</span></div></div>
     </a>
 
     <a class="topic" href="/science/" id="sciCard" hidden style="--c:var(--d2)">
@@ -53,7 +53,7 @@
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
 <script>
-/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7,train:8"). */
+/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7,train:10,meth:5"). */
 document.querySelectorAll(".prog").forEach(p=>{
   let n=0,t=0;
   p.dataset.keys.split(",").forEach(kv=>{const [k,c]=kv.split(":");t+=+c;
