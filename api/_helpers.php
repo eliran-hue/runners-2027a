@@ -164,11 +164,39 @@ function set_session_cookie(string $token, int $days): void {
 }
 
 /** Returns the stored progress as a raw JSON string ("{}" if none). */
+/* The science anatomy page was split into unit pages (sci.anat1 / sci.anat3).
+   Moves completed chapters saved under the old key to the unit they belong to. Returns null if nothing changed. */
+const SCI_ANAT_UNITS = ['sci.anat1' => ['cell', 'tissues', 'bone'], 'sci.anat3' => ['skeleton', 'spine', 'jointtypes', 'limbjoints', 'planes']];
+function migrate_progress(string $raw): ?string {
+    if (strpos($raw, '"sci.anat.') === false) return null;
+    $data = json_decode($raw, true);
+    if (!is_array($data) || !is_array($data['keys'] ?? null)) return null;
+    $keys = $data['keys'];
+    $old = json_decode((string)($keys['sci.anat.done'] ?? '{}'), true);
+    if (!is_array($old)) $old = [];
+    foreach (SCI_ANAT_UNITS as $k => $ids) {
+        $cur = json_decode((string)($keys[$k . '.done'] ?? '{}'), true);
+        if (!is_array($cur)) $cur = [];
+        foreach ($ids as $id) if (!empty($old[$id])) $cur[$id] = true;
+        if ($cur) $keys[$k . '.done'] = json_encode($cur, JSON_UNESCAPED_UNICODE);
+    }
+    unset($keys['sci.anat.done'], $keys['sci.anat.cur']);
+    $data['keys'] = $keys;
+    return json_encode($data, JSON_UNESCAPED_UNICODE);
+}
+
 function load_progress(int $userId): string {
     $stmt = get_pdo()->prepare('SELECT data FROM progress WHERE user_id = ?');
     $stmt->execute([$userId]);
     $row = $stmt->fetch();
-    return $row ? (string)$row['data'] : '{}';
+    if (!$row) return '{}';
+    $raw = (string)$row['data'];
+    $new = migrate_progress($raw);
+    if ($new !== null) {
+        get_pdo()->prepare('UPDATE progress SET data = ? WHERE user_id = ?')->execute([$new, $userId]);
+        return $new;
+    }
+    return $raw;
 }
 
 /** Echoes {"ok":true, ...$extra, "progress": <raw json>} without a decode/encode round trip. */

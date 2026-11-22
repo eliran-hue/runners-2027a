@@ -38,3 +38,21 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
 })();
+
+/* Runs in <head> on every page, before the page reads its progress. */
+/* Science anatomy was split into unit pages: move old local progress (sci.anat.*) to sci.anat1 / sci.anat3. */
+(function migrateLocal(){
+  try {
+    var old = localStorage.getItem("sci.anat.done");
+    if (old != null) {
+      var o = JSON.parse(old) || {}, U = {"sci.anat1":["cell","tissues","bone"], "sci.anat3":["skeleton","spine","jointtypes","limbjoints","planes"]};
+      Object.keys(U).forEach(function(k){
+        var cur = JSON.parse(localStorage.getItem(k + ".done") || "{}") || {}, any = false;
+        U[k].forEach(function(id){ if (o[id]) { cur[id] = true; any = true; } });
+        if (any || localStorage.getItem(k + ".done") != null) localStorage.setItem(k + ".done", JSON.stringify(cur));
+      });
+      localStorage.removeItem("sci.anat.done");
+    }
+    localStorage.removeItem("sci.anat.cur");
+  } catch (e) {}
+})();

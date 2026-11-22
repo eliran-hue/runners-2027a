@@ -11,7 +11,13 @@ $rows = get_pdo()->query('SELECT u.id, u.email, u.display_name, u.created_at, u.
 $out = [];
 foreach ($rows as $r) {
     $done = [];
-    $keys = json_decode((string)($r['data'] ?? '{}'), true)['keys'] ?? [];
+    $raw = (string)($r['data'] ?? '{}');
+    $new = migrate_progress($raw);
+    if ($new !== null) {
+        get_pdo()->prepare('UPDATE progress SET data = ? WHERE user_id = ?')->execute([$new, $r['id']]);
+        $raw = $new;
+    }
+    $keys = json_decode($raw, true)['keys'] ?? [];
     foreach ($keys as $k => $v) {
         if (substr($k, -5) !== '.done') continue;
         $d = json_decode((string)$v, true);

@@ -6,7 +6,7 @@ require __DIR__ . '/_helpers.php';
    הקבצים מוגשים רק למשתמש מחובר שאושר לקורס המדעי, או למנהל. */
 $u = current_user();
 $path = (string)($_GET['f'] ?? '');
-$isPage = $path === '' || substr($path, -1) === '/' || preg_match('/\.html?$/i', $path);
+$isPage = $path === '' || substr($path, -1) === '/' || preg_match('/\.html?$/i', $path) || !preg_match('/\.[a-z0-9]+$/i', $path);
 
 if (!has_science($u)) {
     header('Cache-Control: private, no-store');
@@ -15,6 +15,10 @@ if (!has_science($u)) {
     exit;
 }
 
+if ($path !== '' && substr($path, -1) !== '/' && is_dir(__DIR__ . '/../science/' . $path) && !preg_match('/(^|\/)\./', $path)) {
+    header('Location: /science/' . $path . '/', true, 301);
+    exit;
+}
 if ($path === '' || substr($path, -1) === '/') $path .= 'index.html';
 $base = realpath(__DIR__ . '/../science');
 $file = realpath($base . '/' . $path);

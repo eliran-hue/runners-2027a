@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>אנטומיה · קורס מדעי · קורס מדריכי ריצות ארוכות</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/site.css?v=20261123a">
+<script src="/theme.js?v=20261123a"></script><script src="/sync.js?v=20261123a" defer></script></head><body>
+<header class="wrap">
+  <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">אנטומיה</span></nav>
+  <div class="eyebrow">קורס מדעי · נושא 1</div>
+  <h1>אנטומיה</h1>
+  <p class="lead">מבנה הגוף, לפי יחידות הלימוד. כל יחידה בעמוד משלה, עם בוחן בסוף כל פרק.</p>
+</header>
+<main class="wrap">
+  <div class="grid">
+    <a class="topic" href="/science/anatomy/unit1.html" style="--c:var(--d1)">
+      <div class="num">יחידה 1</div><h2>מבנה מערכות הגוף</h2><p>מהאטום ועד האדם: התא והרקמות שמרכיבות את הגוף.</p><ul><li>מבוא והתא</li><li>רקמות: אפיתל, רקמת חיבור, רצועה וגיד</li><li>עצם, סחוס ומפרק סינוביאלי</li></ul>
+      <div class="prog" data-keys="sci.anat1:3"><div class="bar"><i></i></div><div class="t"><span class="st">3 פרקים</span><span class="go">ליחידה ←</span></div></div>
+    </a>
+
+    <a class="topic" href="/science/anatomy/unit3.html" style="--c:var(--d2)">
+      <div class="num">יחידה 3</div><h2>מערכת שלד-שריר ומפרקים</h2><p>השלד, המפרקים והתנועות שהם מאפשרים.</p><ul><li>מבנה השלד</li><li>עמוד השדרה, הדיסק והצלעות</li><li>6 סוגי מפרקים ומפרקי הגפיים</li><li>מישורים ותנועות, עם כרטיסיות</li></ul>
+      <div class="prog" data-keys="sci.anat3:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">ליחידה ←</span></div></div>
+    </a>
+
+  </div>
+</main>
+<footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
+<script>
+/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7"). */
+document.querySelectorAll(".prog").forEach(p=>{
+  let n=0,t=0;
+  p.dataset.keys.split(",").forEach(kv=>{const [k,c]=kv.split(":");t+=+c;
+    try{const d=JSON.parse(localStorage.getItem(k+".done")||"{}")||{};n+=Math.min(+c,Object.values(d).filter(Boolean).length)}catch(e){}});
+  p.querySelector(".bar i").style.width=(t?Math.min(100,n/t*100):0)+"%";
+  if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;const g=p.querySelector(".go");if(g)g.textContent=n>=t?"לחזרה ←":"להמשיך ←"}
+});
+
+</script>
+</body></html>
