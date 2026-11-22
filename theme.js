@@ -32,7 +32,7 @@
       paint();
     };
     if (mq && mq.addEventListener) mq.addEventListener("change", function(){ if (!saved()) paint(); });
-    var host = document.getElementById("acct") || document.querySelector("nav.sb");
+    var host = document.getElementById("topActions") || document.getElementById("acct") || document.querySelector("nav.sb");
     if (host) host.insertBefore(btn, host.querySelector(".acct-btn"));
     paint();
   }

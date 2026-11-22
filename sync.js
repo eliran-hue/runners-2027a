@@ -242,7 +242,7 @@
   }
   function mount(){
     hit();
-    var host = document.getElementById("acct") || document.querySelector("nav.sb");
+    var host = document.getElementById("topActions") || document.getElementById("acct") || document.querySelector("nav.sb");
     if (host) { host.appendChild(adminLink); host.appendChild(btn); }
     paint();
     api("me.php").then(function(r){
