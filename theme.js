@@ -56,3 +56,37 @@
     localStorage.removeItem("sci.anat.cur");
   } catch (e) {}
 })();
+
+/* "חזרה למעלה" at the end of every page/chapter; shown only when the page is long enough to need it. */
+(function backToTop(){
+  function mount(){
+    if (document.getElementById("toTop")) return;
+    var st = document.createElement("style");
+    st.textContent = ".totop-wrap{display:flex;justify-content:center;margin:12px auto 8px;padding:0 16px}"
+      + ".totop-wrap[hidden]{display:none}"
+      + ".totop{display:inline-flex;align-items:center;gap:8px;font:600 15px inherit;font-family:inherit;color:var(--accent,#1F5FD6);background:var(--paper,#fff);"
+      + "border:1px solid var(--line,#D3DCE3);border-radius:999px;padding:10px 20px;cursor:pointer;min-height:44px}"
+      + ".totop:hover{border-color:var(--accent,#1F5FD6)}"
+      + ".totop:focus-visible{outline:3px solid var(--accent,#1F5FD6);outline-offset:2px}"
+      + ".totop .ar{font-size:18px;line-height:1}"
+      + "@media print{.totop-wrap{display:none}}";
+    document.head.appendChild(st);
+    var wrap = document.createElement("div");
+    wrap.className = "totop-wrap"; wrap.hidden = true;
+    wrap.innerHTML = '<button type="button" class="totop" id="toTop"><span class="ar" aria-hidden="true">↑</span>חזרה למעלה</button>';
+    var foot = document.querySelector("body > footer, footer.wrap");
+    if (foot && foot.parentNode) foot.parentNode.insertBefore(wrap, foot); else document.body.appendChild(wrap);
+    wrap.querySelector("button").onclick = function(){
+      var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({top: 0, behavior: reduce ? "auto" : "smooth"});
+      var h = document.querySelector("h1");
+      if (h) { if (!h.hasAttribute("tabindex")) h.setAttribute("tabindex", "-1"); h.focus({preventScroll: true}); }
+    };
+    function check(){ wrap.hidden = document.documentElement.scrollHeight < window.innerHeight * 1.6; }
+    check();
+    window.addEventListener("resize", check);
+    if (window.ResizeObserver) new ResizeObserver(check).observe(document.body);
+    else setInterval(check, 1000);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
+})();
