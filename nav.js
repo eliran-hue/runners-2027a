@@ -17,13 +17,9 @@
     [null, "קניזיולוגיה"]
   ];
 
-  /* Logo: a winding long-distance route from a start point to a finish flag. */
+  /* Logo: a man and a woman running together (also /favicon.svg). */
   var LOGO = '<svg class="tb-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">'
-    + '<rect width="40" height="40" rx="11" class="tb-mark-bg"/>'
-    + '<path d="M9.5 31 C 17 31, 12.5 21, 20 20.5 S 23.5 12, 28.5 12" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>'
-    + '<circle cx="9.5" cy="31" r="3.3" fill="#fff"/>'
-    + '<path d="M28.5 15.5 V 5.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'
-    + '<path d="M29.3 5.5 h6.2 l-1.8 2.3 1.8 2.3 h-6.2z" fill="#fff"/>'
+    + '<rect width="40" height="40" rx="11" class="tb-mark-bg"/><path d="M27.60 13.20 L25.80 20.80 M27.00 15.20 L30.00 17.50 L32.20 15.00 M27.00 15.20 L24.00 17.00 L23.20 20.00 M25.80 20.80 L29.80 24.00 L29.00 29.00 M25.80 20.80 L24.00 25.00 L20.00 26.20" fill="none" stroke="#fff" stroke-width="2.30" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28.50" cy="10.20" r="2.55" fill="#fff"/><path d="M13.40 15.78 L11.82 22.47 M12.87 17.54 L15.51 19.57 L17.45 17.37 M12.87 17.54 L10.23 19.13 L9.53 21.77 M11.82 22.47 L15.34 25.29 L14.63 29.69 M11.82 22.47 L10.23 26.17 L6.71 27.22" fill="none" stroke="#fff" stroke-width="2.02" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14.19" cy="13.14" r="2.24" fill="#fff"/><path d="M12.52 11.91 Q9.70 11.74 9.18 14.90" fill="none" stroke="#fff" stroke-width="1.67" stroke-linecap="round"/>'
     + '</svg>';
 
   var css = ""
