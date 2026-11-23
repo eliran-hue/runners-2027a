@@ -207,17 +207,23 @@
 
   /* ---------- reading names aloud (Web Speech API) ---------- */
   var canSpeak = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+  /* Voices load asynchronously (notably on iPhone): keep a cached list and refresh it when it changes. */
+  var VOICES = [];
+  function loadVoices(){ try { var v = speechSynthesis.getVoices(); if (v && v.length) VOICES = v; } catch (e) {} }
   function voice(prefixes){
-    var vs = speechSynthesis.getVoices() || [];
-    for (var i = 0; i < prefixes.length; i++) for (var j = 0; j < vs.length; j++) if (vs[j].lang && vs[j].lang.toLowerCase().indexOf(prefixes[i]) === 0) return vs[j];
+    if (!VOICES.length) loadVoices();
+    for (var i = 0; i < prefixes.length; i++) for (var j = 0; j < VOICES.length; j++) {
+      var l = (VOICES[j].lang || "").toLowerCase().replace("_", "-");
+      if (l.indexOf(prefixes[i]) === 0) return VOICES[j];
+    }
     return null;
   }
-  if (canSpeak) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = function(){}; } catch (e) {} }
+  if (canSpeak) { loadVoices(); try { speechSynthesis.addEventListener("voiceschanged", loadVoices); } catch (e) { speechSynthesis.onvoiceschanged = loadVoices; } }
   function say(id, btn){
     if (!canSpeak) return;
-    var b = B[id]; speechSynthesis.cancel(); console.info("[skeleton] read aloud v12");
+    var b = B[id]; speechSynthesis.cancel(); console.info("[skeleton] read aloud v13");
     var term = (b.pr.match(/\(([A-Za-z][^)]*)\)/) || [])[1] || b.en.replace(/ \(.*\)$/, ""), u1 = new SpeechSynthesisUtterance(term.replace(/[\u0590-\u05FF()]/g, "").trim() || b.la),  /* never read Hebrew */ v1 = voice(["en-us", "en-gb", "en"]);
-    if (v1) { u1.voice = v1; u1.lang = v1.lang; } else u1.lang = "en-US";
+    u1.lang = v1 ? v1.lang : "en-US"; if (v1) { try { u1.voice = v1; } catch (e) {} }
     u1.rate = .85;
     var q = [u1];
     if (btn) { btn.classList.add("on"); q[q.length - 1].onend = q[q.length - 1].onerror = function(){ btn.classList.remove("on"); }; }
