@@ -219,8 +219,7 @@
     var u1 = new SpeechSynthesisUtterance(b.la), v1 = voice(["la", "it", "es", "en"]);
     if (v1) { u1.voice = v1; u1.lang = v1.lang; } else u1.lang = "it-IT";
     u1.rate = .85;
-    var q = [u1], vh = voice(["he", "iw"]);
-    if (vh) { var u2 = new SpeechSynthesisUtterance(b.he); u2.voice = vh; u2.lang = vh.lang; u2.rate = .95; q.push(u2); }
+    var q = [u1];
     if (btn) { btn.classList.add("on"); q[q.length - 1].onend = q[q.length - 1].onerror = function(){ btn.classList.remove("on"); }; }
     q.forEach(function(u){ speechSynthesis.speak(u); });
   }
