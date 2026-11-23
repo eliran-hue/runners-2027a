@@ -5,7 +5,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123f" defer></script><script src="/sync.js?v=20261123f" defer></script></head><body>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123f" defer></script><script src="/sync.js?v=20261123f" defer></script><style>
+.sched{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.sched h2{margin:0 0 4px;font:400 24px var(--display)}
+.sched-lead{margin:0 0 12px;color:var(--muted)}
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tl li{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.tl-date{display:flex;flex-direction:column;font-weight:700;font-variant-numeric:tabular-nums;min-width:92px}
+.tl-date small{font-weight:400;color:var(--muted);font-size:13px}
+.tl-kind{font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid currentColor}
+.tl li[data-k=exam] .tl-kind{color:#B4232F;background:color-mix(in srgb,#B4232F 10%,transparent)}
+:root[data-theme=dark] .tl li[data-k=exam] .tl-kind{color:#FF8A94}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .tl li[data-k=exam] .tl-kind{color:#FF8A94}}
+.tl-rel{font-size:13.5px;color:var(--muted);white-space:nowrap}
+.tl li.next{border:2px solid var(--accent);background:var(--accent-soft)}
+.tl li.next .tl-rel{color:var(--accent);font-weight:700}
+.tl li.past{opacity:.55}
+@media (max-width:520px){.tl li{grid-template-columns:auto 1fr;row-gap:4px}.tl li b{grid-column:2}.tl-kind{justify-self:start}.tl-rel{grid-column:2}.tl-date{grid-row:span 3}}
+</style></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">קורס מדעי</span></nav>
   <h1>קורס מדעי</h1>
@@ -14,8 +31,8 @@
 <main class="wrap">
   <div class="grid">
     <a class="topic" href="/science/anatomy/" style="--c:var(--d1)">
-      <h2>אנטומיה</h2><p>מבנה הגוף: מהתא ועד מערכת השלד והמפרקים.</p><ul><li>יחידה 1: מבנה מערכות הגוף</li><li>יחידה 3: מערכת שלד-שריר ומפרקים</li><li>יחידה 4: מערכת שלד-שריר: שרירים</li></ul>
-      <div class="prog" data-keys="sci.anat1:3,sci.anat3:5,sci.anat4:6"><div class="bar"><i></i></div><div class="t"><span class="st">8 פרקים</span><span class="go">לנושא ←</span></div></div>
+      <h2>אנטומיה</h2><p>מבנה הגוף: מהתא ועד השלד, המפרקים והשרירים.</p><ul><li>יחידה 1: מבנה מערכות הגוף</li><li>יחידה 3: מערכת שלד-שריר ומפרקים</li><li>יחידה 4: מערכת שלד-שריר: שרירים</li></ul>
+      <div class="prog" data-keys="sci.anat1:3,sci.anat3:5,sci.anat4:6"><div class="bar"><i></i></div><div class="t"><span class="st">14 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
 
     <a class="topic soon" aria-disabled="true" style="--c:var(--d2)">
@@ -29,6 +46,19 @@
     </a>
 
   </div>
+
+  <section class="sched" aria-labelledby="schedH">
+    <h2 id="schedH">לוח זמנים</h2>
+    <p class="sched-lead">מפגשי החובה הפרונטליים והמבחנים של הקורס המדעי.</p>
+    <ol class="tl" id="schedList">
+      <li data-d="2026-12-14" data-k="meet"><b>מפגש חובה פרונטלי</b></li>
+      <li data-d="2026-12-28" data-k="exam"><b>מבחן באנטומיה</b></li>
+      <li data-d="2027-02-01" data-k="exam"><b>מבחן בפיזיולוגיה</b></li>
+      <li data-d="2027-02-08" data-k="meet"><b>מפגש חובה פרונטלי</b></li>
+      <li data-d="2027-02-15" data-k="meet"><b>מפגש חובה פרונטלי</b></li>
+      <li data-d="2027-02-22" data-k="exam"><b>מבחן בקניזיולוגיה</b></li>
+    </ol>
+  </section>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
 <script>
@@ -41,5 +71,22 @@ document.querySelectorAll(".prog").forEach(p=>{
   if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;const g=p.querySelector(".go");if(g)g.textContent=n>=t?"לחזרה ←":"להמשיך ←"}
 });
 
+/* לוח זמנים: תאריך ויום בשבוע, סימון של מה שעבר ושל האירוע הקרוב. */
+(function(){
+  const today=new Date();today.setHours(0,0,0,0);let next=null;
+  document.querySelectorAll("#schedList li").forEach(li=>{
+    const [y,m,d]=li.dataset.d.split("-").map(Number),dt=new Date(y,m-1,d);
+    const days=Math.round((dt-today)/864e5);
+    const date=`${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}/${y}`;
+    const wd=dt.toLocaleDateString("he-IL",{weekday:"long"});
+    const kind=li.dataset.k==="exam"?"מבחן":"מפגש";
+    li.insertAdjacentHTML("afterbegin",`<span class="tl-date"><bdi>${date}</bdi><small>${wd}</small></span><span class="tl-kind">${kind}</span>`);
+    if(days<0){li.classList.add("past");li.insertAdjacentHTML("beforeend",`<span class="tl-rel">עבר</span>`)}
+    else{
+      if(!next){next=li;li.classList.add("next")}
+      li.insertAdjacentHTML("beforeend",`<span class="tl-rel">${days===0?"היום":days===1?"מחר":`בעוד ${days} ימים`}</span>`);
+    }
+  });
+})();
 </script>
 </body></html>
