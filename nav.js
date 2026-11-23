@@ -12,7 +12,7 @@
     ["/branch/methodology.html", "מתודיקה באימון"]
   ];
   var SCIENCE = [
-    ["/science/anatomy/", "אנטומיה", [["/science/anatomy/unit1.html", "יחידה 1: מבנה מערכות הגוף"], ["/science/anatomy/unit3.html", "יחידה 3: מערכת שלד-שריר ומפרקים"]]],
+    ["/science/anatomy/", "אנטומיה", [["/science/anatomy/unit1.html", "יחידה 1: מבנה מערכות הגוף"], ["/science/anatomy/unit3.html", "יחידה 3: מערכת שלד-שריר ומפרקים"], ["/science/anatomy/unit4.html", "יחידה 4: מערכת שלד-שריר: שרירים"]]],
     [null, "פיזיולוגיה"],
     [null, "קניזיולוגיה"]
   ];
