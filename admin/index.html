@@ -70,7 +70,7 @@ td.num{color:var(--ink)}
 .sw em{font-style:normal;color:var(--muted);min-width:4.5em}
 .empty{padding:22px;text-align:center;color:var(--muted)}
 </style>
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123g" defer></script><script src="/sync.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123h" defer></script><script src="/sync.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -121,7 +121,7 @@ td.num{color:var(--ink)}
   const $=id=>document.getElementById(id);
   const BRANCH_TOTAL=27; /* anat 5 + phys 7 + train 10 + meth 5 */
   /* קורס מדעי: נושא -> [מפתח ההתקדמות, מספר פרקים]. נושא חדש = שורה חדשה כאן. */
-  const SCI_TOPICS=[["אנטומיה · יחידה 1","sci.anat1",3],["אנטומיה · יחידה 3","sci.anat3",5],["אנטומיה · יחידה 4","sci.anat4",6]];
+  const SCI_TOPICS=[["אנטומיה · יחידה 1","sci.anat1",3],["אנטומיה · יחידות 2–3","sci.anat3",5],["אנטומיה · יחידה 4","sci.anat4",6]];
   const SCI_TOTAL=SCI_TOPICS.reduce((a,t)=>a+t[2],0);
   let users=[];
   const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -197,7 +197,7 @@ td.num{color:var(--ink)}
   }
   $("q").oninput=render;
   /* ---------- מונה כניסות ---------- */
-  const PAGE_NAMES={"/":"דף הבית","/branch/":"קורס ענפי","/branch/tools.html":"מחשבונים וכלי עזר","/branch/anatomy.html":"האנטומיה של הריצה","/branch/physiology.html":"הפיזיולוגיה של הריצה","/branch/training.html":"תורת האימון","/branch/methodology.html":"מתודיקה באימון","/science/":"קורס מדעי","/science/anatomy.html":"קורס מדעי · אנטומיה (כתובת ישנה)","/science/anatomy/":"קורס מדעי · אנטומיה","/science/anatomy/unit1.html":"אנטומיה · יחידה 1","/science/anatomy/unit3.html":"אנטומיה · יחידה 3","/science/anatomy/unit4.html":"אנטומיה · יחידה 4","/admin/":"ניהול"};
+  const PAGE_NAMES={"/":"דף הבית","/branch/":"קורס ענפי","/branch/tools.html":"מחשבונים וכלי עזר","/branch/anatomy.html":"האנטומיה של הריצה","/branch/physiology.html":"הפיזיולוגיה של הריצה","/branch/training.html":"תורת האימון","/branch/methodology.html":"מתודיקה באימון","/science/":"קורס מדעי","/science/anatomy.html":"קורס מדעי · אנטומיה (כתובת ישנה)","/science/anatomy/":"קורס מדעי · אנטומיה","/science/anatomy/unit1.html":"אנטומיה · יחידה 1","/science/anatomy/unit3.html":"אנטומיה · יחידות 2–3","/science/anatomy/unit4.html":"אנטומיה · יחידה 4","/admin/":"ניהול"};
   const nf=n=>Number(n||0).toLocaleString("he-IL");
   function loadViews(){
     fetch("/api/admin_stats.php?days="+$("vDays").value,{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{
