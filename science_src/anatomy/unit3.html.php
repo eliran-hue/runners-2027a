@@ -285,7 +285,7 @@ const JTYPES=[
 const chapters=[
 {id:"skeleton",short:"3.1 מבנה השלד",unit:"יחידות 2–3: מערכת שלד-שריר ומפרקים",title:"מבנה השלד",sub:"שלד הציר ושלד הגפיים, וכל העצמות בפלג הגוף העליון והתחתון",
 html:()=>`
-<div class="block"><h3>🦴 סימולטור שלד</h3><p>רוצים לתרגל? ב<a href="/science/anatomy/skeleton.html" style="color:var(--accent);font-weight:700">סימולטור השלד</a> לוחצים על עצם ורואים את השם הלטיני שלה, או בוחנים את עצמכם.</p></div>
+<div class="block"><h3>🦴 סימולטור שלד</h3><p>רוצים לתרגל? ב<a href="/science/anatomy/skeleton.html" style="color:var(--accent);font-weight:700">סימולטור השלד</a> לוחצים על עצם ורואים את השם שלה, או בוחנים את עצמכם.</p></div>
 <div class="block"><h3>שתי חלוקות</h3>
 <div class="grid2">
 <div class="mini"><div class="k">שלד הציר</div>גולגולת, עמוד שדרה, עצם החזה וצלעות.</div>

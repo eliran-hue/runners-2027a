@@ -15,7 +15,7 @@
 <main class="wrap">
   <div class="grid">
     <a class="topic wide" href="/science/anatomy/skeleton.html" style="--c:var(--d4)">
-      <div><div class="num">כלי עזר</div><h2>סימולטור שלד</h2><p>לוחצים על עצם ורואים את השם הלטיני שלה, או בוחנים את עצמכם.</p></div><span class="go">לסימולטור ←</span>
+      <div><div class="num">כלי עזר</div><h2>סימולטור שלד</h2><p>לוחצים על עצם ורואים את השם שלה, או בוחנים את עצמכם.</p></div><span class="go">לסימולטור ←</span>
     </a>
 
     <a class="topic" href="/science/anatomy/unit1.html" style="--c:var(--d1)">
