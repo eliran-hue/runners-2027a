@@ -1,3 +1,4 @@
+<?php http_response_code(404); exit; /* מוגש רק דרך api/science_gate.php */ ?>
 <!doctype html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>יחידות 2–3 · אנטומיה · קורס מדעי · קורס מדריכי ריצות ארוכות</title>
