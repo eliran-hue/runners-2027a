@@ -215,8 +215,8 @@
   if (canSpeak) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = function(){}; } catch (e) {} }
   function say(id, btn){
     if (!canSpeak) return;
-    var b = B[id]; speechSynthesis.cancel();
-    var term = (b.pr.match(/\(([A-Za-z][^)]*)\)/) || [])[1] || b.en.replace(/ \(.*\)$/, ""), u1 = new SpeechSynthesisUtterance(term), v1 = voice(["en-us", "en-gb", "en"]);
+    var b = B[id]; speechSynthesis.cancel(); console.info("[skeleton] read aloud v12");
+    var term = (b.pr.match(/\(([A-Za-z][^)]*)\)/) || [])[1] || b.en.replace(/ \(.*\)$/, ""), u1 = new SpeechSynthesisUtterance(term.replace(/[\u0590-\u05FF()]/g, "").trim() || b.la),  /* never read Hebrew */ v1 = voice(["en-us", "en-gb", "en"]);
     if (v1) { u1.voice = v1; u1.lang = v1.lang; } else u1.lang = "en-US";
     u1.rate = .85;
     var q = [u1];
