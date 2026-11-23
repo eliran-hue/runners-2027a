@@ -219,10 +219,12 @@
     return null;
   }
   if (canSpeak) { loadVoices(); try { speechSynthesis.addEventListener("voiceschanged", loadVoices); } catch (e) { speechSynthesis.onvoiceschanged = loadVoices; } }
+  /* The foreign term shown in the bubble and read aloud: the one in the slide's parentheses, else the course/English term. */
+  function term(b){ var t = (b.pr.match(/\(([A-Za-z][^)]*)\)/) || [])[1] || b.en.replace(/ \(.*\)$/, ""); return t.replace(/[\u0590-\u05FF()]/g, "").trim() || b.la; }
   function say(id, btn){
     if (!canSpeak) return;
-    var b = B[id]; speechSynthesis.cancel(); console.info("[skeleton] read aloud v13");
-    var term = (b.pr.match(/\(([A-Za-z][^)]*)\)/) || [])[1] || b.en.replace(/ \(.*\)$/, ""), u1 = new SpeechSynthesisUtterance(term.replace(/[\u0590-\u05FF()]/g, "").trim() || b.la),  /* never read Hebrew */ v1 = voice(["en-us", "en-gb", "en"]);
+    var b = B[id]; speechSynthesis.cancel(); console.info("[skeleton] read aloud v14");
+    var u1 = new SpeechSynthesisUtterance(term(b)), v1 = voice(["en-us", "en-gb", "en"]);  /* never read Hebrew */
     u1.lang = v1 ? v1.lang : "en-US"; if (v1) { try { u1.voice = v1; } catch (e) {} }
     u1.rate = .85;
     var q = [u1];
@@ -262,8 +264,8 @@
       var r = stage.getBoundingClientRect(), x, y;
       if (ev && ev.clientX) { x = ev.clientX - r.left; y = ev.clientY - r.top; }
       else { var bb = root.querySelector('.sk-front .sk-bone[data-b="' + id + '"]'); if (!bb) { tip.classList.remove("show"); return; } var q = bb.getBoundingClientRect(); x = q.left + q.width / 2 - r.left; y = q.top - r.top + 6; }
-      tip.innerHTML = '<span class="tl">' + B[id].pr + '</span>'
-        + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + B[id].pr + '" title="הקראה">🔊</button>' : '');
+      tip.innerHTML = '<span class="tl" lang="en" dir="ltr">' + term(B[id]) + '</span>'
+        + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + term(B[id]) + '" title="הקראה">🔊</button>' : '');
       tip.style.left = Math.max(90, Math.min(r.width - 90, x)) + "px"; tip.style.top = Math.max(34, y) + "px"; tip.classList.add("show");
     }
     function explore(id, ev){
