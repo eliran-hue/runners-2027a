@@ -79,11 +79,11 @@ document.querySelectorAll(".prog").forEach(p=>{
     const days=Math.round((dt-today)/864e5);
     const date=`${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}/${y}`;
     const wd=dt.toLocaleDateString("he-IL",{weekday:"long"});
-    const kind=li.dataset.k==="exam"?"מבחן":"מפגש";
+    const kind={exam:"מבחן",meet:"מפגש",work:"סדנה",lab:"מעבדה"}[li.dataset.k]||"";
     li.insertAdjacentHTML("afterbegin",`<span class="tl-date"><bdi>${date}</bdi><small>${wd}</small></span><span class="tl-kind">${kind}</span>`);
     if(days<0){li.classList.add("past");li.insertAdjacentHTML("beforeend",`<span class="tl-rel">עבר</span>`)}
     else{
-      if(!next){next=li;li.classList.add("next")}
+      if(!next)next=li.dataset.d;if(li.dataset.d===next)li.classList.add("next");
       li.insertAdjacentHTML("beforeend",`<span class="tl-rel">${days===0?"היום":days===1?"מחר":`בעוד ${days} ימים`}</span>`);
     }
   });

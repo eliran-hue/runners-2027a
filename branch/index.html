@@ -5,7 +5,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123f" defer></script><script src="/sync.js?v=20261123f" defer></script></head><body>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123f" defer></script><script src="/sync.js?v=20261123f" defer></script><style>
+.sched{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.sched h2{margin:0 0 4px;font:400 24px var(--display)}
+.sched-lead{margin:0 0 12px;color:var(--muted)}
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tl li{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.tl-date{display:flex;flex-direction:column;font-weight:700;font-variant-numeric:tabular-nums;min-width:92px}
+.tl-date small{font-weight:400;color:var(--muted);font-size:13px}
+.tl-kind{font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid currentColor}
+.tl li[data-k=exam] .tl-kind{color:#B4232F;background:color-mix(in srgb,#B4232F 10%,transparent)}
+:root[data-theme=dark] .tl li[data-k=exam] .tl-kind{color:#FF8A94}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .tl li[data-k=exam] .tl-kind{color:#FF8A94}}
+.tl li[data-k=lab] .tl-kind{color:#1F7A4D;background:color-mix(in srgb,#1F7A4D 10%,transparent)}
+.tl-rel{font-size:13.5px;color:var(--muted);white-space:nowrap}
+.tl li.next{border:2px solid var(--accent);background:var(--accent-soft)}
+.tl li.next .tl-rel{color:var(--accent);font-weight:700}
+.tl li.past{opacity:.55}
+@media (max-width:520px){.tl li{grid-template-columns:auto 1fr;row-gap:4px}.tl li b{grid-column:2}.tl-kind{justify-self:start}.tl-rel{grid-column:2}.tl-date{grid-row:span 3}}
+</style></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">קורס ענפי</span></nav>
   <h1>קורס ענפי</h1>
@@ -39,6 +57,19 @@
     </a>
 
   </div>
+
+  <section class="sched" aria-labelledby="schedH">
+    <h2 id="schedH">לוח זמנים</h2>
+    <p class="sched-lead">הסדנאות, המעבדה והמבחנים של הקורס הענפי.</p>
+    <ol class="tl" id="schedList">
+      <li data-d="2027-01-01" data-k="work"><b>סדנת מתודיקה: סבב ראשון</b></li>
+      <li data-d="2027-01-01" data-k="lab"><b>מעבדה בפיזיולוגיה</b></li>
+      <li data-d="2027-01-08" data-k="work"><b>סדנת מתודיקה: סבב שני</b></li>
+      <li data-d="2027-01-15" data-k="exam"><b>מבחן מעשי: סבב ראשון</b></li>
+      <li data-d="2027-01-22" data-k="exam"><b>מבחן מעשי: סבב שני</b></li>
+      <li data-d="2027-01-29" data-k="exam"><b>בחינה עיונית מסכמת</b></li>
+    </ol>
+  </section>
   <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> לוחצים על "התחברות / שמירת התקדמות" למעלה, מזינים כתובת מייל ומקבלים קוד כניסה.</div>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
@@ -52,5 +83,23 @@ document.querySelectorAll(".prog").forEach(p=>{
   if(n>0){p.querySelector(".st").textContent=n>=t?`הושלמו כל ${t} הפרקים`:`הושלמו ${n} מתוך ${t} פרקים`;const g=p.querySelector(".go");if(g)g.textContent=n>=t?"לחזרה ←":"להמשיך ←"}
 });
 
+
+/* לוח זמנים: תאריך ויום בשבוע, סימון של מה שעבר ושל האירוע הקרוב. */
+(function(){
+  const today=new Date();today.setHours(0,0,0,0);let next=null;
+  document.querySelectorAll("#schedList li").forEach(li=>{
+    const [y,m,d]=li.dataset.d.split("-").map(Number),dt=new Date(y,m-1,d);
+    const days=Math.round((dt-today)/864e5);
+    const date=`${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}/${y}`;
+    const wd=dt.toLocaleDateString("he-IL",{weekday:"long"});
+    const kind={exam:"מבחן",meet:"מפגש",work:"סדנה",lab:"מעבדה"}[li.dataset.k]||"";
+    li.insertAdjacentHTML("afterbegin",`<span class="tl-date"><bdi>${date}</bdi><small>${wd}</small></span><span class="tl-kind">${kind}</span>`);
+    if(days<0){li.classList.add("past");li.insertAdjacentHTML("beforeend",`<span class="tl-rel">עבר</span>`)}
+    else{
+      if(!next)next=li.dataset.d;if(li.dataset.d===next)li.classList.add("next");
+      li.insertAdjacentHTML("beforeend",`<span class="tl-rel">${days===0?"היום":days===1?"מחר":`בעוד ${days} ימים`}</span>`);
+    }
+  });
+})();
 </script>
 </body></html>
