@@ -102,18 +102,54 @@
     return '<svg class="sk-front" viewBox="60 0 180 708" role="group" aria-label="השלד במבט מלפנים">'
       + '<text class="sk-side" x="66" y="22">ימין</text><text class="sk-side" x="234" y="22" text-anchor="end">שמאל</text>' + s + '</svg>';
   }
+  /* Side view: each vertebra drawn along the curve at init (see buildVerts); the guide path is also the click target. */
+  var SPINE = [
+    ["spineC", "M50,30 C60,54 60,80 50,102", 7, "C", 7.5, 5],
+    ["spineT", "M50,102 C32,142 32,192 50,234", 12, "T", 10, 7],
+    ["spineL", "M50,234 C66,264 66,298 52,324", 5, "L", 14, 10],
+    ["sacrum", "M52,324 C42,344 40,364 48,384", 5, "S", 13, 0],
+    ["coccyx", "M48,384 C52,394 56,400 62,404", 4, "Co", 5, 1.5]
+  ];
   function side(){
-    function seg(id, d, w){ return g(id, '<path class="sk-line sk-spine" d="' + d + '" stroke-width="' + w + '"/>', d); }
-    return '<svg class="sk-sideview" viewBox="0 0 120 420" role="group" aria-label="עמוד השדרה במבט מהצד">'
-      + '<text class="sk-cap" x="60" y="14" text-anchor="middle">עמוד השדרה מהצד</text>'
-      + '<text class="sk-dir" x="112" y="34" text-anchor="end">קדימה →</text>'
-      + seg("spineC", "M56,28 C66,52 66,78 56,100", 10)
-      + seg("spineT", "M56,100 C38,140 38,190 56,232", 13)
-      + seg("spineL", "M56,232 C72,262 72,296 58,322", 16)
-      + seg("sacrum", "M58,322 C48,342 46,362 54,382", 15)
-      + seg("coccyx", "M54,382 C58,392 62,398 68,402", 7)
-      + '<text class="sk-lab" x="68" y="66">לורדוזה</text><text class="sk-lab" x="4" y="170">קיפוזה</text><text class="sk-lab" x="72" y="282">לורדוזה</text>'
+    var o = '<svg class="sk-sideview" viewBox="0 0 150 420" role="group" aria-label="Columna vertebralis, עמוד השדרה במבט מהצד">'
+      + '<text class="sk-cap" x="75" y="14" text-anchor="middle">Columna vertebralis</text>'
+      + '<text class="sk-dir" x="146" y="28" text-anchor="end">anterior →</text>';
+    SPINE.forEach(function(r){
+      o += '<g class="sk-bone" data-b="' + r[0] + '" tabindex="0" role="button" aria-label="' + B[r[0]].la + ', ' + B[r[0]].he + '">'
+        + '<path class="sk-guide" d="' + r[1] + '"/><g class="vb" data-n="' + r[2] + '" data-p="' + r[3] + '" data-w="' + r[4] + '" data-gap="' + r[5] + '"></g>'
+        + '<path class="sk-hit" d="' + r[1] + '"/></g>';
+    });
+    o += '<text class="sk-rl" x="84" y="58">C1–C7</text><text class="sk-cv" x="84" y="70">lordosis</text>'
+      + '<text class="sk-rl" x="84" y="160">T1–T12</text><text class="sk-cv" x="84" y="172">kyphosis</text>'
+      + '<text class="sk-rl" x="84" y="270">L1–L5</text><text class="sk-cv" x="84" y="282">lordosis</text>'
+      + '<text class="sk-rl" x="84" y="350">S1–S5</text><text class="sk-cv" x="84" y="362">os sacrum</text>'
+      + '<text class="sk-rl" x="84" y="402">Co1–Co4</text>'
       + '</svg>';
+    return o;
+  }
+  function buildVerts(root){
+    root.querySelectorAll(".sk-sideview .sk-bone").forEach(function(gEl){
+      var guide = gEl.querySelector(".sk-guide"), vb = gEl.querySelector(".vb"), L = guide.getTotalLength();
+      var n = +vb.dataset.n, p = vb.dataset.p, w = +vb.dataset.w, gap = +vb.dataset.gap, NS = "http://www.w3.org/2000/svg";
+      if (gap === 0) { /* fused (sacrum): one wedge with lines between the fused segments */
+        var pts = [], k; for (k = 0; k <= 10; k++) { var q = guide.getPointAtLength(L * k / 10), q2 = guide.getPointAtLength(Math.min(L, L * k / 10 + .5)), ang = Math.atan2(q2.y - q.y, q2.x - q.x), hw = w / 2 * (1 - k / 14);
+          pts.push([q.x + Math.sin(ang) * hw, q.y - Math.cos(ang) * hw, q.x - Math.sin(ang) * hw, q.y + Math.cos(ang) * hw]); }
+        var d = "M" + pts.map(function(t){ return t[0].toFixed(1) + "," + t[1].toFixed(1); }).join(" L") + " L" + pts.slice().reverse().map(function(t){ return t[2].toFixed(1) + "," + t[3].toFixed(1); }).join(" L") + " Z";
+        var path = document.createElementNS(NS, "path"); path.setAttribute("d", d); vb.appendChild(path);
+        for (k = 1; k < n; k++) { var t = pts[Math.round(k * 10 / n)], ln = document.createElementNS(NS, "path"); ln.setAttribute("class", "sk-fuse"); ln.setAttribute("d", "M" + t[0].toFixed(1) + "," + t[1].toFixed(1) + " L" + t[2].toFixed(1) + "," + t[3].toFixed(1)); vb.appendChild(ln); }
+        return;
+      }
+      var segL = L / n;
+      for (var i = 0; i < n; i++) {
+        var c = guide.getPointAtLength(segL * (i + .5)), a1 = guide.getPointAtLength(segL * i), a2 = guide.getPointAtLength(segL * (i + 1));
+        var deg = Math.atan2(a2.y - a1.y, a2.x - a1.x) * 180 / Math.PI, h = Math.max(2, segL - gap * .35), ww = w * (p === "Co" ? 1 - i * .15 : 1);
+        var r = document.createElementNS(NS, "rect");
+        r.setAttribute("x", (-h / 2).toFixed(2)); r.setAttribute("y", (-ww / 2).toFixed(2)); r.setAttribute("width", h.toFixed(2)); r.setAttribute("height", ww.toFixed(2)); r.setAttribute("rx", "1.4");
+        r.setAttribute("transform", "translate(" + c.x.toFixed(1) + " " + c.y.toFixed(1) + ") rotate(" + deg.toFixed(1) + ")");
+        var tl = document.createElementNS(NS, "title"); tl.textContent = p + (i + 1); r.appendChild(tl);
+        vb.appendChild(r);
+      }
+    });
   }
 
   /* ---------- styles ---------- */
@@ -125,7 +161,7 @@
     + ".sk-bar button{font:700 14.5px var(--body);min-height:40px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}"
     + ".sk-bar button[aria-pressed=true]{background:var(--navy,var(--accent));border-color:var(--navy,var(--accent));color:#fff}"
     + ".sk-bar button:focus-visible,.sk-bone:focus-visible{outline:3px solid var(--accent);outline-offset:2px}"
-    + ".sk-grid{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px;align-items:start}"
+    + ".sk-grid{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:8px;align-items:start}"
     + ".sk-stage{position:relative;background:radial-gradient(70% 60% at 50% 35%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 70%),var(--paper);border:1px solid var(--line);border-radius:16px;padding:6px}"
     + ".sk-front{width:100%;max-width:330px;height:auto;display:block;margin:0 auto;touch-action:manipulation}"
     + ".sk-sideview{width:100%;height:auto;display:block;background:var(--paper);border:1px solid var(--line);border-radius:14px}"
@@ -145,7 +181,8 @@
     + ".sk.groups .sk-bone[data-g=ap] path:not(.sk-hit):not(.sk-hole):not(.sk-lhit),.sk.groups .sk-bone[data-g=ap] rect,.sk.groups .sk-bone[data-g=ap] ellipse:not(.sk-hole){fill:#F5C27A}.sk.groups .sk-bone[data-g=ap] .sk-line{stroke:#F5C27A}"
     + ".sk-legend{display:none;gap:12px;font-size:13.5px;color:var(--muted);margin-top:6px;justify-content:center}.sk.groups .sk-legend{display:flex}"
     + ".sk-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;margin-inline-end:5px}"
-    + ".sk-side{font:700 9px var(--body);fill:var(--muted)}.sk-cap{font:700 11px var(--body);fill:var(--ink)}.sk-dir,.sk-lab{font:600 10px var(--body);fill:var(--muted)}"
+    + ".sk-side{font:700 9px var(--body);fill:var(--muted)}.sk-cap{font:800 12px var(--body);fill:var(--ink)}.sk-dir{font:600 10px var(--body);fill:var(--muted)}.sk-rl{font:800 12px var(--body);fill:var(--ink)}.sk-cv{font:italic 600 10.5px var(--body);fill:var(--muted)}"
+    + ".sk svg .sk-guide{fill:none!important;stroke:none!important}.sk svg .sk-fuse{fill:none!important;stroke:var(--sks)!important;stroke-width:.8!important}"
     + ".sk-tip{position:absolute;pointer-events:none;transform:translate(-50%,-125%);display:flex;align-items:center;gap:6px;background:var(--ink);color:var(--paper);font:700 14px var(--body);padding:5px 10px;border-radius:8px;white-space:nowrap;opacity:0;transition:opacity .15s;z-index:3}"
     + ".sk-tip.show{opacity:1}.sk-tip .sk-say{pointer-events:auto}.sk-tip .th{font-weight:600;opacity:.85}"
     + ".sk-say{border:0;background:rgba(255,255,255,.18);color:inherit;border-radius:999px;width:30px;height:30px;display:grid;place-items:center;cursor:pointer;font-size:15px;margin-inline-start:2px}"
@@ -166,7 +203,7 @@
     + ".sk-list button small{font-weight:400;color:var(--muted);margin-inline-start:6px;font-size:12px}.sk-list button.on small{color:#fff}.sk-list button{font:600 13.5px var(--body);padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;min-height:34px}"
     + ".sk-list button.on{background:var(--accent);border-color:var(--accent);color:#fff}"
     + ".sk-quizonly{display:none}.sk.quiz .sk-quizonly{display:inline-flex}.sk.quiz .sk-list{display:none}"
-    + "@media (max-width:520px){.sk-grid{grid-template-columns:minmax(0,1fr) 92px}.sk-panel h4{font-size:20px}}";
+    + "@media (max-width:520px){.sk-grid{grid-template-columns:minmax(0,1fr) 118px}.sk-panel h4{font-size:20px}}";
 
   /* ---------- reading names aloud (Web Speech API) ---------- */
   var canSpeak = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
@@ -202,6 +239,7 @@
       + '<div class="sk-legend"><span><i style="background:#93B4F5"></i>שלד הציר</span><span><i style="background:#F5C27A"></i>שלד הגפיים</span></div>'
       + '<div class="sk-panel" aria-live="polite"></div>'
       + '<div class="sk-list" aria-label="רשימת העצמות">' + ORDER.map(function(id){ return '<button type="button" data-pick="' + id + '"><bdi lang="la">' + B[id].la + '</bdi><small>' + B[id].he + '</small></button>'; }).join("") + '</div>';
+    buildVerts(root);
     var panel = root.querySelector(".sk-panel"), tip = root.querySelector(".sk-tip"), stage = root.querySelector(".sk-stage");
     root.querySelectorAll(".sk-bone").forEach(function(el){ el.setAttribute("data-g", B[el.dataset.b].g === AX ? "ax" : "ap"); });
     var mode = "explore", sel = null, quiz = null;
@@ -254,7 +292,7 @@
     function pick(id, ev){ if (mode === "quiz") answer(id, ev); else explore(id, ev); }
     root.addEventListener("click", function(e){
       var sb = e.target.closest && e.target.closest("[data-say]"); if (sb) { e.stopPropagation(); say(sb.dataset.say, sb); return; }
-      var bone = e.target.closest && e.target.closest(".sk-bone"); if (bone) { pick(bone.dataset.b, e); return; }
+      var bone = e.target.closest && e.target.closest(".sk-bone"); if (bone) { pick(bone.dataset.b, bone.closest(".sk-sideview") ? null : e); return; }
       var p = e.target.closest && e.target.closest("[data-pick]"); if (p) { explore(p.dataset.pick); return; }
       if (e.target.closest && e.target.closest(".sk-stage") && !e.target.closest(".sk-tip")) tip.classList.remove("show");
       var m = e.target.closest && e.target.closest("[data-mode]");
