@@ -57,6 +57,7 @@
     + ".tb-close{width:40px;height:40px;border-radius:10px;border:1px solid var(--line,#D3DCE3);background:none;color:inherit;font-size:22px;cursor:pointer;line-height:1}"
     + ".tb-tree{overflow:auto;padding:10px 10px 24px;font:600 16px 'Assistant',system-ui,sans-serif;flex:1}"
     + ".tb-tree ul{list-style:none;margin:0;padding:0}"
+    + ".tb-tree > ul > li + li{margin-top:6px;padding-top:6px;border-top:1px solid var(--line,#D3DCE3)}"
     + ".tb-tree ul ul{margin:2px 0 6px;padding-inline-start:14px;border-inline-start:2px solid var(--line,#D3DCE3);margin-inline-start:14px}"
     + ".tb-tree a,.tb-tree .na{display:flex;align-items:center;gap:8px;padding:10px 10px;border-radius:10px;color:inherit;text-decoration:none;min-height:44px;box-sizing:border-box}"
     + ".tb-tree ul ul a,.tb-tree ul ul .na{font-weight:400;font-size:15.5px;min-height:40px;padding:8px 10px}"
@@ -98,9 +99,7 @@
   function tree(){
     var a = window.runnersAuth || {}, sci = !!(a.science || a.admin);
     var h = '<ul>' + '<li>' + link("/", "דף הבית") + '</li>'
-      + '<li class="grp" aria-hidden="true">קורס 1</li>'
-      + '<li>' + link("/branch/", "קורס ענפי") + '<ul>' + BRANCH.map(function(b){ return '<li>' + link(b[0], b[1]) + '</li>'; }).join("") + '</ul></li>'
-      + '<li class="grp" aria-hidden="true">קורס 2</li>';
+      + '<li>' + link("/branch/", "קורס ענפי") + '<ul>' + BRANCH.map(function(b){ return '<li>' + link(b[0], b[1]) + '</li>'; }).join("") + '</ul></li>';
     if (sci) {
       h += '<li>' + link("/science/", "קורס מדעי") + '<ul>' + SCIENCE.map(function(t){
         if (!t[0]) return '<li><span class="na">' + esc(t[1]) + '<span class="soon">בקרוב</span></span></li>';
@@ -110,7 +109,7 @@
       h += '<li><a href="/?science=locked#sciLockCard">קורס מדעי <span aria-hidden="true">🔒</span><span class="soon">נעול</span></a>'
         + '<span class="lock">פתוח רק למשתתפי הקורס המדעי. לפרטים על קבלת גישה ←</span></li>';
     }
-    if (a.admin) h += '<li class="grp" aria-hidden="true">ניהול</li><li>' + link("/admin/", "ניהול האתר") + '</li>';
+    if (a.admin) h += '<li>' + link("/admin/", "ניהול האתר") + '</li>';
     return h + '</ul>';
   }
   function render(){
