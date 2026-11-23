@@ -157,3 +157,79 @@
   }
   window.addEventListener("load", tidy);
 })();
+
+/* Celebration when a chapter is completed (quiz passed for the first time):
+   confetti burst, a short toast, and a pulse on the "next chapter" button. Pages don't need to change:
+   after a quiz answer we compare the *.done progress keys before and after. */
+(function(){
+  "use strict";
+  function snap(){
+    var o = {};
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (/\.done$/.test(k)) o[k] = localStorage.getItem(k); } } catch (e) {}
+    return o;
+  }
+  function count(v){ try { var d = JSON.parse(v || "{}") || {}; return Object.keys(d).filter(function(k){ return d[k]; }).length; } catch (e) { return 0; } }
+  var css = document.createElement("style");
+  css.textContent = ""
+    + "#confettiCv{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:90}"
+    + ".cele-toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;z-index:91;"
+    + "background:var(--paper,#fff);color:var(--ink,#0B1C30);border:1px solid var(--line,#E2E8F0);border-inline-start:4px solid var(--ok,#059669);"
+    + "border-radius:14px;padding:12px 18px;font:700 16px 'Assistant',system-ui,sans-serif;box-shadow:0 16px 36px -10px rgba(15,23,42,.35);transition:opacity .25s,transform .25s;max-width:92vw;width:max-content;white-space:nowrap;text-align:center}"
+    + ".cele-toast.show{opacity:1;transform:translate(-50%,0)}"
+    + "@keyframes nextPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent,#2563EB) 55%,transparent)}50%{box-shadow:0 0 0 10px transparent}}"
+    + "#nextChap.pulse{animation:nextPulse 1.8s ease-in-out 4}"
+    + "@media (prefers-reduced-motion:reduce){#nextChap.pulse{animation:none}.cele-toast{transition:none}}";
+  document.head.appendChild(css);
+
+  function confetti(){
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var cv = document.getElementById("confettiCv");
+    if (!cv) { cv = document.createElement("canvas"); cv.id = "confettiCv"; cv.setAttribute("aria-hidden", "true"); document.body.appendChild(cv); }
+    var dpr = Math.min(2, window.devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; cv.style.display = "block";
+    var ctx = cv.getContext("2d"); ctx.scale(dpr, dpr);
+    var colors = ["#2563EB", "#059669", "#D97706", "#7C3AED", "#F59E0B", "#10B981", "#EC4899", "#38BDF8"];
+    var P = [], bursts = [[W * .5, H * .42], [W * .22, H * .5], [W * .78, H * .5]];
+    bursts.forEach(function(b, bi){
+      for (var i = 0; i < (bi ? 45 : 80); i++) {
+        var a = Math.random() * Math.PI * 2, sp = 4 + Math.random() * (bi ? 6 : 9);
+        P.push({x: b[0], y: b[1], vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 4, s: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .35,
+          c: colors[(Math.random() * colors.length) | 0], shape: Math.random() < .55 ? 0 : 1, life: 0, delay: bi * 9});
+      }
+    });
+    var t = 0;
+    (function frame(){
+      t++; ctx.clearRect(0, 0, W, H); var alive = false;
+      P.forEach(function(p){
+        if (t < p.delay) { alive = true; return; }
+        p.life++; p.vy += .22; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        var o = Math.max(0, 1 - p.life / 110); if (o <= 0 || p.y > H + 20) return; alive = true;
+        ctx.save(); ctx.globalAlpha = o; ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+        if (p.shape) { ctx.beginPath(); ctx.arc(0, 0, p.s / 2.2, 0, 6.283); ctx.fill(); } else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+        ctx.restore();
+      });
+      if (alive) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, W, H); cv.style.display = "none"; }
+    })();
+  }
+  function toast(msg){
+    var el = document.createElement("div"); el.className = "cele-toast"; el.setAttribute("role", "status"); el.textContent = msg;
+    document.body.appendChild(el);
+    requestAnimationFrame(function(){ el.classList.add("show"); });
+    setTimeout(function(){ el.classList.remove("show"); setTimeout(function(){ el.remove(); }, 400); }, 3800);
+  }
+  function celebrate(){
+    confetti();
+    var nb = document.getElementById("nextChap");
+    toast(nb ? "🎉 כל הכבוד! הפרק הושלם" : "🎉 כל הכבוד! סיימת את כל הפרקים בנושא");
+    if (nb) { nb.classList.remove("pulse"); void nb.offsetWidth; nb.classList.add("pulse"); }
+  }
+  document.addEventListener("click", function(e){
+    if (!e.target.closest || !e.target.closest(".quiz .opt")) return;
+    var before = snap();
+    setTimeout(function(){
+      var after = snap();
+      for (var k in after) if (count(after[k]) > count(before[k])) { celebrate(); return; }
+    }, 60);
+  }, true);
+  window.runnersCelebrate = celebrate; /* handy for testing */
+})();
