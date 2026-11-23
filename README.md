@@ -107,3 +107,7 @@ anatomy.html, physiology.html (בשורש): הפניה לכתובות החדשו
 תאריכי השיעורים של יחידות האנטומיה (קורס מדעי) כתובים ידנית בכותרת של כל עמוד יחידה ובכרטיסים בעמוד `science/anatomy/index.html`.
 
 לוחות הזמנים נמצאים ב-`science/index.html` (מפגשים ומבחנים) וב-`branch/index.html` (סדנאות, מעבדה ומבחנים), ברשימה `#schedList`: שורה לכל אירוע, עם `data-d` (תאריך) ו-`data-k` (`meet`, `work`, `lab` או `exam`). מה שעבר מסומן אוטומטית, והאירוע הקרוב מודגש.
+
+## גופן
+
+כל האתר משתמש רק ב-Assistant, שמאוחסן באתר עצמו (`fonts/Assistant-Variable.woff`, גופן משתנה 200–800, רישיון SIL OFL ב-`fonts/Assistant-OFL.txt`). הגופן מוגדר ב-`design.css`, ואין טעינה מ-Google Fonts. חצים וסימנים שאין ב-Assistant (← ↑ ✎ ×) מוצגים בגופן המערכת.

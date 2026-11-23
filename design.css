@@ -4,6 +4,9 @@
    Remove the <link> to design.css to get the previous look back.
    ===================================================================== */
 
+/* ---------- font: Assistant, self-hosted (variable 200–800, SIL OFL: fonts/Assistant-OFL.txt) ---------- */
+@font-face{font-family:"Assistant";src:url("/fonts/Assistant-Variable.woff") format("woff");font-weight:200 800;font-style:normal;font-display:swap}
+
 /* ---------- tokens ---------- */
 :root{
   --bg:#F5F7FC; --paper:#FFFFFF; --ink:#0B1C30; --muted:#4A5970; --line:#E2E8F0;
@@ -12,6 +15,7 @@
   --d1:#2563EB; --d2:#7C3AED; --d3:#059669; --d4:#D97706; --d5:#DB2777;
   --display:"Assistant",system-ui,-apple-system,"Segoe UI",sans-serif;
   --body:"Assistant",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --latin:"Assistant",system-ui,-apple-system,"Segoe UI",sans-serif;
   --shadow-1:0 1px 2px rgba(15,23,42,.04),0 2px 8px -2px rgba(30,58,138,.08);
   --shadow-2:0 12px 28px -8px rgba(30,58,138,.18);
   --glow-1:rgba(37,99,235,.13); --glow-2:rgba(124,58,237,.08); --glow-3:rgba(5,150,105,.07);
@@ -51,6 +55,9 @@ body{
 @supports (-webkit-touch-callout:none){body{background-attachment:scroll}}
 
 /* ---------- typography: Assistant only, hierarchy by weight ---------- */
+body,button,input,select,textarea,summary,table,svg text,.lat,.m,.formula,.formula .en{font-family:var(--body)}
+.lat{font-style:normal;font-weight:600;letter-spacing:0}
+.formula,.tool .res .big,.calc .res .big,.tl-date,.prog .t,.count,.score{font-variant-numeric:tabular-nums}
 h1{font-family:var(--display);font-weight:800;letter-spacing:-.015em;color:var(--navy);font-size:clamp(30px,6vw,44px);line-height:1.12}
 h2{font-family:var(--display);font-weight:800;letter-spacing:-.01em}
 h3{font-weight:700}

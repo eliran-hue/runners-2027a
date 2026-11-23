@@ -97,7 +97,7 @@
    + "dialog.acct{border:1px solid var(--line);border-radius:14px;padding:0;max-width:min(420px,calc(100vw - 32px));width:100%;background:var(--paper);color:var(--ink);font-family:'Assistant',system-ui,sans-serif;direction:rtl}"
    + "dialog.acct::backdrop{background:rgba(10,20,30,.45)}"
    + "dialog.acct form{padding:22px}"
-   + "dialog.acct h2{font-family:'Secular One','Assistant',sans-serif;font-weight:400;font-size:24px;margin:0 0 6px}"
+   + "dialog.acct h2{font-family:'Assistant',sans-serif;font-weight:800;font-weight:400;font-size:24px;margin:0 0 6px}"
    + "dialog.acct p{margin:0 0 12px;color:var(--muted);font-size:15.5px;line-height:1.55}"
    + "dialog.acct label{display:block;font-weight:600;font-size:15px;margin-bottom:4px}"
    + "dialog.acct input{width:100%;font:inherit;font-size:18px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);box-sizing:border-box}"
