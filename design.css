@@ -190,3 +190,37 @@ a.topic.soon:hover{transform:none}
 }
 .grid{gap:20px}
 @media (prefers-reduced-motion:reduce){a.topic,a.topic:hover,a.topic:active{transition:none;transform:none}}
+
+/* ---------- 3D cards: stronger depth in dark mode ---------- */
+:root[data-theme="dark"]{--card-top:#1C2A47;--card-bot:#111a2e;--card-edge:rgba(160,185,255,.16)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--card-top:#1C2A47;--card-bot:#111a2e;--card-edge:rgba(160,185,255,.16)}}
+:root[data-theme="dark"] a.topic,:root[data-theme="dark"] .lockcard{
+  background:linear-gradient(180deg,var(--card-top) 0%,color-mix(in srgb,var(--card-bot) 88%,var(--c,var(--accent))) 100%);
+  border-color:var(--card-edge);border-inline-start-color:var(--c,var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.35),
+    0 2px 3px rgba(0,0,0,.45),0 10px 18px -6px rgba(0,0,0,.6),
+    0 22px 44px -14px color-mix(in srgb,var(--c,var(--accent)) 55%,transparent),
+    0 40px 60px -30px rgba(0,0,0,.85)}
+:root[data-theme="dark"] a.topic:hover{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.35),
+    0 3px 4px rgba(0,0,0,.45),0 16px 26px -8px rgba(0,0,0,.65),
+    0 32px 60px -16px color-mix(in srgb,var(--c,var(--accent)) 70%,transparent),
+    0 54px 80px -34px rgba(0,0,0,.9)}
+:root[data-theme="dark"] a.topic::after,:root[data-theme="dark"] .lockcard::after{
+  background:radial-gradient(120% 70% at 100% 0%,color-mix(in srgb,var(--c,var(--accent)) 22%,transparent),transparent 60%)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) a.topic,:root:not([data-theme="light"]) .lockcard{
+    background:linear-gradient(180deg,var(--card-top) 0%,color-mix(in srgb,var(--card-bot) 88%,var(--c,var(--accent))) 100%);
+    border-color:var(--card-edge);border-inline-start-color:var(--c,var(--accent));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.35),
+      0 2px 3px rgba(0,0,0,.45),0 10px 18px -6px rgba(0,0,0,.6),
+      0 22px 44px -14px color-mix(in srgb,var(--c,var(--accent)) 55%,transparent),
+      0 40px 60px -30px rgba(0,0,0,.85)}
+  :root:not([data-theme="light"]) a.topic:hover{
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.35),
+      0 3px 4px rgba(0,0,0,.45),0 16px 26px -8px rgba(0,0,0,.65),
+      0 32px 60px -16px color-mix(in srgb,var(--c,var(--accent)) 70%,transparent),
+      0 54px 80px -34px rgba(0,0,0,.9)}
+  :root:not([data-theme="light"]) a.topic::after,:root:not([data-theme="light"]) .lockcard::after{
+    background:radial-gradient(120% 70% at 100% 0%,color-mix(in srgb,var(--c,var(--accent)) 22%,transparent),transparent 60%)}
+}
