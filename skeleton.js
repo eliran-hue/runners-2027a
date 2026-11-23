@@ -6,34 +6,34 @@
   /* ---------- bone data ---------- */
   var AX = "שלד הציר", AP = "שלד הגפיים";
   var B = {
-    skull:      {he:"גולגולת", la:"Cranium", en:"Skull", g:AX, fact:"מגינה על המוח. יחד עם עמוד השדרה, עצם החזה והצלעות היא שלד הציר."},
-    spineC:     {he:"חוליות הצוואר", la:"Vertebrae cervicales", en:"Cervical vertebrae", g:AX, n:"7 חוליות", fact:"הקשת של הצוואר היא לורדוזה: קשת קדימה. החוליות כאן הקטנות ביותר."},
-    spineT:     {he:"חוליות בית החזה", la:"Vertebrae thoracicae", en:"Thoracic vertebrae", g:AX, n:"12 חוליות", fact:"כל חוליה מחוברת לזוג צלעות (T1–T12). הקשת כאן היא קיפוזה: קשת אחורה. במבט מלפנים הן מוסתרות מאחורי עצם החזה, ולכן רואים אותן במבט מהצד."},
-    spineL:     {he:"חוליות מותניות", la:"Vertebrae lumbales", en:"Lumbar vertebrae", g:AX, n:"5 חוליות", fact:"החוליות הגדולות ביותר, כי הן נושאות הכי הרבה משקל. הקשת כאן היא שוב לורדוזה: קשת קדימה."},
-    sacrum:     {he:"עצה", la:"Os sacrum", en:"Sacrum", g:AX, n:"5 חוליות מאוחות", fact:"חמש חוליות שהתאחו לעצם אחת. מתחברת לעצם הכסל שבאגן במפרק הסקרו-איליאק."},
-    coccyx:     {he:"עצם הזנב", la:"Os coccygis", en:"Coccyx", g:AX, n:"4 חוליות מאוחות", fact:"הקצה התחתון של עמוד השדרה."},
-    sternum:    {he:"עצם החזה", la:"Sternum", en:"Sternum", g:AX, fact:"העצם השטוחה במרכז בית החזה. הצלעות האמיתיות מתחברות אליה ישירות."},
-    ribsTrue:   {he:"צלעות אמיתיות", la:"Costae verae", en:"True ribs", g:AX, n:"צלעות 1–7", fact:"מחוברות ישירות לעצם החזה, כל אחת דרך סחוס משלה."},
-    ribsFalse:  {he:"צלעות מדומות", la:"Costae spuriae", en:"False ribs", g:AX, n:"צלעות 8–10", fact:"מתחברות לעצם החזה בעקיפין, דרך הסחוס של הצלע השביעית."},
-    ribsFloat:  {he:"צלעות צפות", la:"Costae fluctuantes", en:"Floating ribs", g:AX, n:"צלעות 11–12", fact:"לא מתחברות לעצם החזה בכלל, רק לעמוד השדרה מאחור."},
-    clavicle:   {he:"עצם הבריח", la:"Clavicula", en:"Clavicle", g:AP, fact:"חלק מחגורת הכתפיים. מחברת את הגפה העליונה לשלד הציר, דרך מפרק הסטרנו-קלביקולרי בעצם החזה."},
-    scapula:    {he:"שכמה", la:"Scapula", en:"Scapula", g:AP, fact:"חלק מחגורת הכתפיים. יושבת מאחורי בית החזה, ולכן מלפנים רואים רק את הקצה שלה. השקע שלה (גלנואיד) הוא חלק ממפרק הכתף."},
-    humerus:    {he:"עצם הזרוע", la:"Humerus", en:"Humerus", g:AP, fact:"העצם הארוכה של הזרוע, בין הכתף למרפק. הראש העגול שלה יושב בשקע של השכמה."},
-    radius:     {he:"חישור", la:"Radius", en:"Radius", g:AP, fact:"עצם האמה בצד האגודל. מסתובבת סביב הגומד בסופינציה ופרונציה."},
-    ulna:       {he:"גומד", la:"Ulna", en:"Ulna", g:AP, fact:"עצם האמה בצד הזרת. יוצרת עם הזרוע את מפרק הציר של המרפק."},
-    carpals:    {he:"עצמות שורש כף היד", la:"Ossa carpi", en:"Carpals", g:AP, n:"8 עצמות", fact:"שמונה עצמות קטנות בשתי שורות. ביניהן מפרקי החלקה."},
-    metacarpals:{he:"עצמות המסרק (יד)", la:"Ossa metacarpi", en:"Metacarpals", g:AP, n:"5 עצמות", fact:"העצמות של כף היד עצמה, בין השורש לאצבעות."},
-    handPhal:   {he:"גלילי אצבעות היד", la:"Phalanges manus", en:"Phalanges (hand)", g:AP, n:"14 עצמות", fact:"3 בכל אצבע ו-2 באגודל."},
-    ilium:      {he:"עצם הכסל", la:"Os ilium", en:"Ilium", g:AP, n:"חלק מעצם האגן", fact:"החלק העליון והרחב של עצם האגן (\"הכנף\"). מאחור הוא מתחבר לעצה במפרק הסקרו-איליאק. את השפה העליונה שלו (ציצת הכסל) אפשר למשש בצד המותן."},
-    ischium:    {he:"עצם השת", la:"Os ischii", en:"Ischium", g:AP, n:"חלק מעצם האגן", fact:"החלק התחתון והאחורי של עצם האגן. עליו יושבים, ומהבליטה שלו יוצאים שרירי החבליים (המסטרינג)."},
-    pubis:      {he:"עצם החיק", la:"Os pubis", en:"Pubis", g:AP, n:"חלק מעצם האגן", fact:"החלק הקדמי של עצם האגן. שתי עצמות החיק נפגשות באמצע, במפרק הסימפיזיס פוביס, שבנוי מסחוס סיבי."},
-    femur:      {he:"עצם הירך", la:"Femur", en:"Femur", g:AP, fact:"העצם הארוכה והחזקה ביותר בגוף. הראש שלה יושב בשקע של האגן (מפרק כדורי)."},
-    patella:    {he:"פיקה", la:"Patella", en:"Patella", g:AP, fact:"עצם קטנה בתוך הגיד של הארבע-ראשי, מלפני הברך. יוצרת את מפרק ירך-פיקה."},
-    tibia:      {he:"שוקה", la:"Tibia", en:"Tibia", g:AP, fact:"עצם השוק הגדולה, בצד הפנימי. נושאת את רוב משקל הגוף, ויוצרת עם הירך את מפרק הברך."},
-    fibula:     {he:"שוקית", la:"Fibula", en:"Fibula", g:AP, fact:"עצם השוק הקטנה והדקה, בצד החיצוני. משתתפת במפרק הקרסול."},
-    tarsals:    {he:"עצמות שורש כף הרגל", la:"Ossa tarsi", en:"Tarsals", g:AP, n:"7 עצמות", fact:"ביניהן הקפץ (Talus), שיוצר את מפרק הקרסול עם השוקה והשוקית, והעקב."},
-    metatarsals:{he:"עצמות המסרק (רגל)", la:"Ossa metatarsi", en:"Metatarsals", g:AP, n:"5 עצמות", fact:"העצמות הארוכות של כף הרגל, בין השורש לאצבעות."},
-    footPhal:   {he:"גלילי אצבעות הרגל", la:"Phalanges pedis", en:"Phalanges (foot)", g:AP, n:"14 עצמות", fact:"3 בכל אצבע ו-2 בבוהן."}
+    skull:      {pr:"גולגולת", he:"גולגולת", la:"Cranium", en:"Skull", g:AX, fact:"מגינה על המוח. יחד עם עמוד השדרה, עצם החזה והצלעות היא שלד הציר."},
+    spineC:     {pr:"חוליות צוואריות (Cervical)", he:"חוליות הצוואר", la:"Vertebrae cervicales", en:"Cervical vertebrae", g:AX, n:"7 חוליות", fact:"הקשת של הצוואר היא לורדוזה: קשת קדימה. החוליות כאן הקטנות ביותר."},
+    spineT:     {pr:"חוליות בית החזה (Thorax)", he:"חוליות בית החזה", la:"Vertebrae thoracicae", en:"Thoracic vertebrae", g:AX, n:"12 חוליות", fact:"כל חוליה מחוברת לזוג צלעות (T1–T12). הקשת כאן היא קיפוזה: קשת אחורה. במבט מלפנים הן מוסתרות מאחורי עצם החזה, ולכן רואים אותן במבט מהצד."},
+    spineL:     {pr:"חוליות מותניות (Lumbar)", he:"חוליות מותניות", la:"Vertebrae lumbales", en:"Lumbar vertebrae", g:AX, n:"5 חוליות", fact:"החוליות הגדולות ביותר, כי הן נושאות הכי הרבה משקל. הקשת כאן היא שוב לורדוזה: קשת קדימה."},
+    sacrum:     {pr:"חוליות העצה (Sacrum)", he:"עצה", la:"Os sacrum", en:"Sacrum", g:AX, n:"5 חוליות מאוחות", fact:"חמש חוליות שהתאחו לעצם אחת. מתחברת לעצם הכסל שבאגן במפרק הסקרו-איליאק."},
+    coccyx:     {pr:"חוליות עצם הזנב (Coccyx)", he:"עצם הזנב", la:"Os coccygis", en:"Coccyx", g:AX, n:"4 חוליות מאוחות", fact:"הקצה התחתון של עמוד השדרה."},
+    sternum:    {pr:"עצם החזה (סטרנום)", he:"עצם החזה", la:"Sternum", en:"Sternum", g:AX, fact:"העצם השטוחה במרכז בית החזה. הצלעות האמיתיות מתחברות אליה ישירות."},
+    ribsTrue:   {pr:"צלעות אמתיות", he:"צלעות אמיתיות", la:"Costae verae", en:"True ribs", g:AX, n:"צלעות 1–7", fact:"מחוברות ישירות לעצם החזה, כל אחת דרך סחוס משלה."},
+    ribsFalse:  {pr:"צלעות מדומות", he:"צלעות מדומות", la:"Costae spuriae", en:"False ribs", g:AX, n:"צלעות 8–10", fact:"מתחברות לעצם החזה בעקיפין, דרך הסחוס של הצלע השביעית."},
+    ribsFloat:  {pr:"צלעות צפות", he:"צלעות צפות", la:"Costae fluctuantes", en:"Floating ribs", g:AX, n:"צלעות 11–12", fact:"לא מתחברות לעצם החזה בכלל, רק לעמוד השדרה מאחור."},
+    clavicle:   {pr:"עצם הבריח (Clavicle)", he:"עצם הבריח", la:"Clavicula", en:"Clavicle", g:AP, fact:"חלק מחגורת הכתפיים. מחברת את הגפה העליונה לשלד הציר, דרך מפרק הסטרנו-קלביקולרי בעצם החזה."},
+    scapula:    {pr:"שכמה (Scapula)", he:"שכמה", la:"Scapula", en:"Scapula", g:AP, fact:"חלק מחגורת הכתפיים. יושבת מאחורי בית החזה, ולכן מלפנים רואים רק את הקצה שלה. השקע שלה (גלנואיד) הוא חלק ממפרק הכתף."},
+    humerus:    {pr:"זרוע (Humerus)", he:"עצם הזרוע", la:"Humerus", en:"Humerus", g:AP, fact:"העצם הארוכה של הזרוע, בין הכתף למרפק. הראש העגול שלה יושב בשקע של השכמה."},
+    radius:     {pr:"חישור (Radius)", he:"חישור", la:"Radius", en:"Radius", g:AP, fact:"עצם האמה בצד האגודל. מסתובבת סביב הגומד בסופינציה ופרונציה."},
+    ulna:       {pr:"גומד (Ulna)", he:"גומד", la:"Ulna", en:"Ulna", g:AP, fact:"עצם האמה בצד הזרת. יוצרת עם הזרוע את מפרק הציר של המרפק."},
+    carpals:    {pr:"עצמות שורש כף היד (Carpal)", he:"עצמות שורש כף היד", la:"Ossa carpi", en:"Carpals", g:AP, n:"8 עצמות", fact:"שמונה עצמות קטנות בשתי שורות. ביניהן מפרקי החלקה."},
+    metacarpals:{pr:"עצמות המסרק (מטה-קרפל)", he:"עצמות המסרק (יד)", la:"Ossa metacarpi", en:"Metacarpals", g:AP, n:"5 עצמות", fact:"העצמות של כף היד עצמה, בין השורש לאצבעות."},
+    handPhal:   {pr:"גלילי האצבעות (Phalanges)", he:"גלילי אצבעות היד", la:"Phalanges manus", en:"Phalanges (hand)", g:AP, n:"14 עצמות", fact:"3 בכל אצבע ו-2 באגודל."},
+    ilium:      {pr:"כסל (Ilium)", he:"עצם הכסל", la:"Os ilium", en:"Ilium", g:AP, n:"חלק מעצם האגן", fact:"החלק העליון והרחב של עצם האגן (\"הכנף\"). מאחור הוא מתחבר לעצה במפרק הסקרו-איליאק. את השפה העליונה שלו (ציצת הכסל) אפשר למשש בצד המותן."},
+    ischium:    {pr:"שת (Ischium)", he:"עצם השת", la:"Os ischii", en:"Ischium", g:AP, n:"חלק מעצם האגן", fact:"החלק התחתון והאחורי של עצם האגן. עליו יושבים, ומהבליטה שלו יוצאים שרירי החבליים (המסטרינג)."},
+    pubis:      {pr:"חיק (Pubis)", he:"עצם החיק", la:"Os pubis", en:"Pubis", g:AP, n:"חלק מעצם האגן", fact:"החלק הקדמי של עצם האגן. שתי עצמות החיק נפגשות באמצע, במפרק הסימפיזיס פוביס, שבנוי מסחוס סיבי."},
+    femur:      {pr:"ירך (Femur)", he:"עצם הירך", la:"Femur", en:"Femur", g:AP, fact:"העצם הארוכה והחזקה ביותר בגוף. הראש שלה יושב בשקע של האגן (מפרק כדורי)."},
+    patella:    {pr:"פיקה (Patella)", he:"פיקה", la:"Patella", en:"Patella", g:AP, fact:"עצם קטנה בתוך הגיד של הארבע-ראשי, מלפני הברך. יוצרת את מפרק ירך-פיקה."},
+    tibia:      {pr:"שוקה (Tibia)", he:"שוקה", la:"Tibia", en:"Tibia", g:AP, fact:"עצם השוק הגדולה, בצד הפנימי. נושאת את רוב משקל הגוף, ויוצרת עם הירך את מפרק הברך."},
+    fibula:     {pr:"שוקית (Fibula)", he:"שוקית", la:"Fibula", en:"Fibula", g:AP, fact:"עצם השוק הקטנה והדקה, בצד החיצוני. משתתפת במפרק הקרסול."},
+    tarsals:    {pr:"עצמות שורש כף הרגל (Tarsal)", he:"עצמות שורש כף הרגל", la:"Ossa tarsi", en:"Tarsals", g:AP, n:"7 עצמות", fact:"ביניהן הקפץ (Talus), שיוצר את מפרק הקרסול עם השוקה והשוקית, והעקב."},
+    metatarsals:{pr:"עצמות המסרק (Metatarsal)", he:"עצמות המסרק (רגל)", la:"Ossa metatarsi", en:"Metatarsals", g:AP, n:"5 עצמות", fact:"העצמות הארוכות של כף הרגל, בין השורש לאצבעות."},
+    footPhal:   {pr:"אצבעות הרגל (Phalanges)", he:"גלילי אצבעות הרגל", la:"Phalanges pedis", en:"Phalanges (foot)", g:AP, n:"14 עצמות", fact:"3 בכל אצבע ו-2 בבוהן."}
   };
   var ORDER = ["skull","spineC","clavicle","scapula","sternum","ribsTrue","ribsFalse","ribsFloat","spineT","humerus","radius","ulna","carpals","metacarpals","handPhal","spineL","ilium","ischium","pubis","sacrum","coccyx","femur","patella","tibia","fibula","tarsals","metatarsals","footPhal"];
 
@@ -45,7 +45,7 @@
   function pairStroke(d, w){ return '<path class="sk-line" d="' + d + '" stroke-width="' + w + '"/><path class="sk-line" d="' + d + '" stroke-width="' + w + '"' + M + '/>'
     + '<path class="sk-lhit" d="' + d + '"/><path class="sk-lhit" d="' + d + '"' + M + '/>'; }
   function g(id, inner, hit){ var b = B[id];
-    return '<g class="sk-bone" data-b="' + id + '" tabindex="0" role="button" aria-label="' + b.en + ', ' + b.he + '">' + inner + (hit ? '<path class="sk-hit" d="' + hit + '"/>' + '<path class="sk-hit" d="' + hit + '"' + M + '/>' : '') + '</g>'; }
+    return '<g class="sk-bone" data-b="' + id + '" tabindex="0" role="button" aria-label="' + b.pr + '">' + inner + (hit ? '<path class="sk-hit" d="' + hit + '"/>' + '<path class="sk-hit" d="' + hit + '"' + M + '/>' : '') + '</g>'; }
 
   function front(){
     var s = "";
@@ -115,7 +115,7 @@
       + '<text class="sk-cap" x="75" y="14" text-anchor="middle">Columna vertebralis</text>'
       + '<text class="sk-dir" x="146" y="28" text-anchor="end">anterior →</text>';
     SPINE.forEach(function(r){
-      o += '<g class="sk-bone" data-b="' + r[0] + '" tabindex="0" role="button" aria-label="' + B[r[0]].en + ', ' + B[r[0]].he + '">'
+      o += '<g class="sk-bone" data-b="' + r[0] + '" tabindex="0" role="button" aria-label="' + B[r[0]].pr + '">'
         + '<path class="sk-guide" d="' + r[1] + '"/><g class="vb" data-n="' + r[2] + '" data-p="' + r[3] + '" data-w="' + r[4] + '" data-gap="' + r[5] + '"></g>'
         + '<path class="sk-hit" d="' + r[1] + '"/></g>';
     });
@@ -216,7 +216,7 @@
   function say(id, btn){
     if (!canSpeak) return;
     var b = B[id]; speechSynthesis.cancel();
-    var u1 = new SpeechSynthesisUtterance(b.en.replace(/ \(.*\)$/, "")), v1 = voice(["en-us", "en-gb", "en"]);
+    var term = (b.pr.match(/\(([A-Za-z][^)]*)\)/) || [])[1] || b.en.replace(/ \(.*\)$/, ""), u1 = new SpeechSynthesisUtterance(term), v1 = voice(["en-us", "en-gb", "en"]);
     if (v1) { u1.voice = v1; u1.lang = v1.lang; } else u1.lang = "en-US";
     u1.rate = .85;
     var q = [u1];
@@ -237,7 +237,7 @@
       + '<div class="sk-grid"><div class="sk-stage">' + front() + '<div class="sk-tip"></div></div>' + side() + '</div>'
       + '<div class="sk-legend"><span><i style="background:#93B4F5"></i>שלד הציר</span><span><i style="background:#F5C27A"></i>שלד הגפיים</span></div>'
       + '<div class="sk-panel" aria-live="polite"></div>'
-      + '<div class="sk-list" aria-label="רשימת העצמות">' + ORDER.map(function(id){ return '<button type="button" data-pick="' + id + '"><bdi lang="en">' + B[id].en + '</bdi><small>' + B[id].he + '</small></button>'; }).join("") + '</div>';
+      + '<div class="sk-list" aria-label="רשימת העצמות">' + ORDER.map(function(id){ return '<button type="button" data-pick="' + id + '">' + B[id].pr + '</button>'; }).join("") + '</div>';
     buildVerts(root);
     var panel = root.querySelector(".sk-panel"), tip = root.querySelector(".sk-tip"), stage = root.querySelector(".sk-stage");
     root.querySelectorAll(".sk-bone").forEach(function(el){ el.setAttribute("data-g", B[el.dataset.b].g === AX ? "ax" : "ap"); });
@@ -249,15 +249,15 @@
     }
     function info(id){
       var b = B[id];
-      return '<h4 class="la-main"><span lang="en" dir="ltr">' + b.en + '</span>' + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + b.en + '" title="הקראה">🔊</button>' : '') + '</h4><div class="he-sub">' + b.he + (b.la && b.la !== b.en.replace(/ \(.*\)$/, "") ? ' <span class="en">· בלטינית: <bdi lang="la">' + b.la + '</bdi></span>' : '') + '</div><div class="sk-chips"><span class="sk-chip ' + (b.g === AP ? "ap" : "") + '">' + b.g + '</span>'
+      return '<h4 class="la-main"><span>' + b.pr + '</span>' + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + b.pr + '" title="הקראה">🔊</button>' : '') + '</h4><div class="he-sub"><span class="en">בלטינית: <bdi lang="la">' + b.la + '</bdi></span></div><div class="sk-chips"><span class="sk-chip ' + (b.g === AP ? "ap" : "") + '">' + b.g + '</span>'
         + (b.n ? '<span class="sk-chip">' + b.n + '</span>' : '') + '</div><p>' + b.fact + '</p>';
     }
     function showTip(id, ev){
       var r = stage.getBoundingClientRect(), x, y;
       if (ev && ev.clientX) { x = ev.clientX - r.left; y = ev.clientY - r.top; }
       else { var bb = root.querySelector('.sk-front .sk-bone[data-b="' + id + '"]'); if (!bb) { tip.classList.remove("show"); return; } var q = bb.getBoundingClientRect(); x = q.left + q.width / 2 - r.left; y = q.top - r.top + 6; }
-      tip.innerHTML = '<span class="tl" lang="en" dir="ltr">' + B[id].en + '</span> <span class="th">(' + B[id].he + ')</span>'
-        + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + B[id].en + '" title="הקראה">🔊</button>' : '');
+      tip.innerHTML = '<span class="tl">' + B[id].pr + '</span>'
+        + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + B[id].pr + '" title="הקראה">🔊</button>' : '');
       tip.style.left = Math.max(90, Math.min(r.width - 90, x)) + "px"; tip.style.top = Math.max(34, y) + "px"; tip.classList.add("show");
     }
     function explore(id, ev){
@@ -268,7 +268,7 @@
       var pool = ORDER.filter(function(id){ return id !== (quiz && quiz.target); });
       quiz.target = pool[(Math.random() * pool.length) | 0]; quiz.tries = 0; tip.classList.remove("show");
       mark(null, "ok"); mark(null, "bad"); mark(null, "on");
-      panel.innerHTML = '<p class="sk-q">איפה נמצא/ת: <b lang="en" dir="ltr">' + B[quiz.target].en + '</b>?</p><p class="sk-hint">לוחצים על העצם בשלד' + (/spine|sacrum|coccyx/.test(quiz.target) ? ' (אפשר גם במבט מהצד)' : '') + '.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
+      panel.innerHTML = '<p class="sk-q">איפה נמצא/ת: <b>' + B[quiz.target].pr + '</b>?</p><p class="sk-hint">לוחצים על העצם בשלד' + (/spine|sacrum|coccyx/.test(quiz.target) ? ' (אפשר גם במבט מהצד)' : '') + '.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
     }
     function answer(id, ev){
       if (!quiz.target) return;
@@ -281,10 +281,10 @@
         quiz.tries++; mark(id, "bad"); showTip(id, ev);
         if (quiz.tries >= 2) {
           quiz.asked++; mark(quiz.target, "ok");
-          panel.innerHTML = '<p class="sk-q">לא בדיוק. לחצת על <bdi>' + B[id].en + '</bdi> (' + B[id].he + ').</p><p><bdi>' + B[quiz.target].en + '</bdi> (' + B[quiz.target].he + ') מסומן/ת עכשיו בירוק.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
+          panel.innerHTML = '<p class="sk-q">לא בדיוק. לחצת על <bdi>' + B[id].pr + '</bdi>.</p><p><bdi>' + B[quiz.target].pr + '</bdi> מסומן/ת עכשיו בירוק.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
           quiz.target = null; setTimeout(newQ, 2600);
         } else {
-          panel.innerHTML = '<p class="sk-q">זה <bdi>' + B[id].en + '</bdi> (' + B[id].he + '). נסו שוב: איפה <b lang="en" dir="ltr">' + B[quiz.target].en + '</b>?</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
+          panel.innerHTML = '<p class="sk-q">זה <bdi>' + B[id].pr + '</bdi>. נסו שוב: איפה <b>' + B[quiz.target].pr + '</b>?</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
         }
       }
     }
@@ -299,7 +299,7 @@
         root.querySelectorAll("[data-mode]").forEach(function(b){ b.setAttribute("aria-pressed", String(b === m)); });
         if (mode === "quiz") { quiz = {right:0, asked:0, target:null}; newQ(); } else { mark(null, "ok"); mark(null, "bad"); start(); } return; }
       if (e.target.closest && e.target.closest("[data-groups]")) { var on = root.classList.toggle("groups"); e.target.closest("[data-groups]").setAttribute("aria-pressed", String(on)); return; }
-      if (e.target.closest && e.target.closest("[data-skip]") && quiz) { quiz.asked++; mark(quiz.target, "ok"); var t = quiz.target; quiz.target = null; panel.innerHTML = '<p class="sk-q"><bdi>' + B[t].en + '</bdi> (' + B[t].he + ') מסומן/ת בירוק.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>'; setTimeout(newQ, 1800); }
+      if (e.target.closest && e.target.closest("[data-skip]") && quiz) { quiz.asked++; mark(quiz.target, "ok"); var t = quiz.target; quiz.target = null; panel.innerHTML = '<p class="sk-q"><bdi>' + B[t].pr + '</bdi> מסומן/ת בירוק.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>'; setTimeout(newQ, 1800); }
     });
     root.addEventListener("keydown", function(e){ if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("sk-bone")) { e.preventDefault(); pick(e.target.dataset.b); } });
     function start(){ sel = null; mark(null, "on"); root.querySelectorAll(".sk-list button").forEach(function(b){ b.classList.remove("on"); });
