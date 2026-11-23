@@ -28,7 +28,7 @@
   --d1:#7AA2FF; --d2:#B794F6; --d3:#34D399; --d4:#FBBF24; --d5:#F472B6;
   --shadow-1:0 1px 2px rgba(0,0,0,.3),0 4px 14px -4px rgba(0,0,0,.45);
   --shadow-2:0 16px 34px -10px rgba(0,0,0,.6);
-  --glow-1:rgba(59,130,246,.20); --glow-2:rgba(139,92,246,.14); --glow-3:rgba(16,185,129,.08);
+  --glow-1:rgba(59,130,246,.34); --glow-2:rgba(139,92,246,.26); --glow-3:rgba(16,185,129,.16);
 }}
 :root[data-theme="dark"]{
   --bg:#0B1222; --paper:#131C31; --ink:#E6ECF7; --muted:#9AA8C1; --line:#24304A;
@@ -37,7 +37,7 @@
   --d1:#7AA2FF; --d2:#B794F6; --d3:#34D399; --d4:#FBBF24; --d5:#F472B6;
   --shadow-1:0 1px 2px rgba(0,0,0,.3),0 4px 14px -4px rgba(0,0,0,.45);
   --shadow-2:0 16px 34px -10px rgba(0,0,0,.6);
-  --glow-1:rgba(59,130,246,.20); --glow-2:rgba(139,92,246,.14); --glow-3:rgba(16,185,129,.08);
+  --glow-1:rgba(59,130,246,.34); --glow-2:rgba(139,92,246,.26); --glow-3:rgba(16,185,129,.16);
 }
 
 /* ---------- page background: soft colour glows over a calm base ---------- */
