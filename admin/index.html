@@ -69,29 +69,72 @@ td.num{color:var(--ink)}
 .sw input:disabled+span{opacity:.5}
 .sw em{font-style:normal;color:var(--muted);min-width:4.5em}
 .empty{padding:22px;text-align:center;color:var(--muted)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-top:18px}
+.tabs button{font:700 16.5px var(--body);color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;padding:10px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border-radius:10px 10px 0 0}
+.tabs button:hover{color:var(--accent);background:var(--accent-soft)}
+.tabs button[aria-selected=true]{color:var(--accent);border-bottom-color:var(--accent)}
+.tabs button:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.tabs .badge{font-size:12.5px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--accent);color:var(--paper);display:inline-grid;place-items:center}
+.tabs .badge[hidden]{display:none}
+[role=tabpanel][hidden]{display:none}
+
+form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.stat.hot{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+#pend{border-top:5px solid var(--accent)}
+#pend[hidden]{display:none}
+.preq{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line)}
+.preq:first-of-type{border-top:0}
+.preq .who b{font-size:16.5px}.preq .who .pe{direction:ltr;unicode-bidi:isolate;color:var(--muted);font-size:14.5px;margin-inline-start:8px}
+.preq .who .req{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.preq .acts{display:flex;gap:6px;flex-wrap:wrap}
+.preq .acts button{font:600 14px var(--body);border-radius:8px;padding:6px 12px;cursor:pointer;border:1px solid var(--accent);background:var(--paper);color:var(--accent)}
+.preq .acts button.pri{background:var(--accent);color:var(--paper)}
+.preq .acts button.rej{border-color:#c0392b;color:#c0392b}
+.preq .acts button:disabled{opacity:.5;cursor:default}
+.tag.wait{border-color:var(--accent);color:var(--accent)}
+td .sw + .sp{margin-top:4px}
 </style>
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123i" defer></script><script src="/sync.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
   <h1>ניהול משתמשים</h1>
-  <p class="lead">מי נרשם לאתר, כמה התקדם, ולמי פתוח הקורס המדעי.</p>
+  <p class="lead">מי נרשם לאתר, מי ממתין לאישור, כמה כל אחד התקדם, ולאיזה קורס הוא מורשה.</p>
 </header>
 <main class="wrap">
   <div id="gate" class="notice" hidden></div>
   <div id="app" hidden>
+    <div class="tabs" role="tablist" aria-label="חלקי עמוד הניהול">
+      <button type="button" role="tab" id="tabUsers" aria-controls="pUsers" aria-selected="true">ניהול משתמשים <span class="badge" id="tabBadge" hidden title="ממתינים לאישור"></span></button>
+      <button type="button" role="tab" id="tabViews" aria-controls="pViews" aria-selected="false" tabindex="-1">מונה כניסות</button>
+    </div>
+    <section role="tabpanel" id="pUsers" aria-labelledby="tabUsers">
     <div class="stats">
       <div class="stat"><b id="sTotal">0</b><span>משתמשים</span></div>
+      <div class="stat" id="sPendBox"><b id="sPend">0</b><span>ממתינים לאישור</span></div>
+      <div class="stat"><b id="sBr">0</b><span>עם גישה לקורס הענפי</span></div>
       <div class="stat"><b id="sSci">0</b><span>עם גישה לקורס המדעי</span></div>
       <div class="stat"><b id="sWeek">0</b><span>נכנסו בשבוע האחרון</span></div>
     </div>
+    <div class="panel" id="pend" hidden>
+      <h2>בקשות הרשמה שממתינות לאישור</h2>
+      <p>המייל של כל אחד מהם כבר אומת בקוד. בוחרים לאיזה קורס לפתוח את האתר, והמשתמש מקבל על כך מייל. הכפתור המודגש הוא הקורס שביקש.</p>
+      <div id="pendList"></div>
+    </div>
     <div class="panel">
-      <h2>אישור מראש לקורס המדעי</h2>
-      <p>מזינים כתובת מייל של משתתף. אם הוא עוד לא נרשם, הגישה תחכה לו, וכשיתחבר עם המייל הזה הקורס המדעי ייפתח לו מיד.</p>
-      <form class="add" id="addForm" novalidate><input id="addEmail" type="email" placeholder="name@example.com" aria-label="כתובת מייל לאישור" autocomplete="off"><button class="btn" type="submit">אישור גישה</button></form>
+      <h2>אישור מראש</h2>
+      <p>מזינים כתובת מייל של משתתף ובוחרים קורס. הוא לא יצטרך להירשם: כשייכנס עם המייל הזה, הקורס ייפתח לו מיד. אם המשתמש כבר קיים, הגישה שבחרת תתווסף לו.</p>
+      <form class="add" id="addForm" novalidate><input id="addEmail" type="email" placeholder="name@example.com" aria-label="כתובת מייל לאישור" autocomplete="off"><select id="addCourse" aria-label="קורס"><option value="branch">קורס ענפי</option><option value="science">קורס מדעי</option><option value="both">גם וגם</option></select><button class="btn" type="submit">אישור גישה</button></form>
       <div class="msg" id="addMsg" role="status"></div>
     </div>
-    <div class="panel" id="views">
+    <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי שם או מייל" aria-label="חיפוש לפי שם או מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>שם</th><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th><th><span class="sr">פעולות</span></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+    </section>
+    <section role="tabpanel" id="pViews" aria-labelledby="tabViews" hidden>
+    <div class="panel" id="views" style="margin-top:18px">
       <div class="vhead"><div><h2>מונה כניסות</h2><p>כמה כניסות היו לכל עמוד. לא נספרות כניסות שלך, ורענון של אותו עמוד תוך 5 דקות נספר פעם אחת.</p></div>
         <label class="rng">טווח: <select id="vDays"><option value="7">7 ימים</option><option value="30" selected>30 ימים</option><option value="90">90 ימים</option><option value="0">מההתחלה</option></select></label></div>
       <div class="stats vstats">
@@ -108,11 +151,7 @@ td.num{color:var(--ink)}
         <tbody id="vRows"></tbody>
       </table></div>
     </div>
-    <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי שם או מייל" aria-label="חיפוש לפי שם או מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
-    <div class="tbl"><table>
-      <thead><tr><th>שם</th><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th><th><span class="sr">פעולות</span></th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table></div>
+    </section>
   </div>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
@@ -129,7 +168,7 @@ td.num{color:var(--ink)}
   function gate(html){$("gate").innerHTML=html;$("gate").hidden=false;$("app").hidden=true}
   function load(){
     fetch("/api/admin_users.php",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json().then(j=>[r.status,j])).then(([st,j])=>{
-      if(st===401){gate('<b>צריך להתחבר.</b> לוחצים על "התחברות / שמירת התקדמות" למעלה ומתחברים עם כתובת המייל של המנהל.');return}
+      if(st===401){gate('<b>צריך להתחבר.</b> לוחצים על "כניסה / הרשמה" למעלה ונכנסים עם כתובת המייל של המנהל.');return}
       if(st===403){gate('<b>אין לך הרשאה לעמוד הזה.</b> רק מנהל האתר יכול לצפות ברשימת המשתמשים.');return}
       if(!j.ok){gate("משהו השתבש בטעינת הרשימה. נסה לרענן.");return}
       users=j.users;$("gate").hidden=true;$("app").hidden=false;loadViews();render();
@@ -151,26 +190,40 @@ td.num{color:var(--ink)}
     const q=$("q").value.trim().toLowerCase();
     const list=users.filter(u=>!q||u.email.includes(q)||(u.name||"").toLowerCase().includes(q));
     const week=Date.now()-7*864e5;
+    const pend=users.filter(isPending);
     $("sTotal").textContent=users.length;
+    $("sPend").textContent=pend.length;$("sPendBox").classList.toggle("hot",pend.length>0);
+    $("sBr").textContent=users.filter(u=>u.branch).length;
     $("sSci").textContent=users.filter(u=>u.science).length;
+    $("pend").hidden=!pend.length;
+    $("tabBadge").hidden=!pend.length;$("tabBadge").textContent=pend.length;
+    $("pendList").innerHTML=pend.map(u=>`<div class="preq"><div class="who"><b>${u.name?esc(u.name):"(ללא שם)"}</b> <span class="pe">${esc(u.email)}</span>
+      <span class="req">ביקש/ה: ${COURSE[u.course]||"לא צוין"} · נרשם/ה ${fmt(u.created_at)}</span></div>
+      <div class="acts">${[["branch","קורס ענפי"],["science","קורס מדעי"],["both","גם וגם"]].map(([c,t])=>`<button type="button" class="${u.course===c?"pri":""}" data-ap="${esc(u.email)}" data-c="${c}">אישור: ${t}</button>`).join("")}
+      <button type="button" class="rej" data-del="${esc(u.email)}">דחייה ומחיקה</button></div></div>`).join("");
+    $("pendList").querySelectorAll("[data-ap]").forEach(bt=>bt.onclick=()=>{
+      const c=bt.dataset.c;bt.closest(".acts").querySelectorAll("button").forEach(x=>x.disabled=true);
+      setAccess(bt.dataset.ap,{branch:c!=="science",science:c!=="branch"}).catch(()=>{alert("האישור נכשל. נסה שוב.");render()});
+    });
     $("sWeek").textContent=users.filter(u=>u.last_login_at&&new Date(u.last_login_at.replace(" ","T"))>week).length;
     $("shown").textContent=q?`מוצגים ${list.length} מתוך ${users.length}`:"";
     $("rows").innerHTML=list.length?list.map((u,i)=>{
       const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0)+(u.done.meth||0);
-      const pending=!u.last_login_at;
+      const pending=!u.last_login_at,wait=isPending(u);
       const sd=SCI_TOPICS.reduce((a,t)=>a+Math.min(u.done[t[1]]||0,t[2]),0);
       const sTitle=SCI_TOPICS.map(t=>`${t[0]}: ${u.done[t[1]]||0} מתוך ${t[2]}`).join(" · ");
-      return `<tr><td class="nmc"><span class="nmv">${u.name?esc(u.name):'<span class="none">—</span>'}</span><button class="ed" type="button" data-name="${esc(u.email)}" aria-label="עריכת השם של ${esc(u.email)}" title="עריכת שם">✎</button></td><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
+      return `<tr><td class="nmc"><span class="nmv">${u.name?esc(u.name):'<span class="none">—</span>'}</span><button class="ed" type="button" data-name="${esc(u.email)}" aria-label="עריכת השם של ${esc(u.email)}" title="עריכת שם">✎</button></td><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${wait?'<span class="tag wait">ממתין לאישור</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
         <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>
-        <td class="num">${b} / ${BRANCH_TOTAL} פרקים${u.progress_at?` <button class="rst" type="button" data-reset="${esc(u.email)}">איפוס</button>`:""}</td>
-        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" ${u.science?"checked":""} ${u.admin?"disabled":""}><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label>${(u.science||sd)?`<div class="sp" title="${sTitle}">${sd} / ${SCI_TOTAL} פרקים</div>`:""}</td>
+        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" data-k="branch" ${u.branch?"checked":""} ${u.admin?"disabled":""} aria-label="גישה לקורס הענפי עבור ${esc(u.email)}"><span></span><em>${u.admin?"תמיד":u.branch?"מאושר":"חסום"}</em></label>
+          <div class="sp num">${b} / ${BRANCH_TOTAL} פרקים${u.progress_at?` <button class="rst" type="button" data-reset="${esc(u.email)}">איפוס</button>`:""}</div></td>
+        <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" data-k="science" ${u.science?"checked":""} ${u.admin?"disabled":""} aria-label="גישה לקורס המדעי עבור ${esc(u.email)}"><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label>${(u.science||sd)?`<div class="sp" title="${sTitle}">${sd} / ${SCI_TOTAL} פרקים</div>`:""}</td>
         <td>${u.admin?"":`<button class="del" type="button" data-del="${esc(u.email)}" aria-label="מחיקת ${esc(u.email)}">מחיקה</button>`}</td></tr>`}).join("")
       :`<tr><td colspan="7" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
-    $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,cb.checked,cb));
+    $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,{[cb.dataset.k]:cb.checked},cb).catch(()=>alert("השמירה נכשלה. נסה שוב.")));
     $("rows").querySelectorAll("[data-name]").forEach(bt=>bt.onclick=()=>editName(bt));
-    $("rows").querySelectorAll("[data-del]").forEach(bt=>bt.onclick=()=>{
+    document.querySelectorAll("#rows [data-del],#pendList [data-del]").forEach(bt=>bt.onclick=()=>{
       const em=bt.dataset.del;
-      if(!confirm(`למחוק את ${em} לצמיתות?\nיימחקו המשתמש, ההתקדמות השמורה, ההרשאה לקורס המדעי והחיבורים הפעילים שלו. אי אפשר לבטל את זה.`))return;
+      if(!confirm(`למחוק את ${em} לצמיתות?\nיימחקו המשתמש, ההתקדמות השמורה, ההרשאות לקורסים והחיבורים הפעילים שלו. אי אפשר לבטל את זה.`))return;
       bt.disabled=true;
       fetch("/api/admin_delete.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:em})})
         .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);users=users.filter(x=>x.email!==em);render()})
@@ -185,15 +238,19 @@ td.num{color:var(--ink)}
         .catch(()=>{bt.disabled=false;alert("האיפוס נכשל. נסה שוב.")});
     });
   }
-  function setAccess(email,on,cb){
+  /* נרשם ואימת את המייל, אבל עוד לא קיבל גישה לאף קורס. */
+  function isPending(u){return !u.admin&&!u.branch&&!u.science&&!!u.last_login_at}
+  const COURSE={branch:"קורס ענפי",science:"קורס מדעי",both:"גם וגם (ענפי ומדעי)"};
+  /* change: {branch:true/false} ו/או {science:true/false}. */
+  function setAccess(email,change,cb){
     if(cb)cb.disabled=true;
-    return fetch("/api/admin_access.php",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,science:on})})
+    return fetch("/api/admin_access.php",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,...change})})
       .then(r=>r.json()).then(j=>{
         if(!j.ok)throw new Error(j.error);
         const u=users.find(x=>x.email===j.email);
-        if(u)u.science=j.science;else users.unshift({email:j.email,created_at:new Date().toISOString().slice(0,19).replace("T"," "),last_login_at:null,done:{},science:j.science,admin:false});
+        if(u){u.branch=j.branch;u.science=j.science}else users.unshift({email:j.email,created_at:new Date().toISOString().slice(0,19).replace("T"," "),last_login_at:null,done:{},branch:j.branch,science:j.science,admin:false});
         render();return j;
-      }).catch(e=>{if(cb){cb.checked=!on;cb.disabled=false}throw e});
+      }).catch(e=>{if(cb){cb.checked=!cb.checked;cb.disabled=false}throw e});
   }
   $("q").oninput=render;
   /* ---------- מונה כניסות ---------- */
@@ -216,14 +273,26 @@ td.num{color:var(--ink)}
     }).catch(()=>{});
   }
   $("vDays").onchange=loadViews;
+  /* לשוניות: ניהול משתמשים / מונה כניסות. הלשונית הפתוחה נשמרת בכתובת (#views), כך שרענון נשאר בה. */
+  const TABS=[["tabUsers","pUsers",""],["tabViews","pViews","views"]];
+  function showTab(i,focus){
+    TABS.forEach(([t,p],j)=>{const on=i===j;$(t).setAttribute("aria-selected",on);$(t).tabIndex=on?0:-1;$(p).hidden=!on});
+    if(focus)$(TABS[i][0]).focus();
+    history.replaceState(null,"",TABS[i][2]?"#"+TABS[i][2]:location.pathname+location.search);
+  }
+  TABS.forEach(([t],i)=>{$(t).onclick=()=>showTab(i);$(t).onkeydown=e=>{
+    const k={ArrowLeft:1,ArrowRight:-1,Home:"first",End:"last"}[e.key];if(k===undefined)return;e.preventDefault();
+    showTab(k==="first"?0:k==="last"?TABS.length-1:(i+k+TABS.length)%TABS.length,true)}});
+  showTab(location.hash==="#views"?1:0);
   $("addForm").onsubmit=e=>{
     e.preventDefault();
     const em=$("addEmail").value.trim().toLowerCase(),m=$("addMsg");
     if(!/^\S+@\S+\.\S+$/.test(em)){m.className="msg err";m.textContent="כתובת המייל לא נראית תקינה.";return}
     m.className="msg";m.textContent="שומר...";
-    setAccess(em,true).then(()=>{m.textContent=`${em} אושר לקורס המדעי.`;$("addEmail").value=""}).catch(()=>{m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
+    const c=$("addCourse").value,ch=c==="both"?{branch:true,science:true}:{[c]:true};
+    setAccess(em,ch).then(j=>{m.textContent=`${em} אושר ל${COURSE[c]}.`+(j.notified?" נשלח אליו מייל.":"");$("addEmail").value=""}).catch(()=>{m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
   };
-  /* נטען מחדש אחרי התחברות או התנתקות דרך כפתור "התחברות / שמירת התקדמות". */
+  /* נטען מחדש אחרי כניסה או התנתקות דרך כפתור "כניסה / הרשמה". */
   document.addEventListener("runners:auth",load);
   load();
 })();

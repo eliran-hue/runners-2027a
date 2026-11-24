@@ -1,5 +1,5 @@
 /* Sticky header for every page: logo, hamburger menu with the site tree, and the theme/account buttons.
-   The science course is shown as a locked item (no sub-items) unless the visitor has access (see sync.js → runners:auth). */
+   Each course is shown as a locked item (no sub-items) unless the visitor has access to it; logged-out or pending visitors see only the home page (see sync.js → runners:auth). */
 (function(){
   "use strict";
   if (document.getElementById("topbar")) return;
@@ -97,17 +97,25 @@
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
   function link(href, text){ return '<a href="' + href + '"' + (here === href ? ' aria-current="page"' : '') + '>' + esc(text) + '</a>'; }
   function tree(){
-    var a = window.runnersAuth || {}, sci = !!(a.science || a.admin);
-    var h = '<ul>' + '<li>' + link("/", "דף הבית") + '</li>'
-      + '<li>' + link("/branch/", "קורס ענפי") + '<ul>' + BRANCH.map(function(b){ return '<li>' + link(b[0], b[1]) + '</li>'; }).join("") + '</ul></li>';
+    var a = window.runnersAuth || {}, br = !!(a.branch || a.admin), sci = !!(a.science || a.admin);
+    var h = '<ul>' + '<li>' + link("/", "דף הבית") + '</li>';
+    /* Not logged in, or waiting for approval: the site is closed, so the menu has only the home page. */
+    if (!a.email || a.pending) {
+      return h + '</ul><p class="lock">' + (a.pending ? "הבקשה שלך ממתינה לאישור של מנהל האתר." : "האתר פתוח רק למשתתפי הקורס. נכנסים או נרשמים בדף הבית.") + '</p>';
+    }
+    function locked(area, name){
+      return '<li><a href="/?locked=' + area + '">' + name + ' <span aria-hidden="true">🔒</span><span class="soon">נעול</span></a>'
+        + '<span class="lock">הגישה לקורס הזה עוד לא אושרה לך. לפרטים ←</span></li>';
+    }
+    h += br ? '<li>' + link("/branch/", "קורס ענפי") + '<ul>' + BRANCH.map(function(b){ return '<li>' + link(b[0], b[1]) + '</li>'; }).join("") + '</ul></li>'
+            : locked("branch", "קורס ענפי");
     if (sci) {
       h += '<li>' + link("/science/", "קורס מדעי") + '<ul>' + SCIENCE.map(function(t){
         if (!t[0]) return '<li><span class="na">' + esc(t[1]) + '<span class="soon">בקרוב</span></span></li>';
         return '<li>' + link(t[0], t[1]) + (t[2] ? '<ul>' + t[2].map(function(u){ return '<li>' + link(u[0], u[1]) + '</li>'; }).join("") + '</ul>' : '') + '</li>';
       }).join("") + '</ul></li>';
     } else {
-      h += '<li><a href="/?science=locked#sciLockCard">קורס מדעי <span aria-hidden="true">🔒</span><span class="soon">נעול</span></a>'
-        + '<span class="lock">פתוח רק למשתתפי הקורס המדעי. לפרטים על קבלת גישה ←</span></li>';
+      h += locked("science", "קורס מדעי");
     }
     if (a.admin) h += '<li>' + link("/admin/", "ניהול האתר") + '</li>';
     return h + '</ul>';

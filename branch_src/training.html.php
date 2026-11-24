@@ -1,3 +1,4 @@
+<?php http_response_code(404); exit; /* מוגש רק דרך api/branch_gate.php */ ?>
 <!doctype html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>תורת האימון · קורס ענפי · קורס מדריכי ריצות ארוכות</title>
@@ -212,7 +213,7 @@ table.wide{min-width:760px}
 .vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .vids .fig{margin-top:0}
 figcaption a{color:var(--accent)}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123i" defer></script><script src="/sync.js?v=20261123f" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">תורת האימון</span></nav>
   <h1>תורת האימון</h1>

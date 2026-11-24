@@ -1,9 +1,10 @@
+<?php http_response_code(404); exit; /* מוגש רק דרך api/branch_gate.php */ ?>
 <!doctype html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>מחשבונים וכלי עזר · קורס ענפי</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123i" defer></script><script src="/sync.js?v=20261123f" defer></script><style>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><style>
 .tools{display:flex;flex-direction:column;gap:14px}
 details.tool{padding:0}
 details.tool>summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:center;padding:18px 22px;border-radius:14px}

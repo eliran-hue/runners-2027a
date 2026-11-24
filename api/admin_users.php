@@ -5,7 +5,7 @@ require __DIR__ . '/_helpers.php';
 /* רשימת המשתמשים לעמוד הניהול: מייל, תאריכים, פרקים שהושלמו, וגישה לקורס המדעי. */
 require_admin();
 ensure_schema();
-$rows = get_pdo()->query('SELECT u.id, u.email, u.display_name, u.created_at, u.last_login_at, u.science_access, p.data, p.updated_at
+$rows = get_pdo()->query('SELECT u.id, u.email, u.display_name, u.created_at, u.last_login_at, u.science_access, u.branch_access, u.requested_course, p.data, p.updated_at
     FROM users u LEFT JOIN progress p ON p.user_id = u.id ORDER BY u.created_at DESC')->fetchAll();
 
 $out = [];
@@ -23,7 +23,7 @@ foreach ($rows as $r) {
         $d = json_decode((string)$v, true);
         $done[substr($k, 0, -5)] = is_array($d) ? count(array_filter($d)) : 0;
     }
-    $u = ['email' => $r['email'], 'science_access' => $r['science_access']];
+    $u = ['email' => $r['email'], 'science_access' => $r['science_access'], 'branch_access' => $r['branch_access']];
     $out[] = [
         'email' => $r['email'],
         'name' => $r['display_name'] ?? null,
@@ -31,7 +31,9 @@ foreach ($rows as $r) {
         'last_login_at' => $r['last_login_at'],
         'progress_at' => $r['updated_at'],
         'done' => (object)$done,
+        'branch' => has_branch($u),
         'science' => has_science($u),
+        'course' => $r['requested_course'] ?? null,
         'admin' => is_admin($u),
     ];
 }

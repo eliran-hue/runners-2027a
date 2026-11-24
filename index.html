@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="he" dir="rtl" class="auth-wait"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>קורס מדריכי ריצות ארוכות · סמסטר 2027א</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123i" defer></script><script src="/sync.js?v=20261123f" defer></script><style>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><style>
 .hello{font:400 26px var(--display);color:var(--accent);margin:6px 0 4px}
 .hello[hidden]{display:none}
 .lockcard{display:flex;flex-direction:column;gap:10px;background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:14px;padding:20px 22px}
@@ -16,6 +16,27 @@
 .lockcard .cbtn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .lockcard .small{font-size:14.5px}
 .lockcard.flash{box-shadow:0 0 0 3px var(--accent)}
+.lockcard .cbtn.ghost{color:var(--muted);border-color:var(--line);background:transparent;cursor:pointer}
+html.auth-wait main > section{visibility:hidden}
+main > section[hidden]{display:none}
+.gate{max-width:620px;margin:8px 0 0;background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:16px;padding:26px 26px 22px;text-align:center}
+.gate h2{font-size:26px;margin:0 0 8px}
+.gate p{color:var(--muted);font-size:16.5px;line-height:1.6;margin:0 auto 12px;max-width:52ch}
+.gate .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px}
+.gate .big{font:700 18px var(--body);border-radius:12px;padding:12px 30px;cursor:pointer;border:2px solid var(--accent);background:var(--paper);color:var(--accent);min-width:150px}
+.gate .big.pri{background:var(--accent);color:var(--paper)}
+.gate .big:hover{filter:brightness(1.07)}
+.gate .big:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.gate .steps{list-style:none;padding:0;margin:18px auto 0;display:grid;gap:8px;text-align:start;max-width:440px;counter-reset:s}
+.gate .steps li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;font-size:15.5px;color:var(--ink)}
+.gate .steps li::before{content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:14px;display:grid;place-items:center}
+.gate .note{font-size:15px;color:var(--accent);font-weight:600}
+.gate .note[hidden]{display:none}
+.gate .ic{font-size:40px;line-height:1;margin-bottom:8px}
+.gate .contact{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.gate .cbtn{font:600 15px var(--body);text-decoration:none;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:7px 14px;background:var(--accent-soft);cursor:pointer}
+.gate .cbtn.wa{color:#fff;background:#1F8A55;border-color:#1F8A55}
+.gate .cbtn.ghost{color:var(--muted);border-color:var(--line);background:transparent}
 </style><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"></nav>
@@ -25,8 +46,39 @@
   <p class="lead">כל חומר הלימוד במקום אחד, בשפה פשוטה. בוחרים נושא, לומדים פרק אחר פרק, ובסוף כל פרק עונים על בוחן קצר.</p>
 </header>
 <main class="wrap">
+  <!-- לא מחוברים: רק כניסה או הרשמה. כל התוכן של הקורסים מוגש דרך השרת, ורק למי שאושר. -->
+  <section id="landing" hidden>
+    <div class="gate">
+      <h2>ברוכים הבאים</h2>
+      <p class="note" id="nextNote" hidden>כדי לצפות בעמוד הזה, צריך קודם להיכנס לאתר.</p>
+      <p>האתר פתוח רק למשתתפי הקורס. מי שכבר נרשם נכנס עם כתובת המייל שלו וקוד שנשלח אליו.</p>
+      <div class="acts"><button type="button" class="big pri" data-open="login">כניסה</button><button type="button" class="big" data-open="register">הרשמה</button></div>
+      <ol class="steps">
+        <li>נרשמים עם שם מלא, כתובת מייל והקורס שלומדים (ענפי, מדעי או שניהם).</li>
+        <li>מאמתים את המייל עם קוד בן 6 ספרות.</li>
+        <li>מנהל האתר מאשר את הגישה, ונשלח אליך מייל. מאותו רגע נכנסים מכל מכשיר.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- נרשמו ואימתו את המייל, אבל המנהל עוד לא אישר גישה לאף קורס. -->
+  <section id="pending" hidden>
+    <div class="gate">
+      <div class="ic" aria-hidden="true">⏳</div>
+      <h2>הבקשה שלך התקבלה</h2>
+      <p id="pendingText">המייל אומת, והבקשה ממתינה לאישור של מנהל האתר. ברגע שהגישה תאושר, יישלח אליך מייל, ואפשר יהיה להיכנס עם אותה כתובת.</p>
+      <p>רוצה לזרז? אפשר לפנות למנהל האתר:</p>
+      <div class="contact">
+        <a class="cbtn wa" href="https://wa.me/972537748421?text=%D7%94%D7%99%D7%99%2C%20%D7%A0%D7%A8%D7%A9%D7%9E%D7%AA%D7%99%20%D7%9C%D7%90%D7%AA%D7%A8%20%D7%A9%D7%9C%20%D7%A7%D7%95%D7%A8%D7%A1%20%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%99%20%D7%A8%D7%99%D7%A6%D7%95%D7%AA%20%D7%90%D7%A8%D7%95%D7%9B%D7%95%D7%AA%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%90%D7%99%D7%A9%D7%95%D7%A8%20%D7%92%D7%99%D7%A9%D7%94" target="_blank" rel="noopener">וואטסאפ</a>
+        <a class="cbtn" href="mailto:eliranh84@gmail.com?subject=%D7%90%D7%99%D7%A9%D7%95%D7%A8%20%D7%92%D7%99%D7%A9%D7%94%20%D7%9C%D7%90%D7%AA%D7%A8">מייל: eliranh84@gmail.com</a>
+        <button type="button" class="cbtn ghost" data-logout>התנתקות</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="courses" hidden>
   <div class="grid">
-    <a class="topic" href="/branch/" style="--c:var(--d1)">
+    <a class="topic" href="/branch/" id="branchCard" hidden style="--c:var(--d1)">
       <h2>קורס ענפי</h2><p>הקורס ללימודי מדריכי ריצות ארוכות.</p><ul><li>מחשבונים וכלי עזר</li><li>האנטומיה של הריצה</li><li>הפיזיולוגיה של הריצה</li><li>תורת האימון</li><li>מתודיקה באימון</li></ul>
       <div class="prog" data-keys="anat:5,phys:7,train:10,meth:5"><div class="bar"><i></i></div><div class="t"><span class="st">27 פרקים</span><span class="go">לקורס ←</span></div></div>
     </a>
@@ -36,18 +88,27 @@
       <div class="prog" data-keys="sci.anat1:3,sci.anat3:5,sci.anat4:6"><div class="bar"><i></i></div><div class="t"><span class="st">14 פרקים</span><span class="go">לקורס ←</span></div></div>
     </a>
 
-    <div class="topic lockcard" id="sciLockCard" style="--c:var(--d2)">
-      <h2>קורס מדעי <span class="lock" aria-hidden="true">🔒</span></h2>
-      <p>הגישה לקורס הזה פתוחה רק למשתתפי הקורס המדעי. כדי לקבל גישה, יש ליצור קשר עם מנהל האתר:</p>
+    <div class="topic lockcard" id="branchLockCard" hidden style="--c:var(--d1)">
+      <h2>קורס ענפי <span class="lock" aria-hidden="true">🔒</span></h2>
+      <p>הגישה לקורס הזה עוד לא אושרה לך. היא פתוחה רק למשתתפי הקורס הענפי. כדי לקבל גישה, אפשר לפנות למנהל האתר:</p>
       <div class="contact">
-        <a class="cbtn wa" href="https://wa.me/972537748421?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A9%D7%AA%D7%AA%D7%A3%2F%D7%AA%20%D7%91%D7%A7%D7%95%D7%A8%D7%A1%20%D7%94%D7%9E%D7%93%D7%A2%D7%99%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%92%D7%99%D7%A9%D7%94%20%D7%9C%D7%90%D7%AA%D7%A8" target="_blank" rel="noopener">וואטסאפ</a>
+        <a class="cbtn wa" href="https://wa.me/972537748421?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A9%D7%AA%D7%AA%D7%A3/%D7%AA%20%D7%91%D7%A7%D7%95%D7%A8%D7%A1%20%D7%94%D7%A2%D7%A0%D7%A4%D7%99%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%92%D7%99%D7%A9%D7%94%20%D7%90%D7%9C%D7%99%D7%95%20%D7%91%D7%90%D7%AA%D7%A8" target="_blank" rel="noopener">וואטסאפ</a>
+        <a class="cbtn" href="mailto:eliranh84@gmail.com?subject=%D7%92%D7%99%D7%A9%D7%94%20%D7%9C%D7%A7%D7%95%D7%A8%D7%A1%20%D7%94%D7%A2%D7%A0%D7%A4%D7%99">מייל: eliranh84@gmail.com</a>
+      </div>
+    </div>
+
+    <div class="topic lockcard" id="sciLockCard" hidden style="--c:var(--d2)">
+      <h2>קורס מדעי <span class="lock" aria-hidden="true">🔒</span></h2>
+      <p>הגישה לקורס הזה עוד לא אושרה לך. היא פתוחה רק למשתתפי הקורס המדעי. כדי לקבל גישה, אפשר לפנות למנהל האתר:</p>
+      <div class="contact">
+        <a class="cbtn wa" href="https://wa.me/972537748421?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A9%D7%AA%D7%AA%D7%A3/%D7%AA%20%D7%91%D7%A7%D7%95%D7%A8%D7%A1%20%D7%94%D7%9E%D7%93%D7%A2%D7%99%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%92%D7%99%D7%A9%D7%94%20%D7%90%D7%9C%D7%99%D7%95%20%D7%91%D7%90%D7%AA%D7%A8" target="_blank" rel="noopener">וואטסאפ</a>
         <a class="cbtn" href="mailto:eliranh84@gmail.com?subject=%D7%92%D7%99%D7%A9%D7%94%20%D7%9C%D7%A7%D7%95%D7%A8%D7%A1%20%D7%94%D7%9E%D7%93%D7%A2%D7%99">מייל: eliranh84@gmail.com</a>
       </div>
-      <p class="small">כבר קיבלת אישור? לוחצים על "התחברות / שמירת התקדמות" למעלה ומתחברים עם כתובת המייל שאושרה.</p>
     </div>
 
   </div>
-  <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> לוחצים על "התחברות / שמירת התקדמות" למעלה, מזינים כתובת מייל ומקבלים קוד כניסה.</div>
+  <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> נכנסים שם עם אותה כתובת מייל, וההתקדמות מחכה שם.</div>
+  </section>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
 <script>
@@ -61,16 +122,34 @@ document.querySelectorAll(".prog").forEach(p=>{
 });
 
 
-/* הקורס המדעי מוצג רק למי שאושר (או למנהל). ההרשאה האמיתית נבדקת בשרת, בכל בקשה ל-/science/. */
+/* מה מוצג בדף הבית לפי מצב החיבור (sync.js → runners:auth):
+   לא מחובר: מסך כניסה/הרשמה. ממתין לאישור: הודעת המתנה. מאושר: כרטיסי הקורסים שנפתחו לו (והשאר נעולים).
+   ההרשאה האמיתית נבדקת בשרת, בכל בקשה ל-/branch/ ול-/science/. */
 (function(){
-  const card=document.getElementById("sciCard"),lock=document.getElementById("sciLockCard");
-  const locked=new URLSearchParams(location.search).get("science")==="locked";
-  function apply(a){const ok=!!(a&&(a.science||a.admin));card.hidden=!ok;lock.hidden=ok;lock.classList.toggle("flash",locked&&!ok)}
+  const $=id=>document.getElementById(id);
+  const qs=new URLSearchParams(location.search);
+  const lockedQ=qs.get("locked")||(qs.get("science")==="locked"?"science":"");
+  const COURSE={branch:"לקורס הענפי",science:"לקורס המדעי",both:"לקורס הענפי ולקורס המדעי"};
+  function apply(a){
+    a=a||{};if(!a.known)return;
+    document.documentElement.classList.remove("auth-wait");
+    const ok=!!a.email&&!a.pending;
+    $("landing").hidden=!!a.email;$("pending").hidden=!(a.email&&a.pending);$("courses").hidden=!ok;
+    $("nextNote").hidden=!qs.get("next");
+    if(a.pending){const who=a.name?`שלום ${a.name}, `:"";$("pendingText").textContent=`${who}המייל אומת, והבקשה${a.course&&COURSE[a.course]?" לגישה "+COURSE[a.course]:""} ממתינה לאישור של מנהל האתר. ברגע שהגישה תאושר, יישלח אליך מייל, ואפשר יהיה להיכנס עם אותה כתובת.`}
+    const br=!!(a.branch||a.admin),sci=!!(a.science||a.admin);
+    $("branchCard").hidden=!br;$("branchLockCard").hidden=!ok||br;
+    $("sciCard").hidden=!sci;$("sciLockCard").hidden=!ok||sci;
+    $("branchLockCard").classList.toggle("flash",lockedQ==="branch"&&!br);
+    $("sciLockCard").classList.toggle("flash",lockedQ==="science"&&!sci);
+    const hello=$("hello"),n=a.email&&a.name;hello.hidden=!n;if(n)hello.textContent=`שלום, ${a.name}! 👋`;
+    /* הגיעו מקישור לעמוד בקורס בלי להיות מחוברים: פותחים מיד את חלון הכניסה. */
+    if(!a.email&&!a.offline&&qs.get("next")&&!apply.opened&&window.runnersAccount){apply.opened=true;window.runnersAccount.open("login")}
+  }
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{if(window.runnersAccount)window.runnersAccount.open(b.dataset.open);else alert("הכניסה זמינה רק באתר עצמו (runners2027.fyi).")});
+  document.querySelectorAll("[data-logout]").forEach(b=>b.onclick=()=>window.runnersAccount&&window.runnersAccount.logout());
   document.addEventListener("runners:auth",e=>apply(e.detail));
-  const hello=document.getElementById("hello");
-  function greet(a){const n=a&&a.email&&a.name;hello.hidden=!n;if(n){hello.textContent=`שלום, ${n}! 👋`}}
-  document.addEventListener("runners:auth",e=>greet(e.detail));if(window.runnersAuth)greet(window.runnersAuth);
-  apply(window.runnersAuth||null);
+  apply(window.runnersAuth);
 })();
 </script>
 </body></html>

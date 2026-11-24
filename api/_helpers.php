@@ -86,6 +86,27 @@ function ensure_schema(): void {
     } catch (PDOException $e) {
         $pdo->exec('ALTER TABLE users ADD COLUMN display_name VARCHAR(60) NULL');
     }
+    /* Access to the branch course. Added when the whole site became login-only:
+       everyone who was already registered keeps the access they had (the branch course was public). */
+    try {
+        $pdo->query('SELECT branch_access FROM users LIMIT 1');
+    } catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE users ADD COLUMN branch_access INT NOT NULL DEFAULT 0');
+        $pdo->exec('UPDATE users SET branch_access = 1');
+    }
+    /* The course chosen at registration: branch / science / both. */
+    try {
+        $pdo->query('SELECT requested_course FROM users LIMIT 1');
+    } catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE users ADD COLUMN requested_course VARCHAR(10) NULL');
+    }
+    /* Registration details travel with the code until the email is verified. */
+    try {
+        $pdo->query('SELECT reg_name, reg_course FROM login_codes LIMIT 1');
+    } catch (PDOException $e) {
+        $pdo->exec('ALTER TABLE login_codes ADD COLUMN reg_name VARCHAR(60) NULL');
+        $pdo->exec('ALTER TABLE login_codes ADD COLUMN reg_course VARCHAR(10) NULL');
+    }
     ensure_views_table($pdo);
 }
 
@@ -126,12 +147,23 @@ function has_science(?array $u): bool {
     return $u !== null && (is_admin($u) || (int)($u['science_access'] ?? 0) === 1);
 }
 
-/** Returns the logged-in user row (id, email, science_access) or null. */
+function has_branch(?array $u): bool {
+    return $u !== null && (is_admin($u) || (int)($u['branch_access'] ?? 0) === 1);
+}
+
+/** Courses a visitor can choose at registration. */
+const COURSES = ['branch' => 'קורס ענפי', 'science' => 'קורס מדעי', 'both' => 'גם וגם (ענפי ומדעי)'];
+function clean_course($c): ?string {
+    $c = (string)$c;
+    return isset(COURSES[$c]) ? $c : null;
+}
+
+/** Returns the logged-in user row or null. */
 function current_user(): ?array {
     $token = $_COOKIE['runners_session'] ?? '';
     if (!preg_match('/^[a-f0-9]{64}$/', $token)) return null;
     ensure_schema();
-    $stmt = get_pdo()->prepare('SELECT u.id, u.email, u.science_access, u.display_name FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ? AND s.expires_at > ?');
+    $stmt = get_pdo()->prepare('SELECT u.id, u.email, u.science_access, u.branch_access, u.requested_course, u.display_name FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ? AND s.expires_at > ?');
     $stmt->execute([$token, now_sql()]);
     return $stmt->fetch() ?: null;
 }
@@ -144,7 +176,12 @@ function require_admin(): array {
 
 /** Fields every auth response carries, so the pages know what to show. */
 function auth_fields(?array $u): array {
-    return ['email' => $u['email'] ?? null, 'name' => ($u['display_name'] ?? null) ?: null, 'science' => has_science($u), 'admin' => is_admin($u)];
+    $branch = has_branch($u); $science = has_science($u);
+    return ['email' => $u['email'] ?? null, 'name' => ($u['display_name'] ?? null) ?: null,
+            'branch' => $branch, 'science' => $science, 'admin' => is_admin($u),
+            /* Logged in but not approved for anything yet: waiting for the admin. */
+            'pending' => $u !== null && !$branch && !$science,
+            'course' => $u['requested_course'] ?? null];
 }
 
 function require_user(): array {
@@ -233,23 +270,56 @@ function send_site_mail(string $to, string $subject, string $body): bool {
     return mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers, '-f' . $from);
 }
 
-/** Tells the admins that someone logged in to the site for the first time. Never blocks the login. */
-function notify_new_user(string $email, bool $preApproved, bool $science): void {
+/** Tells the admins that a user they approved in advance logged in for the first time. Never blocks the login. */
+function notify_new_user(string $email, bool $branch, bool $science): void {
     $admins = admin_emails();
     if (in_array($email, $admins, true)) return;
     $c = config();
     $site = $c['site_url'] ?? 'https://runners2027.fyi';
-    $subject = 'משתמש חדש באתר: ' . $email;
+    $subject = 'משתמש שאישרת מראש התחבר: ' . $email;
     $body = "שלום,\n\n"
-          . "משתמש חדש התחבר לאתר של קורס מדריכי ריצות ארוכות 2027א בפעם הראשונה:\n\n"
+          . "משתמש שאישרת מראש התחבר לאתר של קורס מדריכי ריצות ארוכות 2027א בפעם הראשונה:\n\n"
           . "    $email\n\n"
           . "זמן: " . (new DateTime())->format('d.m.Y H:i') . "\n"
-          . "גישה לקורס המדעי: " . ($science ? 'מאושרת' . ($preApproved ? ' (אישרת מראש)' : '') : 'אין') . "\n\n"
-          . "כדי לאשר לו גישה לקורס המדעי, או לראות את כל המשתמשים:\n"
+          . "קורס ענפי: " . ($branch ? 'מאושר' : 'אין גישה') . "\n"
+          . "קורס מדעי: " . ($science ? 'מאושר' : 'אין גישה') . "\n\n"
+          . "לכל המשתמשים וההרשאות:\n"
           . rtrim($site, '/') . "/admin/\n";
     foreach ($admins as $a) {
         try { send_site_mail($a, $subject, $body); } catch (Throwable $e) { error_log('[runners api] notify: ' . $e->getMessage()); }
     }
+}
+
+/** Tells the admins that someone registered and is waiting for approval. Never blocks the registration. */
+function notify_registration(string $email, string $name, string $course): void {
+    $c = config();
+    $site = $c['site_url'] ?? 'https://runners2027.fyi';
+    $subject = 'בקשת הרשמה חדשה: ' . $name;
+    $body = "שלום,\n\n"
+          . "נרשם/ה משתמש/ת חדש/ה לאתר של קורס מדריכי ריצות ארוכות 2027א, והבקשה ממתינה לאישור שלך:\n\n"
+          . "    שם מלא: $name\n"
+          . "    מייל: $email (אומת בקוד)\n"
+          . "    קורס: " . (COURSES[$course] ?? $course) . "\n\n"
+          . "זמן: " . (new DateTime())->format('d.m.Y H:i') . "\n\n"
+          . "עד שתאשר/י, המשתמש/ת רואה רק הודעה שהבקשה ממתינה לאישור.\n"
+          . "כדי לאשר גישה לקורס הענפי ו/או לקורס המדעי, נכנסים לעמוד הניהול:\n"
+          . rtrim($site, '/') . "/admin/\n";
+    foreach (admin_emails() as $a) {
+        try { send_site_mail($a, $subject, $body); } catch (Throwable $e) { error_log('[runners api] notify: ' . $e->getMessage()); }
+    }
+}
+
+/** Tells a user that the admin opened the site for them. */
+function notify_approved(string $email, ?string $name, bool $branch, bool $science): void {
+    $c = config();
+    $site = $c['site_url'] ?? 'https://runners2027.fyi';
+    $what = $branch && $science ? 'לקורס הענפי ולקורס המדעי' : ($science ? 'לקורס המדעי' : 'לקורס הענפי');
+    $body = "שלום" . ($name ? " $name" : '') . ",\n\n"
+          . "הגישה שלך לאתר של קורס מדריכי ריצות ארוכות 2027א אושרה $what.\n\n"
+          . "נכנסים כאן, עם כתובת המייל הזו וקוד שנשלח למייל:\n"
+          . rtrim($site, '/') . "/\n\n"
+          . "בהצלחה בלימודים!\n";
+    try { send_site_mail($email, 'הגישה שלך לאתר אושרה', $body); } catch (Throwable $e) { error_log('[runners api] approved: ' . $e->getMessage()); }
 }
 
 function send_code_email(string $to, string $code): bool {

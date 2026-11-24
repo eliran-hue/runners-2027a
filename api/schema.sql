@@ -6,7 +6,10 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(190) NOT NULL UNIQUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_login_at DATETIME NULL,
-    science_access INT NOT NULL DEFAULT 0
+    science_access INT NOT NULL DEFAULT 0,
+    branch_access INT NOT NULL DEFAULT 0,
+    requested_course VARCHAR(10) NULL,
+    display_name VARCHAR(60) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS login_codes (
@@ -15,6 +18,8 @@ CREATE TABLE IF NOT EXISTS login_codes (
     code_hash VARCHAR(255) NOT NULL,
     ip VARCHAR(45) NOT NULL,
     attempts INT NOT NULL DEFAULT 0,
+    reg_name VARCHAR(60) NULL,
+    reg_course VARCHAR(10) NULL,
     expires_at DATETIME NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX (email), INDEX (ip, created_at)

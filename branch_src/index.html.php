@@ -1,9 +1,10 @@
+<?php http_response_code(404); exit; /* מוגש רק דרך api/branch_gate.php */ ?>
 <!doctype html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>קורס ענפי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261123i" defer></script><script src="/sync.js?v=20261123f" defer></script><style>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><style>
 .sched{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .sched h2{margin:0 0 4px;font:400 24px var(--display)}
 .sched-lead{margin:0 0 12px;color:var(--muted)}
