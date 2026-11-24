@@ -223,10 +223,10 @@
   function term(b){ var t = (b.pr.match(/\(([A-Za-z][^)]*)\)/) || [])[1] || b.en.replace(/ \(.*\)$/, ""); return t.replace(/[\u0590-\u05FF()]/g, "").trim() || b.la; }
   function say(id, btn){
     if (!canSpeak) return;
-    var b = B[id]; speechSynthesis.cancel(); console.info("[skeleton] read aloud v15 (latin)");
-    /* Read the Latin name. Devices have no Latin voice, so an Italian one (closest to Latin pronunciation) is used. */
-    var u1 = new SpeechSynthesisUtterance(b.la), v1 = voice(["it-it", "it", "es-es", "es"]);
-    u1.lang = v1 ? v1.lang : "it-IT"; if (v1) { try { u1.voice = v1; } catch (e) {} }
+    var b = B[id]; speechSynthesis.cancel(); console.info("[skeleton] read aloud v16 (en)");
+    /* Read the term shown in the bubble (as in the presentation) with an English voice; never Hebrew. */
+    var u1 = new SpeechSynthesisUtterance(term(b)), v1 = voice(["en-us", "en-gb", "en"]);
+    u1.lang = v1 ? v1.lang : "en-US"; if (v1) { try { u1.voice = v1; } catch (e) {} }
     u1.rate = .85;
     var q = [u1];
     if (btn) { btn.classList.add("on"); q[q.length - 1].onend = q[q.length - 1].onerror = function(){ btn.classList.remove("on"); }; }
@@ -258,7 +258,7 @@
     }
     function info(id){
       var b = B[id];
-      return '<h4 class="la-main"><span>' + b.pr + '</span>' + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם הלטיני ' + b.la + '" title="הקראה">🔊</button>' : '') + '</h4><div class="he-sub"><span class="en">בלטינית: <bdi lang="la">' + b.la + '</bdi></span></div><div class="sk-chips"><span class="sk-chip ' + (b.g === AP ? "ap" : "") + '">' + b.g + '</span>'
+      return '<h4 class="la-main"><span>' + b.pr + '</span>' + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + term(b) + '" title="הקראה">🔊</button>' : '') + '</h4><div class="he-sub"><span class="en">בלטינית: <bdi lang="la">' + b.la + '</bdi></span></div><div class="sk-chips"><span class="sk-chip ' + (b.g === AP ? "ap" : "") + '">' + b.g + '</span>'
         + (b.n ? '<span class="sk-chip">' + b.n + '</span>' : '') + '</div><p>' + b.fact + '</p>';
     }
     function showTip(id, ev){
@@ -266,7 +266,7 @@
       if (ev && ev.clientX) { x = ev.clientX - r.left; y = ev.clientY - r.top; }
       else { var bb = root.querySelector('.sk-front .sk-bone[data-b="' + id + '"]'); if (!bb) { tip.classList.remove("show"); return; } var q = bb.getBoundingClientRect(); x = q.left + q.width / 2 - r.left; y = q.top - r.top + 6; }
       tip.innerHTML = '<span class="tl" lang="en" dir="ltr">' + term(B[id]) + '</span>'
-        + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם הלטיני ' + B[id].la + '" title="הקראה">🔊</button>' : '');
+        + (canSpeak ? '<button type="button" class="sk-say" data-say="' + id + '" aria-label="הקראת השם ' + term(B[id]) + '" title="הקראה">🔊</button>' : '');
       tip.style.left = Math.max(90, Math.min(r.width - 90, x)) + "px"; tip.style.top = Math.max(34, y) + "px"; tip.classList.add("show");
     }
     function explore(id, ev){
