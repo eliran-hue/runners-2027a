@@ -219,7 +219,7 @@ figcaption a{color:var(--accent)}
 .chk label{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
 .chk input{width:18px;height:18px;margin-top:4px;flex:0 0 auto;accent-color:var(--ok)}
 .chk input:checked+span{color:var(--muted);text-decoration:line-through}
-</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127e" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127f" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head>
 <body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/theory/">תורת האימון</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מתודיקה באימון</span></nav>

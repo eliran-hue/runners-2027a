@@ -10,10 +10,22 @@
     ["/branch/theory/", "תורת האימון", [["/branch/training/", "עקרונות תורת האימון"], ["/branch/planning/", "תכנון אימונים"], ["/branch/methodology/", "מתודיקה באימון"]]]
   ];
   var SCIENCE = [
-    ["/science/anatomy/", "אנטומיה", [["/science/anatomy/skeleton/", "🦴 סימולטור שלד"], ["/science/anatomy/unit1/", "יחידה 1: מבנה מערכות הגוף"], ["/science/anatomy/unit3/", "יחידות 2–3: מערכת שלד-שריר ומפרקים"], ["/science/anatomy/unit4/", "יחידה 4: מערכת שלד-שריר: שרירים"]]],
+    ["/science/anatomy/", "אנטומיה", [["/science/anatomy/skeleton/", "סימולטור שלד"], ["/science/anatomy/unit1/", "יחידה 1: מבנה מערכות הגוף"], ["/science/anatomy/unit3/", "יחידות 2–3: מערכת שלד-שריר ומפרקים"], ["/science/anatomy/unit4/", "יחידה 4: מערכת שלד-שריר: שרירים"]]],
     [null, "פיזיולוגיה"],
     [null, "קניזיולוגיה"]
   ];
+
+  /* An icon beside every item in the site menu (by address; items without an address by their name). */
+  var ICON = {
+    "/": "🏠", "/admin/": "⚙️",
+    "/branch/": "🏃", "/branch/tools/": "🧮",
+    "/branch/body/": "🫀", "/branch/anatomy/": "🦵", "/branch/physiology/": "🫁",
+    "/branch/theory/": "📈", "/branch/training/": "📘", "/branch/planning/": "🗓️", "/branch/methodology/": "📣",
+    "/science/": "🔬", "/science/anatomy/": "🩻", "/science/anatomy/skeleton/": "🦴",
+    "/science/anatomy/unit1/": "🧍", "/science/anatomy/unit3/": "🦿", "/science/anatomy/unit4/": "💪",
+    "פיזיולוגיה": "⚡", "קניזיולוגיה": "🤸", "branch": "🏃", "science": "🔬"
+  };
+  function ic(k){ return ICON[k] ? '<span class="ic" aria-hidden="true">' + ICON[k] + '</span>' : ''; }
 
   /* Logo: a man and a woman running together (also /favicon.svg). */
   var LOGO = '<svg class="tb-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">'
@@ -63,6 +75,8 @@
     + ".tb-tree a[aria-current=page]{background:var(--accent-soft,#E8EEF8);color:var(--accent,#1F5FD6);box-shadow:inset -3px 0 0 var(--accent,#1F5FD6)}"
     + ".tb-tree .grp{font:600 12.5px 'Assistant',system-ui,sans-serif;color:var(--muted,#5B6B78);padding:14px 10px 2px;letter-spacing:.02em}"
     + ".tb-tree .na{color:var(--muted,#5B6B78)}"
+    + ".tb-tree .ic{flex:none;width:26px;text-align:center;font-size:18px;line-height:1;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}"
+    + ".tb-tree ul ul .ic{font-size:16px;width:24px}"
     + ".tb-tree .soon{font-size:12px;font-weight:600;border:1px solid var(--line,#D3DCE3);border-radius:999px;padding:0 8px;margin-inline-start:auto}"
     + ".tb-tree .lock{display:block;font-weight:400;font-size:14px;color:var(--muted,#5B6B78);padding:0 10px 6px}"
     + "html.tb-lock{overflow:hidden}";
@@ -95,7 +109,7 @@
   function canon(href){ return new URL(href, location.href).pathname.replace(/index\.html$/, ""); }
   var here = canon(location.href);
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
-  function link(href, text){ return '<a href="' + href + '"' + (here === canon(href) ? ' aria-current="page"' : '') + '>' + esc(text) + '</a>'; }
+  function link(href, text){ return '<a href="' + href + '"' + (here === canon(href) ? ' aria-current="page"' : '') + '>' + ic(href) + '<span>' + esc(text) + '</span></a>'; }
   function tree(){
     var a = window.runnersAuth || {}, br = !!(a.branch || a.admin), sci = !!(a.science || a.admin);
     var h = '<ul>' + '<li>' + link("/", "דף הבית") + '</li>';
@@ -104,14 +118,14 @@
       return h + '</ul><p class="lock">' + (a.pending ? "הבקשה שלך ממתינה לאישור של מנהל האתר." : "האתר פתוח רק למשתתפי הקורס. נכנסים או נרשמים בדף הבית.") + '</p>';
     }
     function locked(area, name){
-      return '<li><a href="/?locked=' + area + '">' + name + ' <span aria-hidden="true">🔒</span><span class="soon">נעול</span></a>'
+      return '<li><a href="/?locked=' + area + '">' + ic(area) + '<span>' + name + '</span> <span aria-hidden="true">🔒</span><span class="soon">נעול</span></a>'
         + '<span class="lock">הגישה לקורס הזה עוד לא אושרה לך. לפרטים ←</span></li>';
     }
     h += br ? '<li>' + link("/branch/", "קורס ענפי") + '<ul>' + BRANCH.map(function(b){ return '<li>' + link(b[0], b[1]) + (b[2] ? '<ul>' + b[2].map(function(u){ return '<li>' + link(u[0], u[1]) + '</li>'; }).join("") + '</ul>' : '') + '</li>'; }).join("") + '</ul></li>'
             : locked("branch", "קורס ענפי");
     if (sci) {
       h += '<li>' + link("/science/", "קורס מדעי") + '<ul>' + SCIENCE.map(function(t){
-        if (!t[0]) return '<li><span class="na">' + esc(t[1]) + '<span class="soon">בקרוב</span></span></li>';
+        if (!t[0]) return '<li><span class="na">' + ic(t[1]) + '<span>' + esc(t[1]) + '</span><span class="soon">בקרוב</span></span></li>';
         return '<li>' + link(t[0], t[1]) + (t[2] ? '<ul>' + t[2].map(function(u){ return '<li>' + link(u[0], u[1]) + '</li>'; }).join("") + '</ul>' : '') + '</li>';
       }).join("") + '</ul></li>';
     } else {

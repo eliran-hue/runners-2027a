@@ -175,7 +175,7 @@ details.more[open] summary::before{content:"−"}
 .sb [aria-current]{color:var(--ink)}
 .sb .sep{color:var(--muted);opacity:.6}
 .sb a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127e" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127f" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/body/">אנטומיה ופיזיולוגיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">הפיזיולוגיה של הריצה</span></nav>
   <h1>הפיזיולוגיה של הריצה</h1>

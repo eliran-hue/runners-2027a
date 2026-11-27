@@ -243,7 +243,7 @@ ol.steps li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:sta
 ol.steps li div{display:flex;flex-direction:column}ol.steps li div span{color:var(--muted)}
 .ftype{border-top:6px solid var(--c)}.ftype .k{color:var(--c)}
 @media (max-width:520px){.grid3 .k{font-size:21px}}
-</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127e" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127f" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><a href="/science/anatomy/">אנטומיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">יחידה 4</span></nav>
   <div class="eyebrow">אנטומיה · שיעור מיום <bdi>30/11/2026</bdi></div>
