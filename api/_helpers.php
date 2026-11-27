@@ -326,8 +326,11 @@ function send_code_email(string $to, string $code): bool {
     $c = config();
     $from = $c['mail_from'] ?? 'noreply@runners2027.fyi';
     $fromName = $c['mail_from_name'] ?? 'מדריכי ריצות ארוכות 2027א';
-    $subject = 'קוד הכניסה שלך: ' . $code;
-    $body = "שלום,\n\n"
+    /* השורה באנגלית ("verification code") עוזרת לאייפון לזהות את הקוד במייל ולהציע אותו מעל המקלדת
+       (בשדה הקוד יש autocomplete="one-time-code"). */
+    $subject = 'קוד הכניסה שלך: ' . $code . ' (verification code)';
+    $body = "Your runners2027.fyi verification code is: $code\n\n"
+          . "שלום,\n\n"
           . "קוד הכניסה שלך לאתר של קורס מדריכי ריצות ארוכות 2027א הוא:\n\n"
           . "    $code\n\n"
           . "הקוד בתוקף ל-" . CODE_MINUTES . " דקות.\n"
