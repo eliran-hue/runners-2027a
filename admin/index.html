@@ -94,7 +94,7 @@ form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid va
 .tag.wait{border-color:var(--accent);color:var(--accent)}
 td .sw + .sp{margin-top:4px}
 </style>
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -254,7 +254,7 @@ td .sw + .sp{margin-top:4px}
   }
   $("q").oninput=render;
   /* ---------- מונה כניסות ---------- */
-  const PAGE_NAMES={"/":"דף הבית","/branch/":"קורס ענפי","/branch/tools.html":"מחשבונים וכלי עזר","/branch/anatomy.html":"האנטומיה של הריצה","/branch/physiology.html":"הפיזיולוגיה של הריצה","/branch/training.html":"תורת האימון","/branch/planning.html":"תכנון אימונים","/branch/methodology.html":"מתודיקה באימון","/science/":"קורס מדעי","/science/anatomy.html":"קורס מדעי · אנטומיה (כתובת ישנה)","/science/anatomy/":"קורס מדעי · אנטומיה","/science/anatomy/unit1.html":"אנטומיה · יחידה 1","/science/anatomy/unit3.html":"אנטומיה · יחידות 2–3","/science/anatomy/unit4.html":"אנטומיה · יחידה 4","/science/anatomy/skeleton.html":"אנטומיה · סימולטור שלד","/admin/":"ניהול"};
+  const PAGE_NAMES={"/":"דף הבית","/branch/":"קורס ענפי","/branch/tools.html":"מחשבונים וכלי עזר","/branch/anatomy.html":"האנטומיה של הריצה","/branch/physiology.html":"הפיזיולוגיה של הריצה","/branch/training.html":"תורת האימון","/branch/planning.html":"תכנון אימונים","/branch/body/":"אנטומיה ופיזיולוגיה (נושא ראשי)","/branch/theory/":"תורת האימון (נושא ראשי)","/branch/methodology.html":"מתודיקה באימון","/science/":"קורס מדעי","/science/anatomy.html":"קורס מדעי · אנטומיה (כתובת ישנה)","/science/anatomy/":"קורס מדעי · אנטומיה","/science/anatomy/unit1.html":"אנטומיה · יחידה 1","/science/anatomy/unit3.html":"אנטומיה · יחידות 2–3","/science/anatomy/unit4.html":"אנטומיה · יחידה 4","/science/anatomy/skeleton.html":"אנטומיה · סימולטור שלד","/admin/":"ניהול"};
   const nf=n=>Number(n||0).toLocaleString("he-IL");
   function loadViews(){
     fetch("/api/admin_stats.php?days="+$("vDays").value,{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{

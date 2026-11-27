@@ -267,11 +267,11 @@ ul.pevs{margin:8px 0 0;padding-inline-start:20px}
 .mmap small{font-weight:400;color:var(--muted);font-size:12.5px}
 .ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap;display:inline-block}
 .linkbtn{font:inherit;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
-<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">תכנון אימונים</span></nav>
+<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/theory/">תורת האימון</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">תכנון אימונים</span></nav>
   <h1>תכנון אימונים</h1>
-  <p class="lead">מיחידת האימון ועד מחזור הפסגה. כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בדפדפן הזה.</p>
+  <p class="lead">מיחידת האימון ועד מחזור הפסגה. כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בחשבון שלך.</p>
 </header>
 <nav class="rail" aria-label="פרקים"><div class="wrap" id="rail" role="tablist"></div></nav>
 <main class="wrap" id="main"></main>
@@ -427,7 +427,7 @@ html:()=>`
 <div style="--c:var(--d1)"><b>חלק עיקרי</b><span>ההעמסה המרכזית של האימון.</span></div>
 <div style="--c:var(--d3)"><b>חלק מסכם</b><span>שחרור, מתיחות והרפיה.</span></div>
 </div>
-<p class="warn" style="margin-top:10px"><b>שים לב:</b> בשקופית המתיחות בחלק המכין מופיעות עם סימן שאלה, "ומתיחות (?)". כלומר, לא ברור שהן צריכות להיות שם. על מתיחות בחימום יש פירוט בפרק <a href="/branch/?p=training" style="color:var(--accent)">החימום</a> בתורת האימון.</p></div>
+<p class="warn" style="margin-top:10px"><b>שים לב:</b> בשקופית המתיחות בחלק המכין מופיעות עם סימן שאלה, "ומתיחות (?)". כלומר, לא ברור שהן צריכות להיות שם. על מתיחות בחימום יש פירוט בפרק <a href="/branch/training/" style="color:var(--accent)">החימום</a> בתורת האימון.</p></div>
 
 <h3 style="margin-top:8px">החלק המכין</h3>
 <div class="block"><p>לחלק המכין שלוש מטרות:</p>
@@ -456,7 +456,7 @@ html:()=>`
 ${more("הרחבת מידע: האימון בגרפים מהשעון",figs(fig("pFartPace","הקצב לאורך האימון: הקצב הקבוע בחימום, ואז 6 קטעים מהירים",200),fig("pFartHr","הדופק לאורך האימון: עלייה בחימום, ירידה במנוחה, ואז 6 גלים של הקטעים המהירים",200)))}
 <h3 style="margin-top:12px">כמה, כמה זמן ובאיזו עצימות (לפי פרייל, 2010)</h3>
 ${FRIEL_TBL}
-<p style="margin:8px 0 0;font-size:14.5px;color:var(--muted)">באיזו שיטת אימון מפתחים כל יכולת, ראו בפרק <a href="/branch/?p=training" style="color:var(--accent)">חזרות ובחירת שיטה</a> בתורת האימון.</p></div>
+<p style="margin:8px 0 0;font-size:14.5px;color:var(--muted)">באיזו שיטת אימון מפתחים כל יכולת, ראו בפרק <a href="/branch/training/" style="color:var(--accent)">חזרות ובחירת שיטה</a> בתורת האימון.</p></div>
 
 <div class="block"><h3>מה מאמנים לפני מה בחלק המרכזי?</h3>
 <p>יכולות שקשורות ל<b>מערכת העצבים המרכזית</b> באות לפני יכולות שקשורות למערכות המטבוליות או לשרירים:</p>

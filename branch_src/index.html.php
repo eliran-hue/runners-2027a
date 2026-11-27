@@ -4,7 +4,7 @@
 <title>קורס ענפי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><style>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><style>
 .sched{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .sched h2{margin:0 0 4px;font:400 24px var(--display)}
 .sched-lead{margin:0 0 12px;color:var(--muted)}
@@ -22,6 +22,10 @@
 .tl li.next .tl-rel{color:var(--accent);font-weight:700}
 .tl li.past{opacity:.55}
 @media (max-width:520px){.tl li{grid-template-columns:auto 1fr;row-gap:4px}.tl li b{grid-column:2}.tl-kind{justify-self:start}.tl-rel{grid-column:2}.tl-date{grid-row:span 3}}
+.topic.wide .prog{flex-basis:100%;margin-top:4px}
+.topic.wide .subs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding:0;list-style:none}
+.topic.wide .subs li{font-size:13.5px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--bg);margin:0}
+.topic.wide .subs li::before{display:none}
 </style><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">קורס ענפי</span></nav>
@@ -29,36 +33,20 @@
 </header>
 <main class="wrap">
   <div class="grid">
-    <a class="topic wide" href="/branch/?p=tools" style="--c:var(--d3)">
-      <div><h2>מחשבונים וכלי עזר</h2><p>כלים לשימוש מהיר, בלי לחפש בתוך הפרקים.</p></div>
+    <a class="topic wide" href="/branch/tools/" style="--c:var(--d3)">
+      <div><h2>מחשבונים וכלי עזר</h2><p>כלים לשימוש מהיר, בלי לחפש בתוך הפרקים: דופק מטרה, אזורי אימון ואחוז קצב.</p></div>
       <span class="go">לכלים ←</span>
     </a>
 
-    <a class="topic" href="/branch/?p=anatomy" style="--c:var(--d1)">
-      <h2>האנטומיה של הריצה</h2><p>מערכת השלד והשרירים, והיבטים קינזיולוגיים בריצה.</p><ul><li>עצמות ומפרקים: ירך, ברך, קרסול</li><li>מישורי תנועה וסוגי כיווץ</li><li>14 שרירים עיקריים, עם כרטיסיות</li><li>ניתוח צעד ריצה</li></ul>
-      <div class="prog" data-keys="anat:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">לנושא ←</span></div></div>
+    <a class="topic wide" href="/branch/body/" style="--c:var(--d1)">
+      <div><h2>אנטומיה ופיזיולוגיה</h2><p>איך הגוף בנוי ואיך הוא עובד בזמן ריצה.</p><ul class="subs"><li>האנטומיה של הריצה</li><li>הפיזיולוגיה של הריצה</li></ul></div>
+      <div class="prog" data-keys="anat:5,phys:7"><div class="bar"><i></i></div><div class="t"><span class="st">12 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
 
-    <a class="topic" href="/branch/?p=physiology" style="--c:var(--d2)">
-      <h2>הפיזיולוגיה של הריצה</h2><p>מושגי יסוד בפיזיולוגיה של המאמץ והשלכתם על הריצה.</p><ul><li>מסלולי האנרגיה ו-ATP</li><li>לב, דופק ומחשבון קרבונן</li><li>סיבי שריר, צח״מ וסף לקטאט</li><li>יעילות מכאנית ותחומי עצימות</li></ul>
-      <div class="prog" data-keys="phys:7"><div class="bar"><i></i></div><div class="t"><span class="st">7 פרקים</span><span class="go">לנושא ←</span></div></div>
+    <a class="topic wide" href="/branch/theory/" style="--c:var(--d4)">
+      <div><h2>תורת האימון</h2><p>איך בונים כושר, מתכננים אימונים ומדריכים קבוצה.</p><ul class="subs"><li>עקרונות תורת האימון</li><li>תכנון אימונים</li><li>מתודיקה באימון</li></ul></div>
+      <div class="prog" data-keys="train:13,plan:5,meth:5"><div class="bar"><i></i></div><div class="t"><span class="st">23 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
-
-    <a class="topic" href="/branch/?p=training" style="--c:var(--d4)">
-      <h2>תורת האימון</h2><p>גורמי ההישג, מרכיבי הכושר, עקרונות ותכנון האימון, הערכת עצימות, שיטות האימון וטכניקת ריצה.</p><ul><li>גורמי ההישג ומשולש הכושר</li><li>9 עקרונות האימון ופיצוי יסף</li><li>מחזורי אימון, יחידת אימון וחימום</li><li>סולם בורג, קרבונן ו-6 אזורי האימון</li><li>שיטות האימון: רצף, הפוגות וחזרות</li><li>טכניקת ריצה ותרגילי ריצה, עם סרטונים</li></ul>
-      <div class="prog" data-keys="train:13"><div class="bar"><i></i></div><div class="t"><span class="st">13 פרקים</span><span class="go">לנושא ←</span></div></div>
-    </a>
-
-    <a class="topic" href="/branch/?p=planning" style="--c:var(--d2)">
-      <h2>תכנון אימונים</h2><p>איך בונים תוכנית: מיחידת האימון, דרך המחזור השבועי והחודשי, ועד מחזור הפסגה.</p><ul><li>יחידת האימון: ארגון, מטלות ועומס</li><li>מבנה יחידת האימון ואימוני מפתח</li><li>המחזור השבועי (מיקרו)</li><li>המחזור החודשי (מזו)</li><li>מחזור הפסגה והשנה (מאקרו)</li></ul>
-      <div class="prog" data-keys="plan:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">לנושא ←</span></div></div>
-    </a>
-
-    <a class="topic" href="/branch/?p=methodology" style="--c:var(--boneInk)">
-      <h2>מתודיקה באימון</h2><p>איך מדריכים ומאמנים קבוצה: הדרך להעביר את החומר למתאמנים.</p><ul><li>5 העקרונות הדידקטיים ושלבי הלמידה</li><li>הדגמה, הדרכה מילולית והדרכה ידנית</li><li>עמדת המדריך (שר״ש) ותפקוד המאמן</li><li>תכנון האימון ו-8 שאלות לבחינתו</li></ul>
-      <div class="prog" data-keys="meth:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">לנושא ←</span></div></div>
-    </a>
-
   </div>
 
   <section class="sched" aria-labelledby="schedH">
@@ -73,7 +61,7 @@
       <li data-d="2027-01-29" data-k="exam"><b>בחינה עיונית מסכמת</b></li>
     </ol>
   </section>
-  <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> לוחצים על "התחברות / שמירת התקדמות" למעלה, מזינים כתובת מייל ומקבלים קוד כניסה.</div>
+  <div class="tip"><b>איך מסמנים פרק כ"הושלם"?</b> עונים על הבוחן בסוף הפרק, ומקבלים לפחות 70%. הנקודה ליד שם הפרק נצבעת בירוק, והפס מתקדם.<br><b>רוצה להמשיך ממכשיר אחר?</b> נכנסים שם עם אותה כתובת מייל, וההתקדמות מחכה שם.</div>
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
 <script>

@@ -1,7 +1,7 @@
 <?php http_response_code(404); exit; /* מוגש רק דרך api/branch_gate.php */ ?>
 <!doctype html>
 <html lang="he" dir="rtl"><head><meta charset="utf-8"><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>תורת האימון · קורס ענפי · קורס מדריכי ריצות ארוכות</title>
+<title>עקרונות תורת האימון · קורס ענפי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
 /* Same field-guide notebook as "האנטומיה של הריצה": sticky chapter rail, one chapter at a time, quiz closes each chapter */
@@ -226,11 +226,11 @@ figcaption a{color:var(--accent)}
 .mmap small{font-weight:400;color:var(--muted);font-size:12.5px}
 .ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap;display:inline-block}
 .linkbtn{font:inherit;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
-<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">תורת האימון</span></nav>
-  <h1>תורת האימון</h1>
-  <p class="lead">כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בדפדפן הזה.</p>
+<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/theory/">תורת האימון</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">עקרונות תורת האימון</span></nav>
+  <h1>עקרונות תורת האימון</h1>
+  <p class="lead">כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בחשבון שלך.</p>
 </header>
 <nav class="rail" aria-label="פרקים"><div class="wrap" id="rail" role="tablist"></div></nav>
 <main class="wrap" id="main"></main>
@@ -418,7 +418,7 @@ html:()=>`
 <tr><td><b>סבולת בינונית</b></td><td class="num">3–20 דקות</td><td>הספק אירובי מרבי (צח״מ)</td><td>עוברת בהדרגה לאירובית</td></tr>
 <tr><td><b>סבולת ארוכה</b></td><td>מעל 20 דקות</td><td>סבולת אירובית (סף לקטאט)</td><td>אירובית</td></tr>
 </table></div>
-<p style="margin-top:8px">את המסלולים עצמם הסברנו בפרק "מסלולי אנרגיה" ב<a href="/branch/?p=physiology" style="color:var(--accent)">פיזיולוגיה של הריצה</a>.</p></div>
+<p style="margin-top:8px">את המסלולים עצמם הסברנו בפרק "מסלולי אנרגיה" ב<a href="/branch/physiology/" style="color:var(--accent)">פיזיולוגיה של הריצה</a>.</p></div>
 
 <div class="block"><h3>כוח</h3>
 <p>היכולת לגבור על התנגדות וכוחות חיצוניים. 3 סוגים:</p>
@@ -698,7 +698,7 @@ quiz:[
 {id:"intensity",short:"7. הערכת עצימות",title:"הערכת עצימות באימוני סבולת",sub:"לקטאט, סולם בורג ודופק: איך יודעים כמה קשה להתאמן",
 html:()=>`
 <div class="block"><h3>תזכורת קצרה</h3>
-<p>המצגת פותחת בחזרה על ATP, שלושת מסלולי האנרגיה, צח״מ וסף הלקטאט. הכול מוסבר בפירוט ב<a href="/branch/?p=physiology" style="color:var(--accent)">פיזיולוגיה של הריצה</a> (פרקים 2, 5 ו-6). הדבר החדש כאן: במבדק לקטאט מבחינים ב<b>סף ראשון</b> (הלקטאט מתחיל לעלות מעל המנוחה) וב<b>סף שני</b> (הנקודה שבה הוא מזנק).</p>
+<p>המצגת פותחת בחזרה על ATP, שלושת מסלולי האנרגיה, צח״מ וסף הלקטאט. הכול מוסבר בפירוט ב<a href="/branch/physiology/" style="color:var(--accent)">פיזיולוגיה של הריצה</a> (פרקים 2, 5 ו-6). הדבר החדש כאן: במבדק לקטאט מבחינים ב<b>סף ראשון</b> (הלקטאט מתחיל לעלות מעל המנוחה) וב<b>סף שני</b> (הנקודה שבה הוא מזנק).</p>
 <p><b>סבולת</b> לפי נייס וענבר (2003): לבצע מאמץ עם שרירים גדולים בהספק הגבוה ביותר למרחק או לזמן נתון, להתנגד לעייפות לאורך זמן, ולהתאושש מהר.</p></div>
 
 <div class="block"><h3>משתני האימון באימוני סבולת</h3>
@@ -732,7 +732,7 @@ ${fig("borg","שני סולמות בורג: הישן (6–20) מימין, החד
 <div class="mini"><div class="k">איך מודדים דופק מנוחה נכון</div>3 בקרים רצופים: מתעוררים, יושבים בשקט דקה, סופרים 15 שניות וכופלים ב-4. לוקחים את הממוצע של השלושה.</div>
 <div class="mini"><div class="k">עתודת הדופק (HRR)</div>ההפרש בין הדופק המרבי לדופק המנוחה. זה "המרחב" שבו עובדים.</div>
 </div>
-<p style="margin-top:8px">את שתי השיטות אפשר לחשב ב<a href="/branch/?p=tools" style="color:var(--accent)">מחשבון דופק המטרה</a>.</p></div>
+<p style="margin-top:8px">את שתי השיטות אפשר לחשב ב<a href="/branch/tools/" style="color:var(--accent)">מחשבון דופק המטרה</a>.</p></div>
 
 <div class="block"><h3>הכול ביחד: מד עצימות משולב</h3>
 <p>לאדם עם דופק מנוחה 60 ודופק מרבי 200:</p>
@@ -821,7 +821,7 @@ ${more("הרחבת מידע: תוצאות המחקר",figs(fig("t30v","מהיר�
 <label>דופק ממוצע ב-20 הדק׳ האחרונות<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
 </div>
 <div id="zOut" aria-live="polite"></div>
-<p class="note">הקצבים לפי % מקצב הטסט (פרייל), והדופק לפי % מדופק הסף שבמצגת. אפשר למצוא את המחשבון הזה גם ב<a href="/branch/?p=tools" style="color:var(--accent)">מחשבונים וכלי עזר</a>.</p></div>
+<p class="note">הקצבים לפי % מקצב הטסט (פרייל), והדופק לפי % מדופק הסף שבמצגת. אפשר למצוא את המחשבון הזה גם ב<a href="/branch/tools/" style="color:var(--accent)">מחשבונים וכלי עזר</a>.</p></div>
 
 <div class="block warn"><h3>זהירות עם זון 2 העליון</h3>
 <p>במכון סילבן אדמס (נתונים שלא פורסמו, 37 נבדקים) השוו את גבול זון 2 העליון לפי פרייל לדופק הסף הראשון (VT1) שנמדד בפועל. אצל חלק מהנבדקים זון 2 העליון יצא <b>מעל</b> הסף הראשון. כלומר, הם התאמנו <b>קשה מדי</b> באימונים שאמורים להיות קלים. אצל אחרים זה יצא הפוך, והם התאמנו קל מדי. גם כאן המסקנה: כשאפשר, עדיף סף שנמדד אישית.</p></div>
@@ -1090,7 +1090,7 @@ html:()=>`
 <div class="mini"><div class="k">4. נקודת הנחיתה</div>עקב ${L("heel strike")} מול קדמת כף הרגל ${L("forefoot")}.</div>
 </div></div>
 <div class="trick"><b class="tag">טריק לזכירה</b><b>י״ק״ה״ן</b>: <b>י</b>ציבה, <b>ק</b>צב, <b>ה</b>קפצה (העתק אנכי), <b>נ</b>חיתה. מלמעלה למטה: מהגוף כולו, דרך הקצב והתנועה, ועד המגע בקרקע.</div>
-<p style="margin:0;color:var(--muted);font-size:15px">את שלבי צעד הריצה (תמיכה, דחיפה, ריחוף, נחיתה) למדנו ב<a href="/branch/?p=anatomy" style="color:var(--accent)">האנטומיה של הריצה</a>, בפרק ניתוח צעד הריצה.</p>
+<p style="margin:0;color:var(--muted);font-size:15px">את שלבי צעד הריצה (תמיכה, דחיפה, ריחוף, נחיתה) למדנו ב<a href="/branch/anatomy/" style="color:var(--accent)">האנטומיה של הריצה</a>, בפרק ניתוח צעד הריצה.</p>
 
 <h3 style="margin-top:8px">1. יציבת ריצה (מנח גוף)</h3>
 <div class="block"><ul>

@@ -175,11 +175,11 @@ details.more[open] summary::before{content:"−"}
 .sb [aria-current]{color:var(--ink)}
 .sb .sep{color:var(--muted);opacity:.6}
 .sb a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
-<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">הפיזיולוגיה של הריצה</span></nav>
+<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/body/">אנטומיה ופיזיולוגיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">הפיזיולוגיה של הריצה</span></nav>
   <h1>הפיזיולוגיה של הריצה</h1>
-  <p class="lead">כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בדפדפן הזה.</p>
+  <p class="lead">כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בחשבון שלך.</p>
 </header>
 <nav class="rail" aria-label="פרקים"><div class="wrap" id="rail" role="tablist"></div></nav>
 <main class="wrap" id="main"></main>
@@ -552,7 +552,7 @@ ${fig("profile","אחוז הסיבים האיטיים לפי ענף: רצי מר
 <p>לפני מרתון החלבונים המתכווצים (אקטין ומיוזין) מסודרים בשורות. אחרי המרתון רואים <b>חוסר סדר</b> במבנה: זה נזק שריר אמיתי, שדורש התאוששות.</p>
 ${fig("damage","משמאל: סיב של רץ מרתון לפני הריצה, מסודר. מימין: אחרי, עם אי-סדירות באקטין ובמיוזין (Wilmore & Costill)",240)}
 ${more("הרחבת מידע: ריצה מול רכיבה",fig("runbike","אותן שעות אימון, עומס שונה: אחרי שלושה ימים של 2.5 שעות ביום, אצל הרצים נמדד בערך פי 2 סמן נזק שריר (CK) ופי 2 סמן דלקת (CRP) לעומת הרוכבים",380))}</div>
-<div class="trick"><b class="tag">חיבור לאנטומיה</b>היחידות המוטוריות האלה הן מה שמפעיל את השרירים שלמדת בפרק השרירים באתר <a href="/branch/?p=anatomy" style="color:var(--accent)">האנטומיה של הריצה</a>. למשל, הסוליה עשירה בסיבים איטיים, והתאומים מעורבים יותר.</div>
+<div class="trick"><b class="tag">חיבור לאנטומיה</b>היחידות המוטוריות האלה הן מה שמפעיל את השרירים שלמדת בפרק השרירים באתר <a href="/branch/anatomy/" style="color:var(--accent)">האנטומיה של הריצה</a>. למשל, הסוליה עשירה בסיבים איטיים, והתאומים מעורבים יותר.</div>
 `,
 quiz:[
 ["מה זו יחידה מוטורית?",["שריר שלם","עצב מוטורי אחד וכל סיבי השריר שהוא מעצבב","סיב שריר בודד","המוח וחוט השדרה"],1,"עצב אחד + הסיבים שלו. כשהעצב יורה, כל היחידה מתכווצת יחד."],

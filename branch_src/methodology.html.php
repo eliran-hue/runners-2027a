@@ -219,12 +219,12 @@ figcaption a{color:var(--accent)}
 .chk label{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
 .chk input{width:18px;height:18px;margin-top:4px;flex:0 0 auto;accent-color:var(--ok)}
 .chk input:checked+span{color:var(--muted);text-decoration:line-through}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head>
 <body>
 
-<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מתודיקה באימון</span></nav>
+<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/theory/">תורת האימון</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מתודיקה באימון</span></nav>
   <h1>מתודיקה באימון</h1>
-  <p class="lead">איך מדריכים ומאמנים קבוצה: עקרונות, שיטות הדרכה, עמדת המדריך ותכנון האימון. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בדפדפן הזה.</p>
+  <p class="lead">איך מדריכים ומאמנים קבוצה: עקרונות, שיטות הדרכה, עמדת המדריך ותכנון האימון. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בחשבון שלך.</p>
 </header>
 <nav class="rail" aria-label="פרקים"><div class="wrap" id="rail" role="tablist"></div></nav>
 <main class="wrap" id="main"></main>
@@ -320,7 +320,7 @@ html:()=>`
 <div class="mini"><div class="k">מהפשוט למורכב</div>קודם חלק אחד, אחר כך שילוב.</div>
 <div class="mini"><div class="k">מהידוע לבלתי ידוע</div>בונים על מה שהמתאמן כבר מכיר.</div>
 </div>
-<p style="margin-top:8px">דוגמה מתרגילי הריצה: מסקיפינג נמוך לסקיפינג גבוה, ומתרגיל בודד לתרגיל שממשיך לריצה (ראו <a href="/branch/?p=training" style="color:var(--accent)">תורת האימון</a>, פרק 10).</p></div>
+<p style="margin-top:8px">דוגמה מתרגילי הריצה: מסקיפינג נמוך לסקיפינג גבוה, ומתרגיל בודד לתרגיל שממשיך לריצה (ראו <a href="/branch/training/" style="color:var(--accent)">תורת האימון</a>, פרק 10).</p></div>
 <div class="block"><h3>התפתחות הסגנון: 3 שלבים בטכניקה</h3>
 <div class="ladder">
 <div class="lv" style="--w:60%"><b>1. השלב ה"גס"</b><span>התנועה נכונה בגדול, עם הרבה טעויות</span></div>
@@ -446,7 +446,7 @@ html:()=>`
 ${["האם הוא מתאים לתקופת האימונים בעונה?","האם הוא מתאים לרמת המתאמנים?","האם הוא ממשיך את האימון הקודם? יש פרוגרסיה בין האימונים?","האם מודגשים בו תכנים לימודיים, טכניים או טקטיים?","האם יחס ההעמסה וההתאוששות בתוך האימון נכון?","האם יחס ההעמסה וההתאוששות בינו לבין האימון הקודם נכון?","האם התוכן מתאים ללוח הזמנים של האימון?","האם התוכן מתאים לרמת המתאמנים?"].map((q,i)=>`<label><input type="checkbox"><span>${i+1}. ${q}</span></label>`).join("")}
 </div>
 <p style="margin-top:8px;font-size:14.5px;color:var(--muted)">הסימונים לא נשמרים: זה כלי עזר לבדיקה מהירה.</p></div>
-<div class="trick"><b class="tag">טריק לזכירה</b>4 שאלות על <b>ההקשר</b> (עונה, רמה, אימון קודם, מה מדגישים), ו-4 על <b>המינון</b> (עומס בתוך האימון, עומס מול האימון הקודם, זמן, רמה). את העקרונות עצמם, כמו פרוגרסיה ועומס והתאוששות, למדנו ב<a href="/branch/?p=training" style="color:var(--accent)">תורת האימון</a>.</div>
+<div class="trick"><b class="tag">טריק לזכירה</b>4 שאלות על <b>ההקשר</b> (עונה, רמה, אימון קודם, מה מדגישים), ו-4 על <b>המינון</b> (עומס בתוך האימון, עומס מול האימון הקודם, זמן, רמה). את העקרונות עצמם, כמו פרוגרסיה ועומס והתאוששות, למדנו ב<a href="/branch/training/" style="color:var(--accent)">תורת האימון</a>.</div>
 <div class="block"><h3>לקריאת העשרה</h3>
 <p><a href="http://yedion.wincol.ac.il/books/izqc/#p=14" target="_blank" rel="noopener" style="color:var(--accent)">ידיעון המכללה</a>, עמודים 10–13.</p></div>
 

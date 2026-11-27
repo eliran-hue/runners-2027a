@@ -233,9 +233,9 @@ details.more[open] summary::before{content:"−"}
 .jfacts>div{display:grid;grid-template-columns:70px 1fr;gap:8px;font-size:15px}
 .jfacts span{color:var(--muted);font-weight:600}
 .unitTag{color:var(--accent)}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
-<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><a href="/science/?p=anatomy/">אנטומיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">יחידות 2–3</span></nav>
+<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><a href="/science/anatomy/">אנטומיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">יחידות 2–3</span></nav>
   <div class="eyebrow">אנטומיה · שיעור מיום <bdi>23/11/2026</bdi></div>
   <h1>יחידות 2–3: מערכת שלד-שריר ומפרקים</h1>
   <p class="lead">מבנה השלד, עמוד השדרה, סוגי מפרקים, מפרקי הגפיים, ומישורים ותנועות. כל החומר מהמצגות, בשפה פשוטה, עם בוחן בסוף כל פרק וכרטיסיות לשינון. ההתקדמות נשמרת בדפדפן, ואפשר לסנכרן אותה עם המייל.</p>
@@ -285,7 +285,7 @@ const JTYPES=[
 const chapters=[
 {id:"skeleton",short:"3.1 מבנה השלד",unit:"יחידות 2–3: מערכת שלד-שריר ומפרקים",title:"מבנה השלד",sub:"שלד הציר ושלד הגפיים, וכל העצמות בפלג הגוף העליון והתחתון",
 html:()=>`
-<div class="block"><h3>🦴 סימולטור שלד</h3><p>רוצים לתרגל? ב<a href="/science/?p=anatomy/skeleton" style="color:var(--accent);font-weight:700">סימולטור השלד</a> לוחצים על עצם ורואים את השם שלה, או בוחנים את עצמכם.</p></div>
+<div class="block"><h3>🦴 סימולטור שלד</h3><p>רוצים לתרגל? ב<a href="/science/anatomy/skeleton/" style="color:var(--accent);font-weight:700">סימולטור השלד</a> לוחצים על עצם ורואים את השם שלה, או בוחנים את עצמכם.</p></div>
 <div class="block"><h3>שתי חלוקות</h3>
 <div class="grid2">
 <div class="mini"><div class="k">שלד הציר</div>גולגולת, עמוד שדרה, עצם החזה וצלעות.</div>
@@ -309,7 +309,7 @@ html:()=>`
 <ul><li>7 עצמות שורש כף הרגל ${L("Tarsals")}</li><li>5 עצמות המסרק ${L("Metatarsals")}</li><li>14 גלילי האצבעות ${L("Phalanges")}</li></ul></div>
 </div>
 <div class="trick"><b class="tag">טריק לזכירה</b>היד והרגל בנויות באותה תבנית: <b>שורש → מסרק (5) → אצבעות (14)</b>. ההבדל בשורש: <b>8 ביד, 7 ברגל</b>. ו"מטה" (Meta) = אחרי: המסרק בא <b>אחרי</b> השורש.</div>
-<div class="block"><h3>חיבור לאנטומיה בקורס הענפי</h3><p>על העצמות של הרגל, האגן והקרסול, ואיך הן משתלבות בריצה, יש פירוט נוסף בפרקים "עצמות" ו"מפרקים" ב<a href="/branch/?p=anatomy" style="color:var(--accent)">האנטומיה של הריצה</a>.</p></div>
+<div class="block"><h3>חיבור לאנטומיה בקורס הענפי</h3><p>על העצמות של הרגל, האגן והקרסול, ואיך הן משתלבות בריצה, יש פירוט נוסף בפרקים "עצמות" ו"מפרקים" ב<a href="/branch/anatomy/" style="color:var(--accent)">האנטומיה של הריצה</a>.</p></div>
 `,
 quiz:[
 ["מה שייך לשלד הציר?",["שכמה ובריח","גולגולת, עמוד שדרה, עצם החזה וצלעות","אגן ורגליים","זרוע ואמה"],1,"השאר שייכים לשלד הגפיים."],

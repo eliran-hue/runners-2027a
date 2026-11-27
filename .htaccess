@@ -1,8 +1,8 @@
 DirectoryIndex index.html index.php
 
 # הכתובות הישנות (לפני החלוקה לקורסים) עברו לקורס הענפי.
-Redirect 301 /anatomy.html /branch/?p=anatomy
-Redirect 301 /physiology.html /branch/?p=physiology
+Redirect 301 /anatomy.html /branch/anatomy/
+Redirect 301 /physiology.html /branch/physiology/
 
 # האתר לא מיועד למנועי חיפוש: מבקשים מכולם לא לאנדקס שום קובץ.
 <IfModule mod_headers.c>

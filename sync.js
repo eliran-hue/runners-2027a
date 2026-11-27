@@ -246,18 +246,18 @@
       }).catch(function(){ busy(form, false); err.textContent = msg("net"); });
     };
   }
-  /* The page's address for the view counter, in the old file form (/branch/training.html), so the admin stats keep their names. */
+  /* The page's address for the view counter, in the old file form (/branch/training.html), so the admin stats keep their names.
+     Pages live at folder addresses (/branch/training/); hub pages (folders of topics) keep their folder address. */
+  var HUBS = ["/branch/", "/science/", "/branch/body/", "/branch/theory/", "/science/anatomy/"];
   function pagePath(){
-    var p = new URLSearchParams(location.search).get("p");
-    if (p === null) return location.pathname;
-    p = p.replace(/^\/+/, "");
-    if (p && !/\/$/.test(p) && !/\.[a-z0-9]+$/i.test(p)) p += ".html";
-    return location.pathname + p;
+    var p = location.pathname;
+    if (HUBS.indexOf(p) >= 0 || !/^\/(branch|science)\/.+\/$/.test(p)) return p;
+    return p.slice(0, -1) + ".html";
   }
   /* Where to go after logging in: a course page the visitor asked for before logging in (set by the content gate). */
   function nextUrl(){
     var n = new URLSearchParams(location.search).get("next") || "";
-    return /^\/(branch|science)\/(\?p=[\w\-\/.]*)?$/.test(n) && n.indexOf("..") < 0 ? n : "";
+    return /^\/(branch|science)\/([\w\-]+\/)*$/.test(n) ? n : "";
   }
   function loggedIn(changed){
         view('<h2>' + (state.name ? "שלום, " + esc(state.name) + "!" : "מחובר") + '</h2><p>מעכשיו כל פרק שתסיים יישמר אצלנו. בכל מכשיר אחר, נכנסים עם אותה כתובת מייל וממשיכים מאותה נקודה.</p>'

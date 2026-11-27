@@ -8,17 +8,26 @@ require __DIR__ . '/_helpers.php';
 $area = $GATE_AREA ?? '';
 if (!in_array($area, ['branch', 'science'], true)) { http_response_code(404); exit; }
 $u = current_user();
-/* הכתובות באתר הן בצורה /branch/?p=training. ב-Cloudways, Nginx מגיש בעצמו (או מחזיר 404) כל כתובת עם סיומת ‎.html,
-   וגם כתובת בלי סיומת לא מגיעה ל-Apache. רק כתובת התיקייה (/branch/) מגיעה לכאן, ולכן שם הדף עובר בפרמטר p. */
-$path = isset($_GET['p']) ? (string)$_GET['p'] : (string)($_GET['f'] ?? '');
-$path = ltrim($path, '/');
+/* כתובות נקיות: לכל דף יש תיקייה משלו (/branch/training/), ובה index.php קטן שמגדיר את $GATE_PAGE ומגיע לכאן.
+   למה תיקיות: ב-Cloudways, Nginx עונה בעצמו על כל כתובת ‎.html (ומחזיר 404 כשאין קובץ), וגם כתובת בלי סיומת
+   לא מגיעה ל-Apache. רק כתובת של תיקייה עם index.php מגיעה ל-PHP. */
+if (isset($GATE_PAGE)) {
+    $path = (string)$GATE_PAGE;
+} else {
+    $path = ltrim(isset($_GET['p']) ? (string)$_GET['p'] : (string)($_GET['f'] ?? ''), '/');
+    // הכתובות הישנות (/branch/?p=training) עוברות לכתובת הנקייה.
+    if (isset($_GET['p']) && $path !== '' && preg_match('#^[\w\-/]+$#', $path)) {
+        header('Location: /' . $area . '/' . rtrim($path, '/') . '/', true, 301);
+        exit;
+    }
+}
 $isPage = $path === '' || substr($path, -1) === '/' || preg_match('/\.html?$/i', $path) || !preg_match('/\.[a-z0-9]+$/i', $path);
 
 $allowed = $area === 'science' ? has_science($u) : has_branch($u);
 if (!$allowed) {
     header('Cache-Control: private, no-store');
     // Not logged in: to the login screen, and back here afterwards. Logged in without access: the home page explains.
-    $back = '/' . $area . '/' . ($path === '' ? '' : '?p=' . $path);
+    $back = '/' . $area . '/' . ($path === '' ? '' : rtrim($path, '/') . '/');
     if ($isPage) { header('Location: ' . ($u ? '/?locked=' . $area : '/?next=' . rawurlencode($back)), true, 302); exit; }
     http_response_code(403);
     exit;
@@ -26,9 +35,11 @@ if (!$allowed) {
 
 $base = realpath(__DIR__ . '/../' . $area . '_src');
 if ($path !== '' && substr($path, -1) !== '/' && is_dir($base . '/' . $path) && !preg_match('/(^|\/)\./', $path)) {
-    header('Location: /' . $area . '/?p=' . $path . '/', true, 301);
+    header('Location: /' . $area . '/' . $path . '/', true, 301);
     exit;
 }
+/* "training/" (דף, לא תיקייה) → training.html */
+if (substr($path, -1) === '/' && !is_dir($base . '/' . $path) && is_file($base . '/' . rtrim($path, '/') . '.html.php')) $path = rtrim($path, '/') . '.html';
 if ($path === '' || substr($path, -1) === '/') $path .= 'index.html';
 /* כתובת בלי סיומת (/branch/training): Nginx של Cloudways מגיש בעצמו כל כתובת ‎.html (ומחזיר 404 כשהקובץ לא קיים),
    ולכן הקישורים באתר הם בלי סיומת, וכך הם מגיעים לכאן. */

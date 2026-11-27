@@ -1,7 +1,7 @@
 <?php http_response_code(404); exit; /* מוגש רק דרך api/branch_gate.php */ ?>
 <!doctype html><html><head><meta charset=utf8><link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml"><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.golink{font:inherit;font-weight:700;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .golink:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <title>האנטומיה של הריצה · קורס ענפי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -159,9 +159,9 @@ figcaption{font-size:13px;color:var(--muted);margin-top:6px}
 .sb a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 </style>
 
-<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">האנטומיה של הריצה</span></nav>
+<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/body/">אנטומיה ופיזיולוגיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">האנטומיה של הריצה</span></nav>
   <h1>האנטומיה של הריצה</h1>
-  <p class="lead">כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בדפדפן הזה.</p>
+  <p class="lead">כל החומר מהמצגת, בשפה פשוטה. לומדים פרק, ובסוף כל פרק עונים על בוחן קצר. ההתקדמות נשמרת בחשבון שלך.</p>
 </header>
 <nav class="rail" aria-label="פרקים"><div class="wrap" id="rail" role="tablist"></div></nav>
 <main class="wrap" id="main"></main>

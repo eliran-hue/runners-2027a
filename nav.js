@@ -5,15 +5,12 @@
   if (document.getElementById("topbar")) return;
 
   var BRANCH = [
-    ["/branch/?p=tools", "מחשבונים וכלי עזר"],
-    ["/branch/?p=anatomy", "האנטומיה של הריצה"],
-    ["/branch/?p=physiology", "הפיזיולוגיה של הריצה"],
-    ["/branch/?p=training", "תורת האימון"],
-    ["/branch/?p=planning", "תכנון אימונים"],
-    ["/branch/?p=methodology", "מתודיקה באימון"]
+    ["/branch/tools/", "מחשבונים וכלי עזר"],
+    ["/branch/body/", "אנטומיה ופיזיולוגיה", [["/branch/anatomy/", "האנטומיה של הריצה"], ["/branch/physiology/", "הפיזיולוגיה של הריצה"]]],
+    ["/branch/theory/", "תורת האימון", [["/branch/training/", "עקרונות תורת האימון"], ["/branch/planning/", "תכנון אימונים"], ["/branch/methodology/", "מתודיקה באימון"]]]
   ];
   var SCIENCE = [
-    ["/science/?p=anatomy/", "אנטומיה", [["/science/?p=anatomy/skeleton", "🦴 סימולטור שלד"], ["/science/?p=anatomy/unit1", "יחידה 1: מבנה מערכות הגוף"], ["/science/?p=anatomy/unit3", "יחידות 2–3: מערכת שלד-שריר ומפרקים"], ["/science/?p=anatomy/unit4", "יחידה 4: מערכת שלד-שריר: שרירים"]]],
+    ["/science/anatomy/", "אנטומיה", [["/science/anatomy/skeleton/", "🦴 סימולטור שלד"], ["/science/anatomy/unit1/", "יחידה 1: מבנה מערכות הגוף"], ["/science/anatomy/unit3/", "יחידות 2–3: מערכת שלד-שריר ומפרקים"], ["/science/anatomy/unit4/", "יחידה 4: מערכת שלד-שריר: שרירים"]]],
     [null, "פיזיולוגיה"],
     [null, "קניזיולוגיה"]
   ];
@@ -94,12 +91,8 @@
   drawer.hidden = true;
   document.body.appendChild(scrim); document.body.appendChild(drawer);
 
-  /* Page addresses are /branch/?p=training (see api/gate.php), so the page is in the p parameter. */
-  function canon(href){
-    var u = new URL(href, location.href), p = u.searchParams.get("p");
-    if (p === null) return u.pathname.replace(/index\.html$/, "");
-    return u.pathname + p.replace(/^\/+/, "");
-  }
+  /* Pages live at folder addresses (/branch/training/, see api/gate.php). */
+  function canon(href){ return new URL(href, location.href).pathname.replace(/index\.html$/, ""); }
   var here = canon(location.href);
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
   function link(href, text){ return '<a href="' + href + '"' + (here === canon(href) ? ' aria-current="page"' : '') + '>' + esc(text) + '</a>'; }
@@ -114,7 +107,7 @@
       return '<li><a href="/?locked=' + area + '">' + name + ' <span aria-hidden="true">🔒</span><span class="soon">נעול</span></a>'
         + '<span class="lock">הגישה לקורס הזה עוד לא אושרה לך. לפרטים ←</span></li>';
     }
-    h += br ? '<li>' + link("/branch/", "קורס ענפי") + '<ul>' + BRANCH.map(function(b){ return '<li>' + link(b[0], b[1]) + '</li>'; }).join("") + '</ul></li>'
+    h += br ? '<li>' + link("/branch/", "קורס ענפי") + '<ul>' + BRANCH.map(function(b){ return '<li>' + link(b[0], b[1]) + (b[2] ? '<ul>' + b[2].map(function(u){ return '<li>' + link(u[0], u[1]) + '</li>'; }).join("") + '</ul>' : '') + '</li>'; }).join("") + '</ul></li>'
             : locked("branch", "קורס ענפי");
     if (sci) {
       h += '<li>' + link("/science/", "קורס מדעי") + '<ul>' + SCIENCE.map(function(t){
@@ -247,4 +240,124 @@
     }, 60);
   }, true);
   window.runnersCelebrate = celebrate; /* handy for testing */
+})();
+
+/* Chapters: a topic page opens with cards for all its chapters (title, what's in it, done or not).
+   A card opens the chapter (address #c=<id>, so the browser's Back returns to the cards). While reading, a short
+   bar on top shows "all chapters", the chapter number and previous / next. The page's own chapter buttons (#rail)
+   stay in the DOM, hidden, and still do the actual switching, so every page keeps its own logic. */
+(function(){
+  "use strict";
+  var nav = document.querySelector("nav.rail"), rail = nav && document.getElementById("rail"), main = document.getElementById("main");
+  if (!rail || !main) return;
+  var css = document.createElement("style");
+  css.textContent = ""
+    + "nav.rail.cp-on>#rail{display:none!important}"
+    + "nav.rail.cp-idx{display:none}"
+    + ".cp{display:flex;align-items:center;gap:8px;padding-block:8px}"
+    + "nav.rail .cp.wrap{overflow:visible}"
+    + ".cp button{font:700 15px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:999px;cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:6px;padding:0 14px}"
+    + ".cp button:focus-visible,.chx button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}"
+    + ".cp button:disabled{opacity:.35;cursor:default}"
+    + ".cp .cp-all{flex:0 0 auto;color:var(--accent);border-color:var(--accent)}"
+    + ".cp .cp-where{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;font-weight:700;overflow:hidden}"
+    + ".cp .cp-n{flex:0 0 auto;font-size:12.5px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px}"
+    + ".cp .cp-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
+    + ".cp .cp-step{flex:0 0 auto}"
+    + ".chx{padding-block:8px 28px}"
+    + ".chx-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 14px}"
+    + ".chx-top h2{margin:0;font-size:22px}"
+    + ".chx-top .sum{color:var(--muted);font-size:15px}"
+    + ".chx-go{font:700 16px var(--body);color:#fff;background:var(--accent);border:0;border-radius:999px;padding:10px 20px;cursor:pointer}"
+    + ".chx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}"
+    + ".chx-card{display:flex;flex-direction:column;gap:6px;text-align:start;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:14px;padding:14px 16px 16px;cursor:pointer;position:relative;transition:transform .12s,border-color .12s}"
+    + ".chx-card:hover{transform:translateY(-2px);border-color:var(--accent)}"
+    + ".chx-card .no{font-size:13px;font-weight:700;color:var(--accent)}"
+    + ".chx-card b{font-size:18px;line-height:1.3}"
+    + ".chx-card .sub{font-size:14.5px;color:var(--muted);line-height:1.45}"
+    + ".chx-card .st{margin-top:auto;padding-top:6px;font-size:13.5px;font-weight:700;color:var(--muted)}"
+    + ".chx-card.done{border-top-color:var(--ok)}"
+    + ".chx-card.done .st{color:var(--ok)}"
+    + ".chx-card.next{box-shadow:0 0 0 2px var(--accent)}"
+    + "@media (max-width:560px){.cp .cp-l{display:none}.cp button{padding:0 12px}.chx-grid{grid-template-columns:1fr}.chx-card b{font-size:17px}}";
+  document.head.appendChild(css);
+
+  var CH = (typeof chapters !== "undefined" && chapters) || null; // the page's chapter list (title, sub)
+  nav.classList.add("cp-on");
+  var bar = document.createElement("div"); bar.className = "cp wrap";
+  bar.innerHTML = '<button type="button" class="cp-all"><span aria-hidden="true">☰</span><span>כל הפרקים</span></button>'
+    + '<span class="cp-where"><span class="cp-n"></span><span class="cp-t"></span></span>'
+    + '<button type="button" class="cp-step" data-d="-1" aria-label="לפרק הקודם"><span aria-hidden="true">→</span><span class="cp-l">הקודם</span></button>'
+    + '<button type="button" class="cp-step" data-d="1" aria-label="לפרק הבא"><span class="cp-l">הבא</span><span aria-hidden="true">←</span></button>';
+  nav.appendChild(bar);
+  var idx = document.createElement("section"); idx.className = "chx wrap"; idx.setAttribute("aria-label", "פרקי הנושא");
+  main.parentNode.insertBefore(idx, main);
+
+  function tabs(){ return Array.prototype.slice.call(rail.querySelectorAll("button")); }
+  function sel(t){ for (var i = 0; i < t.length; i++) if (t[i].getAttribute("aria-selected") === "true") return i; return 0; }
+  function isDone(b){ var d = b.querySelector(".done"); return !!(d && d.classList.contains("on")); }
+  function esc(x){ return String(x == null ? "" : x).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function info(b, j){
+    var c = CH && CH[j], lab = (b.textContent || "").trim(), m = lab.match(/^(\d+)\.\s+(.*)$/);
+    return {id: b.getAttribute("data-id"), short: m && +m[1] === j + 1 ? m[2] : lab, title: c && c.title || lab, sub: c && c.sub || ""};
+  }
+  function idFromHash(){ var m = location.hash.match(/^#c=([\w-]+)$/); return m ? m[1] : null; }
+
+  function drawIndex(){
+    var t = tabs(); if (!t.length) return;
+    var n = t.filter(isDone).length, firstOpen = -1;
+    for (var j = 0; j < t.length; j++) if (!isDone(t[j])) { firstOpen = j; break; }
+    var go = firstOpen < 0 ? 0 : firstOpen;
+    idx.innerHTML = '<div class="chx-top"><div><h2>' + t.length + ' פרקים</h2><div class="sum">' + (n ? "הושלמו " + n + " מתוך " + t.length : "בוחרים פרק ומתחילים. בסוף כל פרק יש בוחן קצר.") + '</div></div>'
+      + '<button type="button" class="chx-go" data-i="' + go + '">' + (n === 0 ? "להתחיל מפרק 1" : firstOpen < 0 ? "לחזור על הנושא מההתחלה" : "להמשיך לפרק " + (go + 1)) + ' ←</button></div>'
+      + '<div class="chx-grid">' + t.map(function(b, j){
+        var f = info(b, j), d = isDone(b);
+        return '<button type="button" class="chx-card' + (d ? " done" : "") + (j === firstOpen && n ? " next" : "") + '" data-i="' + j + '">'
+          + '<span class="no">פרק ' + (j + 1) + '</span><b>' + esc(f.title) + '</b>' + (f.sub ? '<span class="sub">' + esc(f.sub) + '</span>' : "")
+          + '<span class="st">' + (d ? "✓ הושלם" : j === firstOpen && n ? "הפרק הבא שלך" : "עוד לא הושלם") + '</span></button>';
+      }).join("") + '</div>';
+  }
+  function drawBar(){
+    var t = tabs(); if (!t.length) return;
+    var i = sel(t), f = info(t[i], i);
+    bar.querySelector(".cp-n").textContent = "פרק " + (i + 1) + " מתוך " + t.length;
+    bar.querySelector(".cp-t").textContent = f.short;
+    bar.querySelector('[data-d="-1"]').disabled = i === 0;
+    bar.querySelector('[data-d="1"]').disabled = i === t.length - 1;
+  }
+  var showing = null;
+  function showIndex(){
+    showing = "index"; drawIndex();
+    idx.hidden = false; main.hidden = true; nav.classList.add("cp-idx");
+    var nx = document.getElementById("nextChap"); if (nx) nx.hidden = true;
+  }
+  function showChapter(id){
+    var t = tabs(), b = null;
+    for (var j = 0; j < t.length; j++) if (t[j].getAttribute("data-id") === id) b = t[j];
+    if (!b) { showIndex(); return; }
+    showing = "chapter";
+    idx.hidden = true; main.hidden = false; nav.classList.remove("cp-idx");
+    if (b.getAttribute("aria-selected") !== "true") b.click(); else drawBar();
+    window.scrollTo({top: 0});
+  }
+  function openAt(j){ var t = tabs(); if (t[j]) location.hash = "c=" + t[j].getAttribute("data-id"); }
+  function route(){ var id = idFromHash(); if (id) showChapter(id); else showIndex(); }
+
+  idx.addEventListener("click", function(e){ var c = e.target.closest && e.target.closest("[data-i]"); if (c) openAt(+c.getAttribute("data-i")); });
+  bar.querySelector(".cp-all").onclick = function(){
+    if (idFromHash()) history.pushState(null, "", location.pathname + location.search);
+    showIndex(); window.scrollTo({top: 0});
+  };
+  bar.querySelectorAll(".cp-step").forEach(function(s){ s.onclick = function(){ openAt(sel(tabs()) + (+s.getAttribute("data-d"))); }; });
+  window.addEventListener("hashchange", route);
+  window.addEventListener("popstate", route);
+  /* The page also switches chapters by itself ("next chapter" button): keep the address and the bar in step. */
+  new MutationObserver(function(){
+    drawBar();
+    if (showing === "chapter") {
+      var t = tabs(), id = t.length && t[sel(t)].getAttribute("data-id");
+      if (id && idFromHash() !== id) history.replaceState(null, "", "#c=" + id);
+    } else if (showing === "index") drawIndex();
+  }).observe(rail, {childList: true, subtree: true, attributes: true, attributeFilter: ["aria-selected", "class"]});
+  drawBar(); route();
 })();

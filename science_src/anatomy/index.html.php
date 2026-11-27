@@ -4,7 +4,7 @@
 <title>אנטומיה · קורס מדעי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><style>.topic .ldate{color:var(--muted);font-weight:600;letter-spacing:0}</style><style>.exam-note{display:inline-block;margin:10px 0 0;padding:8px 14px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--line)}.exam-note a{color:var(--accent);font-weight:600}</style><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127d" defer></script><script src="/sync.js?v=20261127d" defer></script><style>.topic .ldate{color:var(--muted);font-weight:600;letter-spacing:0}</style><style>.exam-note{display:inline-block;margin:10px 0 0;padding:8px 14px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--line)}.exam-note a{color:var(--accent);font-weight:600}</style><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">אנטומיה</span></nav>
   <div class="eyebrow">קורס מדעי</div>
@@ -14,21 +14,21 @@
 </header>
 <main class="wrap">
   <div class="grid">
-    <a class="topic wide" href="/science/?p=anatomy/skeleton" style="--c:var(--d4)">
+    <a class="topic wide" href="/science/anatomy/skeleton/" style="--c:var(--d4)">
       <div><div class="num">כלי עזר</div><h2>סימולטור שלד</h2><p>לוחצים על עצם ורואים את השם שלה, או בוחנים את עצמכם.</p></div><span class="go">לסימולטור ←</span>
     </a>
 
-    <a class="topic" href="/science/?p=anatomy/unit1" style="--c:var(--d1)">
+    <a class="topic" href="/science/anatomy/unit1/" style="--c:var(--d1)">
       <div class="num">יחידה 1 <span class="ldate">· שיעור <bdi>16/11/2026</bdi></span></div><h2>מבנה מערכות הגוף</h2><p>מהאטום ועד האדם: התא והרקמות שמרכיבות את הגוף.</p><ul><li>מבוא והתא</li><li>רקמות: אפיתל, רקמת חיבור, רצועה וגיד</li><li>עצם, סחוס ומפרק סינוביאלי</li></ul>
       <div class="prog" data-keys="sci.anat1:3"><div class="bar"><i></i></div><div class="t"><span class="st">3 פרקים</span><span class="go">ליחידה ←</span></div></div>
     </a>
 
-    <a class="topic" href="/science/?p=anatomy/unit3" style="--c:var(--d2)">
+    <a class="topic" href="/science/anatomy/unit3/" style="--c:var(--d2)">
       <div class="num">יחידות 2–3 <span class="ldate">· שיעור <bdi>23/11/2026</bdi></span></div><h2>מערכת שלד-שריר ומפרקים</h2><p>השלד, המפרקים והתנועות שהם מאפשרים.</p><ul><li>מבנה השלד</li><li>עמוד השדרה, הדיסק והצלעות</li><li>6 סוגי מפרקים ומפרקי הגפיים</li><li>מישורים ותנועות, עם כרטיסיות</li></ul>
       <div class="prog" data-keys="sci.anat3:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">ליחידה ←</span></div></div>
     </a>
 
-    <a class="topic" href="/science/?p=anatomy/unit4" style="--c:var(--d3)">
+    <a class="topic" href="/science/anatomy/unit4/" style="--c:var(--d3)">
       <div class="num">יחידה 4 <span class="ldate">· שיעור <bdi>30/11/2026</bdi></span></div><h2>מערכת שלד-שריר: שרירים</h2><p>מבנה ותפקוד השריר: מהסיב ועד הסרקומר.</p><ul><li>סוגי שרירים ותפקידם</li><li>מבנה השריר ומנגנון ההתכווצות</li><li>סיבים איטיים ומהירים, ואספקת דם</li><li>דרכי התכווצות, עם כרטיסיות</li></ul>
       <div class="prog" data-keys="sci.anat4:6"><div class="bar"><i></i></div><div class="t"><span class="st">6 פרקים</span><span class="go">ליחידה ←</span></div></div>
     </a>
