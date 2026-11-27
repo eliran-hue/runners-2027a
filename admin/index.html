@@ -81,7 +81,7 @@ td.num{color:var(--ink)}
 .nyp{border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:10px}
 .nyp h4{margin:0 0 6px;font:700 16px var(--body)}.nyp h4 small{color:var(--muted);font-weight:600}
 .nyi{display:flex;align-items:center;gap:10px;padding:6px 4px;border-top:1px dashed var(--line);cursor:pointer;font-size:15.5px}
-.nyi:first-of-type{border-top:0}.nyi input{width:20px;height:20px;accent-color:#E0A100;flex:none}
+.nyi:first-of-type{border-top:0}.nyi input{width:20px;height:20px;accent-color:#2E9E6A;flex:none}
 .nyi .n{color:var(--muted);font-variant-numeric:tabular-nums;min-width:1.6em}
 .nyi .tg{margin-inline-start:auto;font:700 12px var(--body);color:#1b1400;background:#E0A100;border-radius:999px;padding:1px 8px}
 .nyi:not(.on) .tg{display:none}
@@ -164,7 +164,7 @@ td .sw + .sp{margin-top:4px}
     <section role="tabpanel" id="pNy" aria-labelledby="tabNy" hidden>
     <div class="panel" style="margin-top:18px">
       <h2>פרקים שעוד לא נלמדו בכיתה</h2>
-      <p>מסמנים פרק, והמשתמשים יראו עליו סרט "עוד לא נלמד בכיתה" בכרטיס הפרק וליד הכותרת שלו. הפרק נשאר פתוח לקריאה. מורידים את הסימון אחרי שהפרק נלמד.</p>
+      <p>V מסומן = הפרק נלמד בכיתה. פרק בלי V יוצג למשתמשים עם סרט "עוד לא נלמד בכיתה" בכרטיס הפרק וליד הכותרת שלו (הפרק נשאר פתוח לקריאה). מסמנים V אחרי שהפרק נלמד.</p>
       <div id="nyList"><p class="empty">טוען...</p></div>
       <div class="msg" id="nyMsg" role="status"></div>
     </div>
@@ -303,16 +303,16 @@ td .sw + .sp{margin-top:4px}
     const CN={branch:"קורס ענפי",science:"קורס מדעי"};
     $("nyList").innerHTML=["branch","science"].map(c=>{const pg=NYC.filter(p=>p.course===c);if(!pg.length)return"";
       return `<div class="nyc"><h3>${CN[c]}</h3>`+pg.map(p=>{const on=NYM[p.url]||[];
-        return `<div class="nyp"><h4>${esc(p.title)} <small>· ${on.length?on.length+" מסומנים":"הכול נלמד"}</small></h4>`+
-          p.chapters.map((ch,i)=>{const sel=on.includes(ch.id);
-            return `<label class="nyi${sel?" on":""}"><input type="checkbox" data-u="${esc(p.url)}" data-c="${esc(ch.id)}"${sel?" checked":""}><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="tg">עוד לא נלמד</span></label>`}).join("")+`</div>`}).join("")+`</div>`}).join("");
+        return `<div class="nyp"><h4>${esc(p.title)} <small>· ${on.length?on.length+" עוד לא נלמדו":"הכול נלמד"}</small></h4>`+
+          p.chapters.map((ch,i)=>{const ny=on.includes(ch.id);
+            return `<label class="nyi${ny?" on":""}"><input type="checkbox" data-u="${esc(p.url)}" data-c="${esc(ch.id)}"${ny?"":" checked"} aria-label="נלמד בכיתה"><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="tg">עוד לא נלמד</span></label>`}).join("")+`</div>`}).join("")+`</div>`}).join("");
   }
   $("nyList").addEventListener("change",e=>{
     const x=e.target.closest("input[data-u]");if(!x)return;
-    const url=x.dataset.u,ch=x.dataset.c,on=x.checked,m=$("nyMsg");x.disabled=true;
+    const url=x.dataset.u,ch=x.dataset.c,on=!x.checked,m=$("nyMsg");x.disabled=true;
     fetch("/api/notyet.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({url,chapter:ch,on})})
       .then(r=>r.json()).then(j=>{if(!j.ok)throw 0;NYM=j.notyet||{};nyCount();drawNy();m.className="msg";m.textContent="נשמר.";})
-      .catch(()=>{x.checked=!on;x.disabled=false;m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
+      .catch(()=>{x.checked=on;x.disabled=false;m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
   });
   const TABS=[["tabUsers","pUsers",""],["tabViews","pViews","views"],["tabNy","pNy","class"]];
   function showTab(i,focus){
