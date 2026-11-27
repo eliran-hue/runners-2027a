@@ -4,7 +4,7 @@
 <title>אנטומיה · קורס מדעי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127h" defer></script><script src="/sync.js?v=20261127d" defer></script><style>.topic .ldate{color:var(--muted);font-weight:600;letter-spacing:0}</style><style>.exam-note{display:inline-block;margin:10px 0 0;padding:8px 14px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--line)}.exam-note a{color:var(--accent);font-weight:600}</style><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127i" defer></script><script src="/sync.js?v=20261127d" defer></script><style>.topic .ldate{color:var(--muted);font-weight:600;letter-spacing:0}</style><style>.exam-note{display:inline-block;margin:10px 0 0;padding:8px 14px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--line)}.exam-note a{color:var(--accent);font-weight:600}</style><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">אנטומיה</span></nav>
   <div class="eyebrow">קורס מדעי</div>

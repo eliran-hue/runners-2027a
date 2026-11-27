@@ -101,7 +101,12 @@ td.num{color:var(--ink)}
 .nyi .seg button[aria-pressed=true][data-s=done]{background:#2E9E6A;color:#fff}
 .nyi .seg button[aria-pressed=true][data-s=learning]{background:#3B82F6;color:#fff}
 .nyi .seg button[aria-pressed=true][data-s=notyet]{background:#E0A100;color:#1b1400}
-.nyi .seg button:disabled{opacity:.6;cursor:wait}
+.nyi .seg button:disabled,.nyi .exb:disabled{opacity:.6;cursor:wait}
+.nyi .exb{margin-inline-start:auto;font:700 13px var(--body);border:1px dashed var(--line);background:none;color:var(--muted);padding:5px 11px;border-radius:999px;cursor:pointer;flex:none}
+.nyi .exb:hover{color:var(--ink)}
+.nyi .exb[aria-pressed=true]{background:#8B5CF6;border:1px solid #8B5CF6;color:#fff}
+.nyi .ctl{margin-inline-start:auto;display:inline-flex;align-items:center;gap:8px;flex:none}
+.nyi .ctl .exb,.nyi .ctl .seg{margin-inline-start:0}
 
 form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .stat.hot{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
@@ -119,7 +124,7 @@ form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid va
 .tag.wait{border-color:var(--accent);color:var(--accent)}
 td .sw + .sp{margin-top:4px}
 </style>
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127h" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127i" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -181,7 +186,7 @@ td .sw + .sp{margin-top:4px}
     <section role="tabpanel" id="pNy" aria-labelledby="tabNy" hidden>
     <div class="panel" style="margin-top:18px">
       <h2>פרקים שעוד לא נלמדו בכיתה</h2>
-      <p>לכל פרק בוחרים מצב: <b>נלמד</b> (ברירת המחדל, בלי סימון אצל המשתמשים), <b>בלימוד</b> (סרט כחול "בלימוד בכיתה") או <b>עוד לא נלמד</b> (סרט צהוב "עוד לא נלמד בכיתה"). הסרט מופיע בכרטיס הפרק וליד הכותרת שלו, והפרק נשאר פתוח לקריאה.</p>
+      <p>לכל פרק בוחרים מצב: <b>נלמד</b> (ברירת המחדל, בלי סימון אצל המשתמשים), <b>בלימוד</b> (סרט כחול "בלימוד בכיתה") או <b>עוד לא נלמד</b> (סרט צהוב "עוד לא נלמד בכיתה"). הסרט מופיע בכרטיס הפרק וליד הכותרת שלו, והפרק נשאר פתוח לקריאה.<br>בנפרד, כפתור <b>העשרה</b> מסמן פרק כחומר העשרה: תגית סגולה "העשרה" בכרטיס הפרק, ליד הכותרת, בתפריט "כל הפרקים", ובתפריט הראשי ליד הנושא שיש בו פרק כזה.</p>
       <div id="nyList"><p class="empty">טוען...</p></div>
       <div class="msg" id="nyMsg" role="status"></div>
     </div>
@@ -309,7 +314,7 @@ td .sw + .sp{margin-top:4px}
   $("vDays").onchange=loadViews;
   /* לשוניות: ניהול משתמשים / מונה כניסות. הלשונית הפתוחה נשמרת בכתובת (#views), כך שרענון נשאר בה. */
   /* פרקים שעוד לא נלמדו בכיתה: רשימת כל הפרקים, וסימון לכל פרק נשמר מיד בשרת. */
-  let NYC=null,NYM={},LRN={};
+  let NYC=null,NYM={},LRN={},EXM={};
   function nyCount(){const n=Object.values(NYM).reduce((a,v)=>a+v.length,0);$("nyBadge").hidden=!n;$("nyBadge").textContent=n}
   const ST=[["done","נלמד"],["learning","בלימוד"],["notyet","עוד לא נלמד"]];
   /* אילו אקורדיונים פתוחים, כדי שיישארו פתוחים אחרי כל שמירה */
@@ -317,25 +322,30 @@ td .sw + .sp{margin-top:4px}
   $("nyList").addEventListener("toggle",e=>{const d=e.target;if(!d.dataset||!d.dataset.k)return;d.open?NYO.add(d.dataset.k):NYO.delete(d.dataset.k)},true);
   function loadNy(){
     fetch("/api/notyet.php?catalog=1",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{
-      if(!j.ok||!j.catalog)return;NYC=j.catalog;NYM=j.notyet||{};LRN=j.learning||{};nyCount();drawNy();
+      if(!j.ok||!j.catalog)return;NYC=j.catalog;NYM=j.notyet||{};LRN=j.learning||{};EXM=j.extra||{};nyCount();drawNy();
     }).catch(()=>{$("nyList").innerHTML='<p class="empty">הטעינה נכשלה.</p>'});
   }
   function drawNy(){
     const CN={branch:"קורס ענפי",science:"קורס מדעי"};
-    const S=(lr,on)=>[lr?lr+" בלימוד":"",on?on+" עוד לא נלמדו":""].filter(Boolean).join(" · ")||"הכול נלמד";
+    const S=(lr,on,ex)=>([lr?lr+" בלימוד":"",on?on+" עוד לא נלמדו":""].filter(Boolean).join(" · ")||"הכול נלמד")+(ex?" · "+ex+" העשרה":"");
     $("nyList").innerHTML=["branch","science"].map(c=>{const pg=NYC.filter(p=>p.course===c);if(!pg.length)return"";
-      const cl=pg.reduce((a,p)=>a+(LRN[p.url]||[]).length,0),cn=pg.reduce((a,p)=>a+(NYM[p.url]||[]).length,0);
-      return `<details class="nyc" data-k="${c}"${NYO.has(c)?" open":""}><summary>${CN[c]} <small>· ${pg.length} נושאים · ${S(cl,cn)}</small></summary>`+pg.map(p=>{const on=NYM[p.url]||[],lr=LRN[p.url]||[];
-        return `<details class="nyp" data-k="${esc(p.url)}"${NYO.has(p.url)?" open":""}><summary>${esc(p.title)} <small>· ${p.chapters.length} פרקים · ${S(lr.length,on.length)}</small></summary>`+
+      const cl=pg.reduce((a,p)=>a+(LRN[p.url]||[]).length,0),cn=pg.reduce((a,p)=>a+(NYM[p.url]||[]).length,0),ce=pg.reduce((a,p)=>a+(EXM[p.url]||[]).length,0);
+      return `<details class="nyc" data-k="${c}"${NYO.has(c)?" open":""}><summary>${CN[c]} <small>· ${pg.length} נושאים · ${S(cl,cn,ce)}</small></summary>`+pg.map(p=>{const on=NYM[p.url]||[],lr=LRN[p.url]||[],ex=EXM[p.url]||[];
+        return `<details class="nyp" data-k="${esc(p.url)}"${NYO.has(p.url)?" open":""}><summary>${esc(p.title)} <small>· ${p.chapters.length} פרקים · ${S(lr.length,on.length,ex.length)}</small></summary>`+
           p.chapters.map((ch,i)=>{const cur=on.includes(ch.id)?"notyet":lr.includes(ch.id)?"learning":"done";
-            return `<div class="nyi"><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="seg" role="group" aria-label="מצב בכיתה: ${esc(ch.title)}">`+
-              ST.map(([k,l])=>`<button type="button" data-u="${esc(p.url)}" data-c="${esc(ch.id)}" data-s="${k}" aria-pressed="${k===cur}">${l}</button>`).join("")+`</span></div>`}).join("")+`</details>`}).join("")+`</details>`}).join("");
+            return `<div class="nyi"><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="ctl"><button type="button" class="exb" data-u="${esc(p.url)}" data-c="${esc(ch.id)}" aria-pressed="${ex.includes(ch.id)}" title="חומר העשרה">העשרה</button><span class="seg" role="group" aria-label="מצב בכיתה: ${esc(ch.title)}">`+
+              ST.map(([k,l])=>`<button type="button" data-u="${esc(p.url)}" data-c="${esc(ch.id)}" data-s="${k}" aria-pressed="${k===cur}">${l}</button>`).join("")+`</span></span></div>`}).join("")+`</details>`}).join("")+`</details>`}).join("");
   }
   $("nyList").addEventListener("click",e=>{
+    const xb=e.target.closest("button.exb");
+    if(xb){const url=xb.dataset.u,ch=xb.dataset.c,extra=xb.getAttribute("aria-pressed")!=="true",m=$("nyMsg");xb.disabled=true;
+      fetch("/api/notyet.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({url,chapter:ch,extra})})
+        .then(r=>r.json()).then(j=>{if(!j.ok)throw 0;NYM=j.notyet||{};LRN=j.learning||{};EXM=j.extra||{};drawNy();m.className="msg";m.textContent="נשמר.";})
+        .catch(()=>{xb.disabled=false;m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});return}
     const x=e.target.closest("button[data-s]");if(!x||x.getAttribute("aria-pressed")==="true")return;
     const url=x.dataset.u,ch=x.dataset.c,state=x.dataset.s,m=$("nyMsg"),bs=x.parentNode.querySelectorAll("button");bs.forEach(b=>b.disabled=true);
     fetch("/api/notyet.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({url,chapter:ch,state})})
-      .then(r=>r.json()).then(j=>{if(!j.ok)throw 0;NYM=j.notyet||{};LRN=j.learning||{};nyCount();drawNy();m.className="msg";m.textContent="נשמר.";})
+      .then(r=>r.json()).then(j=>{if(!j.ok)throw 0;NYM=j.notyet||{};LRN=j.learning||{};EXM=j.extra||{};nyCount();drawNy();m.className="msg";m.textContent="נשמר.";})
       .catch(()=>{bs.forEach(b=>b.disabled=false);m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
   });
   const TABS=[["tabUsers","pUsers",""],["tabViews","pViews","views"],["tabNy","pNy","class"]];

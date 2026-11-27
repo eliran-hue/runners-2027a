@@ -5,7 +5,8 @@ require __DIR__ . '/_helpers.php';
    GET (כל משתמש מחובר): {notyet: {"/branch/training/": ["zones", ...]}, learning: {...}}
    notyet = עוד לא נלמד בכיתה, learning = בלימוד עכשיו. פרק שלא מופיע באף אחד מהם = נלמד.
    GET ?catalog=1 (מנהל): גם רשימת כל העמודים והפרקים, לעמוד הניהול.
-   POST (מנהל): {url, chapter, state: "done"|"learning"|"notyet"} (או on=true/false כמו פעם). */
+   POST (מנהל): {url, chapter, state: "done"|"learning"|"notyet"} (או on=true/false כמו פעם).
+   חומר העשרה (נפרד ממצב הלימוד): GET מחזיר גם extra: {url: [chapterIds]}; POST {url, chapter, extra: true|false}. */
 header('Cache-Control: private, no-store');
 $u = current_user();
 if (!$u) json_error('not_logged_in', 401);
@@ -14,6 +15,8 @@ $valid = [];
 foreach ($catalog as $p) foreach ($p['chapters'] as $c) $valid[$p['url']][$c['id']] = true;
 
 $maps = ['notyet' => setting_get('notyet', []), 'learning' => setting_get('learning', [])];
+$extra = setting_get('extra', []);
+if (!is_array($extra)) $extra = [];
 foreach ($maps as $k => $m) if (!is_array($m)) $maps[$k] = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,6 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $in = json_input();
     $url = (string)($in['url'] ?? ''); $ch = (string)($in['chapter'] ?? '');
     if (empty($valid[$url][$ch])) json_error('bad_chapter');
+    if (array_key_exists('extra', $in)) {
+        $list = array_values(array_filter($extra[$url] ?? [], fn($x) => $x !== $ch && !empty($valid[$url][$x])));
+        if (!empty($in['extra'])) $list[] = $ch;
+        if ($list) $extra[$url] = $list; else unset($extra[$url]);
+        setting_set('extra', $extra);
+    } else {
     $state = (string)($in['state'] ?? (!empty($in['on']) ? 'notyet' : 'done'));
     if (!in_array($state, ['done', 'learning', 'notyet'], true)) json_error('bad_state');
     foreach ($maps as $k => $map) {
@@ -30,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $maps[$k] = $map;
         setting_set($k, $map);
     }
+    }
 }
-$out = ['ok' => true, 'notyet' => (object)$maps['notyet'], 'learning' => (object)$maps['learning']];
+$out = ['ok' => true, 'notyet' => (object)$maps['notyet'], 'learning' => (object)$maps['learning'], 'extra' => (object)$extra];
 if (!empty($_GET['catalog']) && is_admin($u)) $out['catalog'] = $catalog;
 json_out($out);

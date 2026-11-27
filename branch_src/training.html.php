@@ -226,7 +226,7 @@ figcaption a{color:var(--accent)}
 .mmap small{font-weight:400;color:var(--muted);font-size:12.5px}
 .ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap;display:inline-block}
 .linkbtn{font:inherit;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
-</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127h" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127i" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/theory/">תורת האימון</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">עקרונות תורת האימון</span></nav>
   <h1>עקרונות תורת האימון</h1>
