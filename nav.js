@@ -264,6 +264,19 @@
     + ".cp .cp-n{flex:0 0 auto;font-size:12.5px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px}"
     + ".cp .cp-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
     + ".cp .cp-step{flex:0 0 auto}"
+    + ".cp .cp-all .cp-c{font-size:12px;transition:transform .15s}"
+    + ".cp .cp-all[aria-expanded=true] .cp-c{transform:rotate(180deg)}"
+    + ".cp-panel{position:absolute;inset-inline:0;top:100%;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 18px 30px -18px rgba(0,0,0,.5);max-height:min(70vh,560px);overflow:auto;z-index:5}"
+    + ".cp-panel[hidden]{display:none}"
+    + "nav.rail .cp-panel .wrap{display:block;overflow:visible;padding-block:0}"
+    + ".cp-panel .cp-head{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;color:var(--muted);padding:12px 2px 8px}"
+    + ".cp-panel .cp-head button{font:600 13.5px var(--body);color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}"
+    + ".cp-panel .cp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px;padding-bottom:14px}"
+    + ".cp-panel .cp-grid button{display:flex;align-items:center;gap:10px;text-align:start;font:600 15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}"
+    + ".cp-panel .cp-grid button:hover{border-color:var(--accent)}"
+    + ".cp-panel .cp-grid button[aria-current=true]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}"
+    + ".cp-panel .cp-grid .k{flex:0 0 auto;min-width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:800;background:var(--line);color:var(--ink)}"
+    + ".cp-panel .cp-grid .k.on{background:var(--ok);color:#fff}"
     + ".chx{padding-block:8px 28px}"
     + ".chx-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 14px}"
     + ".chx-top h2{margin:0;font-size:22px}"
@@ -279,17 +292,22 @@
     + ".chx-card.done{border-top-color:var(--ok)}"
     + ".chx-card.done .st{color:var(--ok)}"
     + ".chx-card.next{box-shadow:0 0 0 2px var(--accent)}"
-    + "@media (max-width:560px){.cp .cp-l{display:none}.cp button{padding:0 12px}.chx-grid{grid-template-columns:1fr}.chx-card b{font-size:17px}}";
+    + "@media (max-width:560px){.cp .cp-l,.cp .cp-t{display:none}.cp button{padding:0 12px}.chx-grid{grid-template-columns:1fr}.chx-card b{font-size:17px}}";
   document.head.appendChild(css);
 
   var CH = (typeof chapters !== "undefined" && chapters) || null; // the page's chapter list (title, sub)
   nav.classList.add("cp-on");
   var bar = document.createElement("div"); bar.className = "cp wrap";
-  bar.innerHTML = '<button type="button" class="cp-all"><span aria-hidden="true">☰</span><span>כל הפרקים</span></button>'
+  bar.innerHTML = '<button type="button" class="cp-all" aria-expanded="false" aria-controls="cpPanel"><span aria-hidden="true">☰</span><span>כל הפרקים</span><span class="cp-c" aria-hidden="true">▾</span></button>'
     + '<span class="cp-where"><span class="cp-n"></span><span class="cp-t"></span></span>'
     + '<button type="button" class="cp-step" data-d="-1" aria-label="לפרק הקודם"><span aria-hidden="true">→</span><span class="cp-l">הקודם</span></button>'
     + '<button type="button" class="cp-step" data-d="1" aria-label="לפרק הבא"><span class="cp-l">הבא</span><span aria-hidden="true">←</span></button>';
   nav.appendChild(bar);
+  /* "all chapters" opens a drop-down list of the chapters, right here (no leaving the chapter). */
+  var panel = document.createElement("div"); panel.className = "cp-panel"; panel.id = "cpPanel"; panel.hidden = true;
+  panel.innerHTML = '<div class="wrap"><div class="cp-head"><span class="cp-sum"></span><button type="button" class="cp-cards">לתצוגת הכרטיסים</button></div><div class="cp-grid"></div></div>';
+  nav.appendChild(panel);
+  if (getComputedStyle(nav).position === "static") nav.style.position = "relative";
   var idx = document.createElement("section"); idx.className = "chx wrap"; idx.setAttribute("aria-label", "פרקי הנושא");
   main.parentNode.insertBefore(idx, main);
 
@@ -324,10 +342,19 @@
     bar.querySelector(".cp-t").textContent = f.short;
     bar.querySelector('[data-d="-1"]').disabled = i === 0;
     bar.querySelector('[data-d="1"]').disabled = i === t.length - 1;
+    panel.querySelector(".cp-sum").textContent = "הושלמו " + t.filter(isDone).length + " מתוך " + t.length;
+    panel.querySelector(".cp-grid").innerHTML = t.map(function(b, j){
+      var f = info(b, j);
+      return '<button type="button" data-p="' + j + '"' + (j === i ? ' aria-current="true"' : "") + '><span class="k' + (isDone(b) ? " on" : "") + '">' + (isDone(b) ? "✓" : j + 1) + '</span><span>' + esc(f.title) + '</span></button>';
+    }).join("");
+  }
+  function openPanel(v){
+    panel.hidden = !v; bar.querySelector(".cp-all").setAttribute("aria-expanded", v ? "true" : "false");
+    if (v) { var a = panel.querySelector("[aria-current]"); if (a) a.focus({preventScroll: true}); }
   }
   var showing = null;
   function showIndex(){
-    showing = "index"; drawIndex();
+    showing = "index"; openPanel(false); drawIndex();
     idx.hidden = false; main.hidden = true; nav.classList.add("cp-idx");
     var nx = document.getElementById("nextChap"); if (nx) nx.hidden = true;
   }
@@ -344,11 +371,19 @@
   function route(){ var id = idFromHash(); if (id) showChapter(id); else showIndex(); }
 
   idx.addEventListener("click", function(e){ var c = e.target.closest && e.target.closest("[data-i]"); if (c) openAt(+c.getAttribute("data-i")); });
-  bar.querySelector(".cp-all").onclick = function(){
-    if (idFromHash()) history.pushState(null, "", location.pathname + location.search);
-    showIndex(); window.scrollTo({top: 0});
-  };
-  bar.querySelectorAll(".cp-step").forEach(function(s){ s.onclick = function(){ openAt(sel(tabs()) + (+s.getAttribute("data-d"))); }; });
+  bar.querySelector(".cp-all").onclick = function(){ openPanel(panel.hidden); };
+  panel.addEventListener("click", function(e){
+    var c = e.target.closest && e.target.closest("[data-p]");
+    if (c) { openPanel(false); openAt(+c.getAttribute("data-p")); return; }
+    if (e.target.closest && e.target.closest(".cp-cards")) {
+      openPanel(false);
+      if (idFromHash()) history.pushState(null, "", location.pathname + location.search);
+      showIndex(); window.scrollTo({top: 0});
+    }
+  });
+  document.addEventListener("click", function(e){ if (!panel.hidden && !nav.contains(e.target)) openPanel(false); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !panel.hidden) { openPanel(false); bar.querySelector(".cp-all").focus(); } });
+  bar.querySelectorAll(".cp-step").forEach(function(s){ s.onclick = function(){ openPanel(false); openAt(sel(tabs()) + (+s.getAttribute("data-d"))); }; });
   window.addEventListener("hashchange", route);
   window.addEventListener("popstate", route);
   /* The page also switches chapters by itself ("next chapter" button): keep the address and the bar in step. */
