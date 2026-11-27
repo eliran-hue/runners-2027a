@@ -49,7 +49,7 @@ details.tool>:last-child{margin-bottom:20px}
       <summary><span class="sumt"><h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3><p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים.</p></span><span class="chev" aria-hidden="true"></span></summary>
       <div class="row">
         <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" id="zDist" min="2" max="12" step="0.01" inputmode="decimal"></label>
-        <label>דופק ממוצע ב-20 הדק׳ האחרונות<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
+        <label>דופק ממוצע ב-20 הדק׳ האחרונות (דופק סח״ח)<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
       </div>
       <div id="zOut" aria-live="polite"></div>
       <p class="note">הקצבים לפי אחוז מקצב הטסט (פרייל), והדופק לפי אחוז מדופק הסף שבמצגת. ההסבר המלא בפרק <a href="/branch/training/">"אזורי אימון" בתורת האימון</a>.</p>

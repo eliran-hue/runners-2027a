@@ -821,7 +821,7 @@ ${more("הרחבת מידע: תוצאות המחקר",figs(fig("t30v","מהיר�
 <p style="margin:0;color:var(--muted);font-size:15px">מזינים את המרחק שעברת ב-30 דקות ואת הדופק הממוצע של 20 הדקות האחרונות. ברירת המחדל היא הדוגמה מהמצגת.</p>
 <div class="row">
 <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" id="zDist" min="2" max="12" step="0.01" inputmode="decimal"></label>
-<label>דופק ממוצע ב-20 הדק׳ האחרונות<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
+<label>דופק ממוצע ב-20 הדק׳ האחרונות (דופק סח״ח)<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
 </div>
 <div id="zOut" aria-live="polite"></div>
 <p class="note">הקצבים לפי % מקצב הטסט (פרייל), והדופק לפי % מדופק הסף שבמצגת. אפשר למצוא את המחשבון הזה גם ב<a href="/branch/tools/" style="color:var(--accent)">מחשבונים וכלי עזר</a>.</p></div>
