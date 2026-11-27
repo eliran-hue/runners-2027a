@@ -8,14 +8,17 @@ require __DIR__ . '/_helpers.php';
 $area = $GATE_AREA ?? '';
 if (!in_array($area, ['branch', 'science'], true)) { http_response_code(404); exit; }
 $u = current_user();
-$path = (string)($_GET['f'] ?? '');
+/* הכתובות באתר הן בצורה /branch/?p=training. ב-Cloudways, Nginx מגיש בעצמו (או מחזיר 404) כל כתובת עם סיומת ‎.html,
+   וגם כתובת בלי סיומת לא מגיעה ל-Apache. רק כתובת התיקייה (/branch/) מגיעה לכאן, ולכן שם הדף עובר בפרמטר p. */
+$path = isset($_GET['p']) ? (string)$_GET['p'] : (string)($_GET['f'] ?? '');
+$path = ltrim($path, '/');
 $isPage = $path === '' || substr($path, -1) === '/' || preg_match('/\.html?$/i', $path) || !preg_match('/\.[a-z0-9]+$/i', $path);
 
 $allowed = $area === 'science' ? has_science($u) : has_branch($u);
 if (!$allowed) {
     header('Cache-Control: private, no-store');
     // Not logged in: to the login screen, and back here afterwards. Logged in without access: the home page explains.
-    $back = '/' . $area . '/' . $path;
+    $back = '/' . $area . '/' . ($path === '' ? '' : '?p=' . $path);
     if ($isPage) { header('Location: ' . ($u ? '/?locked=' . $area : '/?next=' . rawurlencode($back)), true, 302); exit; }
     http_response_code(403);
     exit;
@@ -23,7 +26,7 @@ if (!$allowed) {
 
 $base = realpath(__DIR__ . '/../' . $area . '_src');
 if ($path !== '' && substr($path, -1) !== '/' && is_dir($base . '/' . $path) && !preg_match('/(^|\/)\./', $path)) {
-    header('Location: /' . $area . '/' . $path . '/', true, 301);
+    header('Location: /' . $area . '/?p=' . $path . '/', true, 301);
     exit;
 }
 if ($path === '' || substr($path, -1) === '/') $path .= 'index.html';

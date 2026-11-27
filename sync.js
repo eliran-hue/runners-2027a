@@ -246,10 +246,18 @@
       }).catch(function(){ busy(form, false); err.textContent = msg("net"); });
     };
   }
+  /* The page's address for the view counter, in the old file form (/branch/training.html), so the admin stats keep their names. */
+  function pagePath(){
+    var p = new URLSearchParams(location.search).get("p");
+    if (p === null) return location.pathname;
+    p = p.replace(/^\/+/, "");
+    if (p && !/\/$/.test(p) && !/\.[a-z0-9]+$/i.test(p)) p += ".html";
+    return location.pathname + p;
+  }
   /* Where to go after logging in: a course page the visitor asked for before logging in (set by the content gate). */
   function nextUrl(){
     var n = new URLSearchParams(location.search).get("next") || "";
-    return /^\/(branch|science)\/[\w\-\/.]*$/.test(n) && n.indexOf("..") < 0 ? n : "";
+    return /^\/(branch|science)\/(\?p=[\w\-\/.]*)?$/.test(n) && n.indexOf("..") < 0 ? n : "";
   }
   function loggedIn(changed){
         view('<h2>' + (state.name ? "שלום, " + esc(state.name) + "!" : "מחובר") + '</h2><p>מעכשיו כל פרק שתסיים יישמר אצלנו. בכל מכשיר אחר, נכנסים עם אותה כתובת מייל וממשיכים מאותה נקודה.</p>'
@@ -313,7 +321,7 @@
         vid = Array.prototype.map.call(a, function(b){ return ("0" + b.toString(16)).slice(-2); }).join("");
         origSet.call(ls, "rv.vid", vid);
       }
-      api("hit.php", {path: location.pathname, v: vid}).catch(function(){});
+      api("hit.php", {path: pagePath(), v: vid}).catch(function(){});
     } catch (e) {}
   }
   function mount(){

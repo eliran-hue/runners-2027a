@@ -4,7 +4,7 @@
 <title>מחשבונים וכלי עזר · קורס ענפי</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><style>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127a" defer></script><script src="/sync.js?v=20261127a" defer></script><style>
 .tools{display:flex;flex-direction:column;gap:14px}
 details.tool{padding:0}
 details.tool>summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:center;padding:18px 22px;border-radius:14px}
@@ -43,7 +43,7 @@ details.tool>:last-child{margin-bottom:20px}
         <label>עד<input type="number" id="cK2" min="20" max="100" inputmode="numeric"></label>
       </div>
       <div class="out" id="cOut" aria-live="polite"></div>
-      <p class="note">החיזוי לפי גיל הוא הערכה גסה. אם יש דופק מרבי ממבדק, עדיף להזין אותו. ההסבר המלא נמצא בפרק <a href="/branch/physiology.html">"לב ודופק" בפיזיולוגיה</a>, והערכים שמוזנים כאן משותפים למחשבון שבפרק.</p>
+      <p class="note">החיזוי לפי גיל הוא הערכה גסה. אם יש דופק מרבי ממבדק, עדיף להזין אותו. ההסבר המלא נמצא בפרק <a href="/branch/?p=physiology">"לב ודופק" בפיזיולוגיה</a>, והערכים שמוזנים כאן משותפים למחשבון שבפרק.</p>
     </details>
       <details class="tool" id="zCalc" style="border-top-color:var(--d4)">
       <summary><span class="sumt"><h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3><p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים.</p></span><span class="chev" aria-hidden="true"></span></summary>
@@ -52,7 +52,7 @@ details.tool>:last-child{margin-bottom:20px}
         <label>דופק ממוצע ב-20 הדק׳ האחרונות<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
       </div>
       <div id="zOut" aria-live="polite"></div>
-      <p class="note">הקצבים לפי אחוז מקצב הטסט (פרייל), והדופק לפי אחוז מדופק הסף שבמצגת. ההסבר המלא בפרק <a href="/branch/training.html">"אזורי אימון" בתורת האימון</a>.</p>
+      <p class="note">הקצבים לפי אחוז מקצב הטסט (פרייל), והדופק לפי אחוז מדופק הסף שבמצגת. ההסבר המלא בפרק <a href="/branch/?p=training">"אזורי אימון" בתורת האימון</a>.</p>
     </details>
     <details class="tool" id="pCalc" style="border-top-color:var(--d2)">
       <summary><span class="sumt"><h3>מחשבון אחוז קצב מטסט</h3><p class="desc"><b class="usage">מיועד לתרגול אימוני עליות.</b> מזינים קצב ייחוס (למשל הקצב מטסט 30 דקות) ואחוז, ומקבלים את הקצב לאימון.</p></span><span class="chev" aria-hidden="true"></span></summary>

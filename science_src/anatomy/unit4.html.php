@@ -243,9 +243,9 @@ ol.steps li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:sta
 ol.steps li div{display:flex;flex-direction:column}ol.steps li div span{color:var(--muted)}
 .ftype{border-top:6px solid var(--c)}.ftype .k{color:var(--c)}
 @media (max-width:520px){.grid3 .k{font-size:21px}}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127a" defer></script><script src="/sync.js?v=20261127a" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
-<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><a href="/science/anatomy/">אנטומיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">יחידה 4</span></nav>
+<header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><a href="/science/?p=anatomy/">אנטומיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">יחידה 4</span></nav>
   <div class="eyebrow">אנטומיה · שיעור מיום <bdi>30/11/2026</bdi></div>
   <h1>יחידה 4: מערכת שלד-שריר: שרירים</h1>
   <p class="lead">מבנה ותפקוד השריר: סוגי שרירים, מבנה שריר השלד, מנגנון ההתכווצות, סיבים איטיים ומהירים, אספקת דם ודרכי התכווצות. כל החומר מהמצגת, בשפה פשוטה, עם בוחן בסוף כל פרק וכרטיסיות לשינון. ההתקדמות נשמרת בדפדפן, ואפשר לסנכרן אותה עם המייל.</p>
@@ -375,7 +375,7 @@ ${fig("fiber","מבנה השריר: שריר משורטט, אגודת שריר, 
 <tr><td><b>מיטוכונדריון</b></td><td>מייצר את האנרגיה הכימית שהתא צריך</td></tr>
 <tr><td><b>ריבוזומים</b></td><td>"בתי החרושת" שבהם התא מייצר חלבונים ואנזימים</td></tr>
 </table></div>
-<p style="margin-top:8px">אלה אותם אברונים שלמדנו בתא הכללי, ב<a href="/science/anatomy/unit1.html" style="color:var(--accent)">יחידה 1</a>, עם שמות מיוחדים לתא השריר.</p></div>
+<p style="margin-top:8px">אלה אותם אברונים שלמדנו בתא הכללי, ב<a href="/science/?p=anatomy/unit1" style="color:var(--accent)">יחידה 1</a>, עם שמות מיוחדים לתא השריר.</p></div>
 <div class="block warn"><h3>שימו לב</h3><p>במצגת כתוב "סרקופלסמה = קרום התא". בספרות המקובלת <b>סרקולמה</b> ${L("Sarcolemma")} היא קרום תא השריר, ו<b>סרקופלסמה</b> ${L("Sarcoplasm")} היא הציטופלסמה (נוזל התא) של תא השריר. המצגת עצמה משתמשת ב"סרקולמה" כקרום שיוצר את תעלות T. במבחן כדאי ללכת לפי מה שהמרצה לימדה.</p></div>
 <div class="trick"><b class="tag">טריק לזכירה</b><b>Sarco</b> = בשר (שריר). סרקו<b>למה</b> = <b>למה</b>? כי צריך <b>עטיפה</b> (הקרום). סרקו<b>פלסמה</b> = <b>פלסמה</b>, הנוזל שבפנים. וסרקו<b>מר</b> = ה<b>מר</b>חק בין שני פסי Z, היחידה שמתכווצת.</div>
 `,
@@ -455,7 +455,7 @@ html:()=>`
 <li>אבל <b>אימון ספציפי</b> יכול לשנות את <b>הפעילות</b> של הסיב.</li>
 </ul></div>
 <div class="trick"><b class="tag">טריק לזכירה</b><b>אדום = דם = חמצן = דרך ארוכה</b>: הרבה כלי דם נותנים לסיב צבע אדום וחמצן, ולכן הוא מחזיק לאורך זמן, כמו <b>צב</b>. <b>לבן = ספרינט</b>: מעט דם, בלי חמצן, הרבה כוח לזמן קצר, כמו <b>ארנב</b>. וגם במספרים: <b>1</b> = מרתון אחד ארוך, <b>2</b> = פעמיים יותר מהר.</div>
-<div class="block"><h3>חיבור לריצה</h3><p>רוב העבודה בריצה ארוכה נעשית בסיבים האדומים. אימון סבולת משפר את הפעילות האירובית שלהם, גם אם הרכב הסיבים עצמו נקבע מלידה. על מערכות האנרגיה (אירובית ואנאירובית) יש פירוט ב<a href="/branch/physiology.html" style="color:var(--accent)">הפיזיולוגיה של הריצה</a>.</p></div>
+<div class="block"><h3>חיבור לריצה</h3><p>רוב העבודה בריצה ארוכה נעשית בסיבים האדומים. אימון סבולת משפר את הפעילות האירובית שלהם, גם אם הרכב הסיבים עצמו נקבע מלידה. על מערכות האנרגיה (אירובית ואנאירובית) יש פירוט ב<a href="/branch/?p=physiology" style="color:var(--accent)">הפיזיולוגיה של הריצה</a>.</p></div>
 `,
 quiz:[
 ["סיבי Type I (אדומים) מאופיינים בכך שהם:",["מהירים ומתעייפים מהר","איטיים ועמידים לעייפות","ללא מיטוכונדריות","אנאירוביים בעיקר"],1,"שאלת חזרה מהמצגת."],
@@ -484,7 +484,7 @@ html:()=>`
 <li><span class="sn">5</span><div><b>אחרי שמפסיקים</b><span>הזרימה עשויה לעלות לרגע, כי הלחץ על כלי הדם נעלם. במהלך הדקה הבאה בערך היא חוזרת לרמה הרגילה.</span></div></li>
 </ol></div>
 <div class="trick"><b class="tag">טריק לזכירה</b>השריר הוא <b>ספוג</b> בתוך צינור: כשסוחטים אותו (כיווץ), הזרימה נעצרת לרגע. כשמשחררים (הרפיה), הדם נכנס פנימה. ואחרי 15–20 שניות הגוף מוצא את הקצב.</div>
-<div class="block"><h3>קשר ליחידה 1</h3><p>זרימת הדם הטובה של השריר היא הסיבה שהוא מחלים <b>מהר</b>, כמו שראינו בטבלת סיכום רקמות החיבור ב<a href="/science/anatomy/unit1.html" style="color:var(--accent)">יחידה 1</a> (פרק עצם, סחוס ומפרק סינוביאלי). המצגת של יחידה 4 חוזרת על אותה טבלה, ולכן היא לא מופיעה כאן שוב.</p></div>
+<div class="block"><h3>קשר ליחידה 1</h3><p>זרימת הדם הטובה של השריר היא הסיבה שהוא מחלים <b>מהר</b>, כמו שראינו בטבלת סיכום רקמות החיבור ב<a href="/science/?p=anatomy/unit1" style="color:var(--accent)">יחידה 1</a> (פרק עצם, סחוס ומפרק סינוביאלי). המצגת של יחידה 4 חוזרת על אותה טבלה, ולכן היא לא מופיעה כאן שוב.</p></div>
 `,
 quiz:[
 ["כמה מתפוקת הלב במנוחה עוברת לשרירי השלד?",["כ-5%","כ-20%","כ-50%","כ-80%"],1,"ובמאמץ הרבה יותר."],
@@ -505,7 +505,7 @@ ${fig("ctypes","קונצנטרית (מתקצר), אקסצנטרית (מתארך)
 <tr><td><b>איזומטרית</b> ${L("Isometric")}</td><td>מפתח כוח, <b>האורך לא משתנה</b></td><td>הכוח של השריר וההתנגדות <b>שווים</b></td><td>מחזיקים את המשקולת במקום</td></tr>
 </table></div></div>
 <div class="trick"><b class="tag">טריק לזכירה</b><b>קונ</b>צנטרית = <b>קונ</b>ים (הולכים <b>פנימה</b>, אל המרכז: מתקצר). <b>אקס</b>צנטרית = <b>אקס</b>יט (יוצאים <b>החוצה</b>: מתארך). <b>איזו</b>מטרית = <b>איזו</b> = שווה, אותו אורך (<b>מטר</b>).</div>
-<div class="block"><h3>חיבור לריצה</h3><p>בכל נחיתה, הארבע-ראשי עובד <b>אקסצנטרית</b>: הוא מתכווץ ומתארך כדי לבלום את הברך. בירידות זה קורה הרבה יותר, ולכן ריצה בירידה גורמת לכאבי שרירים חזקים במיוחד. פירוט נוסף יש בפרק "תנועה וכיווץ" ב<a href="/branch/anatomy.html" style="color:var(--accent)">האנטומיה של הריצה</a>.</p></div>
+<div class="block"><h3>חיבור לריצה</h3><p>בכל נחיתה, הארבע-ראשי עובד <b>אקסצנטרית</b>: הוא מתכווץ ומתארך כדי לבלום את הברך. בירידות זה קורה הרבה יותר, ולכן ריצה בירידה גורמת לכאבי שרירים חזקים במיוחד. פירוט נוסף יש בפרק "תנועה וכיווץ" ב<a href="/branch/?p=anatomy" style="color:var(--accent)">האנטומיה של הריצה</a>.</p></div>
 
 <h3 style="margin-top:14px">כרטיסיות לשינון: כל המושגים ביחידה</h3>
 <div class="fc-bar"><button class="btn" id="fcPrev">הקודם</button><button class="btn primary" id="fcNext">הבא</button><button class="btn" id="fcShuf">ערבב</button><span class="count" id="fcCount"></span></div>

@@ -4,7 +4,7 @@
 <title>קורס ענפי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261124a" defer></script><script src="/sync.js?v=20261124a" defer></script><style>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127a" defer></script><script src="/sync.js?v=20261127a" defer></script><style>
 .sched{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .sched h2{margin:0 0 4px;font:400 24px var(--display)}
 .sched-lead{margin:0 0 12px;color:var(--muted)}
@@ -29,27 +29,27 @@
 </header>
 <main class="wrap">
   <div class="grid">
-    <a class="topic wide" href="/branch/tools.html" style="--c:var(--d3)">
+    <a class="topic wide" href="/branch/?p=tools" style="--c:var(--d3)">
       <div><h2>מחשבונים וכלי עזר</h2><p>כלים לשימוש מהיר, בלי לחפש בתוך הפרקים.</p></div>
       <span class="go">לכלים ←</span>
     </a>
 
-    <a class="topic" href="/branch/anatomy.html" style="--c:var(--d1)">
+    <a class="topic" href="/branch/?p=anatomy" style="--c:var(--d1)">
       <h2>האנטומיה של הריצה</h2><p>מערכת השלד והשרירים, והיבטים קינזיולוגיים בריצה.</p><ul><li>עצמות ומפרקים: ירך, ברך, קרסול</li><li>מישורי תנועה וסוגי כיווץ</li><li>14 שרירים עיקריים, עם כרטיסיות</li><li>ניתוח צעד ריצה</li></ul>
       <div class="prog" data-keys="anat:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
 
-    <a class="topic" href="/branch/physiology.html" style="--c:var(--d2)">
+    <a class="topic" href="/branch/?p=physiology" style="--c:var(--d2)">
       <h2>הפיזיולוגיה של הריצה</h2><p>מושגי יסוד בפיזיולוגיה של המאמץ והשלכתם על הריצה.</p><ul><li>מסלולי האנרגיה ו-ATP</li><li>לב, דופק ומחשבון קרבונן</li><li>סיבי שריר, צח״מ וסף לקטאט</li><li>יעילות מכאנית ותחומי עצימות</li></ul>
       <div class="prog" data-keys="phys:7"><div class="bar"><i></i></div><div class="t"><span class="st">7 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
 
-    <a class="topic" href="/branch/training.html" style="--c:var(--d4)">
+    <a class="topic" href="/branch/?p=training" style="--c:var(--d4)">
       <h2>תורת האימון</h2><p>גורמי ההישג, מרכיבי הכושר, עקרונות ותכנון האימון, הערכת עצימות, שיטות האימון וטכניקת ריצה.</p><ul><li>גורמי ההישג ומשולש הכושר</li><li>9 עקרונות האימון ופיצוי יסף</li><li>מחזורי אימון, יחידת אימון וחימום</li><li>סולם בורג, קרבונן ו-6 אזורי האימון</li><li>שיטות האימון: רצף, הפוגות וחזרות</li><li>טכניקת ריצה ותרגילי ריצה, עם סרטונים</li></ul>
       <div class="prog" data-keys="train:13"><div class="bar"><i></i></div><div class="t"><span class="st">13 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
 
-    <a class="topic" href="/branch/methodology.html" style="--c:var(--boneInk)">
+    <a class="topic" href="/branch/?p=methodology" style="--c:var(--boneInk)">
       <h2>מתודיקה באימון</h2><p>איך מדריכים ומאמנים קבוצה: הדרך להעביר את החומר למתאמנים.</p><ul><li>5 העקרונות הדידקטיים ושלבי הלמידה</li><li>הדגמה, הדרכה מילולית והדרכה ידנית</li><li>עמדת המדריך (שר״ש) ותפקוד המאמן</li><li>תכנון האימון ו-8 שאלות לבחינתו</li></ul>
       <div class="prog" data-keys="meth:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>

@@ -5,14 +5,14 @@
   if (document.getElementById("topbar")) return;
 
   var BRANCH = [
-    ["/branch/tools.html", "מחשבונים וכלי עזר"],
-    ["/branch/anatomy.html", "האנטומיה של הריצה"],
-    ["/branch/physiology.html", "הפיזיולוגיה של הריצה"],
-    ["/branch/training.html", "תורת האימון"],
-    ["/branch/methodology.html", "מתודיקה באימון"]
+    ["/branch/?p=tools", "מחשבונים וכלי עזר"],
+    ["/branch/?p=anatomy", "האנטומיה של הריצה"],
+    ["/branch/?p=physiology", "הפיזיולוגיה של הריצה"],
+    ["/branch/?p=training", "תורת האימון"],
+    ["/branch/?p=methodology", "מתודיקה באימון"]
   ];
   var SCIENCE = [
-    ["/science/anatomy/", "אנטומיה", [["/science/anatomy/skeleton.html", "🦴 סימולטור שלד"], ["/science/anatomy/unit1.html", "יחידה 1: מבנה מערכות הגוף"], ["/science/anatomy/unit3.html", "יחידות 2–3: מערכת שלד-שריר ומפרקים"], ["/science/anatomy/unit4.html", "יחידה 4: מערכת שלד-שריר: שרירים"]]],
+    ["/science/?p=anatomy/", "אנטומיה", [["/science/?p=anatomy/skeleton", "🦴 סימולטור שלד"], ["/science/?p=anatomy/unit1", "יחידה 1: מבנה מערכות הגוף"], ["/science/?p=anatomy/unit3", "יחידות 2–3: מערכת שלד-שריר ומפרקים"], ["/science/?p=anatomy/unit4", "יחידה 4: מערכת שלד-שריר: שרירים"]]],
     [null, "פיזיולוגיה"],
     [null, "קניזיולוגיה"]
   ];
@@ -93,9 +93,15 @@
   drawer.hidden = true;
   document.body.appendChild(scrim); document.body.appendChild(drawer);
 
-  var here = location.pathname.replace(/index\.html$/, "");
+  /* Page addresses are /branch/?p=training (see api/gate.php), so the page is in the p parameter. */
+  function canon(href){
+    var u = new URL(href, location.href), p = u.searchParams.get("p");
+    if (p === null) return u.pathname.replace(/index\.html$/, "");
+    return u.pathname + p.replace(/^\/+/, "");
+  }
+  var here = canon(location.href);
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
-  function link(href, text){ return '<a href="' + href + '"' + (here === href ? ' aria-current="page"' : '') + '>' + esc(text) + '</a>'; }
+  function link(href, text){ return '<a href="' + href + '"' + (here === canon(href) ? ' aria-current="page"' : '') + '>' + esc(text) + '</a>'; }
   function tree(){
     var a = window.runnersAuth || {}, br = !!(a.branch || a.admin), sci = !!(a.science || a.admin);
     var h = '<ul>' + '<li>' + link("/", "דף הבית") + '</li>';
