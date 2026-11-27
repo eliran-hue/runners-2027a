@@ -306,6 +306,11 @@
     + ".chx-card.done{border-top-color:var(--ok)}"
     + ".chx-card.done .st{color:var(--ok)}"
     + ".chx-card.next{box-shadow:0 0 0 2px var(--accent)}"
+    + ".chx-card{overflow:hidden}"
+    + ".chx-card.ny{opacity:.92}"
+    + ".chx-card .ny-rib{position:absolute;top:22px;left:-46px;width:190px;transform:rotate(-35deg);background:#E0A100;color:#1b1400;font:800 12.5px var(--body);text-align:center;padding:5px 0;box-shadow:0 2px 6px rgba(0,0,0,.3);pointer-events:none}"
+    + ".ny-badge{display:inline-flex;align-items:center;gap:4px;vertical-align:middle;margin-inline-start:10px;font:800 13px var(--body);color:#1b1400;background:#E0A100;border-radius:999px;padding:3px 10px;white-space:nowrap}"
+    + ".cp-panel .ny-tag{margin-inline-start:auto;font:700 11.5px var(--body);color:#1b1400;background:#E0A100;border-radius:999px;padding:1px 7px;white-space:nowrap}"
     + "@media (max-width:560px){.cp .cp-l,.cp .cp-t{display:none}.cp button{padding:0 12px}.chx-grid{grid-template-columns:1fr}.chx-card b{font-size:17px}}";
   document.head.appendChild(css);
 
@@ -408,5 +413,39 @@
       if (id && idFromHash() !== id) history.replaceState(null, "", "#c=" + id);
     } else if (showing === "index") drawIndex();
   }).observe(rail, {childList: true, subtree: true, attributes: true, attributeFilter: ["aria-selected", "class"]});
+  /* Chapters the teacher hasn't reached in class yet (set in the admin page): a diagonal ribbon on the card,
+     a badge beside the chapter title, and a tag in the drop-down list. */
+  var NY = [];
+  function isNY(id){ return NY.indexOf(id) >= 0; }
+  function decorate(){
+    var t = tabs();
+    idx.querySelectorAll(".chx-card[data-i]").forEach(function(c){
+      var b = t[+c.getAttribute("data-i")], on = !!(b && isNY(b.getAttribute("data-id")));
+      c.classList.toggle("ny", on);
+      var r = c.querySelector(".ny-rib");
+      if (on && !r) c.insertAdjacentHTML("afterbegin", '<span class="ny-rib" aria-hidden="true">עוד לא נלמד בכיתה</span>');
+      if (!on && r) r.remove();
+      var stx = c.querySelector(".st"); if (on && stx && !/עוד לא נלמד/.test(stx.textContent)) stx.textContent += " · עוד לא נלמד בכיתה";
+    });
+    panel.querySelectorAll("[data-p]").forEach(function(x){
+      var b = t[+x.getAttribute("data-p")], on = !!(b && isNY(b.getAttribute("data-id")));
+      if (on && !x.querySelector(".ny-tag")) x.insertAdjacentHTML("beforeend", '<span class="ny-tag">עוד לא נלמד</span>');
+    });
+    var h = main.querySelector(".chap-head h2"), cur = t.length && t[sel(t)];
+    if (h) {
+      var on2 = !!(cur && isNY(cur.getAttribute("data-id"))), bd = h.querySelector(".ny-badge");
+      if (on2 && !bd) h.insertAdjacentHTML("beforeend", '<span class="ny-badge">🕓 עוד לא נלמד בכיתה</span>');
+      if (!on2 && bd) bd.remove();
+    }
+  }
+  new MutationObserver(function(){ if (NY.length) decorate(); }).observe(main, {childList: true});
+  new MutationObserver(function(){ if (NY.length) decorate(); }).observe(idx, {childList: true});
+  new MutationObserver(function(){ if (NY.length) decorate(); }).observe(panel, {childList: true, subtree: true});
   drawBar(); route();
+  try {
+    fetch("/api/notyet.php", {credentials: "same-origin", cache: "no-store"})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.notyet) { NY = j.notyet[location.pathname] || []; decorate(); } })
+      .catch(function(){});
+  } catch(e) {}
 })();

@@ -341,3 +341,21 @@ function send_code_email(string $to, string $code): bool {
     ];
     return mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers, '-f' . $from);
 }
+
+/* הגדרות כלליות של האתר (מפתח → JSON). כרגע: notyet = הפרקים שעוד לא נלמדו בכיתה, לפי כתובת העמוד. */
+function setting_get(string $key, $default = null) {
+    $pdo = get_pdo();
+    $pdo->exec('CREATE TABLE IF NOT EXISTS site_settings (k VARCHAR(50) PRIMARY KEY, v TEXT NOT NULL)');
+    $q = $pdo->prepare('SELECT v FROM site_settings WHERE k = ?');
+    $q->execute([$key]);
+    $v = $q->fetchColumn();
+    if ($v === false) return $default;
+    $d = json_decode((string)$v, true);
+    return $d === null ? $default : $d;
+}
+function setting_set(string $key, $value): void {
+    $pdo = get_pdo();
+    $pdo->exec('CREATE TABLE IF NOT EXISTS site_settings (k VARCHAR(50) PRIMARY KEY, v TEXT NOT NULL)');
+    $pdo->prepare('DELETE FROM site_settings WHERE k = ?')->execute([$key]);
+    $pdo->prepare('INSERT INTO site_settings (k, v) VALUES (?, ?)')->execute([$key, json_encode($value, JSON_UNESCAPED_UNICODE)]);
+}

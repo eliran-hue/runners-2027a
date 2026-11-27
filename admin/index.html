@@ -77,6 +77,14 @@ td.num{color:var(--ink)}
 .tabs .badge{font-size:12.5px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--accent);color:var(--paper);display:inline-grid;place-items:center}
 .tabs .badge[hidden]{display:none}
 [role=tabpanel][hidden]{display:none}
+.nyc{margin-top:18px}.nyc>h3{font:800 18px var(--body);margin:0 0 4px}
+.nyp{border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:10px}
+.nyp h4{margin:0 0 6px;font:700 16px var(--body)}.nyp h4 small{color:var(--muted);font-weight:600}
+.nyi{display:flex;align-items:center;gap:10px;padding:6px 4px;border-top:1px dashed var(--line);cursor:pointer;font-size:15.5px}
+.nyi:first-of-type{border-top:0}.nyi input{width:20px;height:20px;accent-color:#E0A100;flex:none}
+.nyi .n{color:var(--muted);font-variant-numeric:tabular-nums;min-width:1.6em}
+.nyi .tg{margin-inline-start:auto;font:700 12px var(--body);color:#1b1400;background:#E0A100;border-radius:999px;padding:1px 8px}
+.nyi:not(.on) .tg{display:none}
 
 form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .stat.hot{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
@@ -94,7 +102,7 @@ form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid va
 .tag.wait{border-color:var(--accent);color:var(--accent)}
 td .sw + .sp{margin-top:4px}
 </style>
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127f" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127g" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -107,6 +115,7 @@ td .sw + .sp{margin-top:4px}
     <div class="tabs" role="tablist" aria-label="חלקי עמוד הניהול">
       <button type="button" role="tab" id="tabUsers" aria-controls="pUsers" aria-selected="true">ניהול משתמשים <span class="badge" id="tabBadge" hidden title="ממתינים לאישור"></span></button>
       <button type="button" role="tab" id="tabViews" aria-controls="pViews" aria-selected="false" tabindex="-1">מונה כניסות</button>
+      <button type="button" role="tab" id="tabNy" aria-controls="pNy" aria-selected="false" tabindex="-1">פרקים בכיתה <span class="badge" id="nyBadge" hidden title="פרקים שסומנו כלא נלמדו"></span></button>
     </div>
     <section role="tabpanel" id="pUsers" aria-labelledby="tabUsers">
     <div class="stats">
@@ -150,6 +159,14 @@ td .sw + .sp{margin-top:4px}
         <thead><tr><th>עמוד</th><th>כניסות</th><th>מבקרים שונים</th><th>רשומים</th><th>אנונימיים</th><th>כניסה אחרונה</th></tr></thead>
         <tbody id="vRows"></tbody>
       </table></div>
+    </div>
+    </section>
+    <section role="tabpanel" id="pNy" aria-labelledby="tabNy" hidden>
+    <div class="panel" style="margin-top:18px">
+      <h2>פרקים שעוד לא נלמדו בכיתה</h2>
+      <p>מסמנים פרק, והמשתמשים יראו עליו סרט "עוד לא נלמד בכיתה" בכרטיס הפרק וליד הכותרת שלו. הפרק נשאר פתוח לקריאה. מורידים את הסימון אחרי שהפרק נלמד.</p>
+      <div id="nyList"><p class="empty">טוען...</p></div>
+      <div class="msg" id="nyMsg" role="status"></div>
     </div>
     </section>
   </div>
@@ -274,7 +291,30 @@ td .sw + .sp{margin-top:4px}
   }
   $("vDays").onchange=loadViews;
   /* לשוניות: ניהול משתמשים / מונה כניסות. הלשונית הפתוחה נשמרת בכתובת (#views), כך שרענון נשאר בה. */
-  const TABS=[["tabUsers","pUsers",""],["tabViews","pViews","views"]];
+  /* פרקים שעוד לא נלמדו בכיתה: רשימת כל הפרקים, וסימון לכל פרק נשמר מיד בשרת. */
+  let NYC=null,NYM={};
+  function nyCount(){const n=Object.values(NYM).reduce((a,v)=>a+v.length,0);$("nyBadge").hidden=!n;$("nyBadge").textContent=n}
+  function loadNy(){
+    fetch("/api/notyet.php?catalog=1",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{
+      if(!j.ok||!j.catalog)return;NYC=j.catalog;NYM=j.notyet||{};nyCount();drawNy();
+    }).catch(()=>{$("nyList").innerHTML='<p class="empty">הטעינה נכשלה.</p>'});
+  }
+  function drawNy(){
+    const CN={branch:"קורס ענפי",science:"קורס מדעי"};
+    $("nyList").innerHTML=["branch","science"].map(c=>{const pg=NYC.filter(p=>p.course===c);if(!pg.length)return"";
+      return `<div class="nyc"><h3>${CN[c]}</h3>`+pg.map(p=>{const on=NYM[p.url]||[];
+        return `<div class="nyp"><h4>${esc(p.title)} <small>· ${on.length?on.length+" מסומנים":"הכול נלמד"}</small></h4>`+
+          p.chapters.map((ch,i)=>{const sel=on.includes(ch.id);
+            return `<label class="nyi${sel?" on":""}"><input type="checkbox" data-u="${esc(p.url)}" data-c="${esc(ch.id)}"${sel?" checked":""}><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="tg">עוד לא נלמד</span></label>`}).join("")+`</div>`}).join("")+`</div>`}).join("");
+  }
+  $("nyList").addEventListener("change",e=>{
+    const x=e.target.closest("input[data-u]");if(!x)return;
+    const url=x.dataset.u,ch=x.dataset.c,on=x.checked,m=$("nyMsg");x.disabled=true;
+    fetch("/api/notyet.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({url,chapter:ch,on})})
+      .then(r=>r.json()).then(j=>{if(!j.ok)throw 0;NYM=j.notyet||{};nyCount();drawNy();m.className="msg";m.textContent="נשמר.";})
+      .catch(()=>{x.checked=!on;x.disabled=false;m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
+  });
+  const TABS=[["tabUsers","pUsers",""],["tabViews","pViews","views"],["tabNy","pNy","class"]];
   function showTab(i,focus){
     TABS.forEach(([t,p],j)=>{const on=i===j;$(t).setAttribute("aria-selected",on);$(t).tabIndex=on?0:-1;$(p).hidden=!on});
     if(focus)$(TABS[i][0]).focus();
@@ -283,7 +323,8 @@ td .sw + .sp{margin-top:4px}
   TABS.forEach(([t],i)=>{$(t).onclick=()=>showTab(i);$(t).onkeydown=e=>{
     const k={ArrowLeft:1,ArrowRight:-1,Home:"first",End:"last"}[e.key];if(k===undefined)return;e.preventDefault();
     showTab(k==="first"?0:k==="last"?TABS.length-1:(i+k+TABS.length)%TABS.length,true)}});
-  showTab(location.hash==="#views"?1:0);
+  showTab(location.hash==="#views"?1:location.hash==="#class"?2:0);
+  loadNy();
   $("addForm").onsubmit=e=>{
     e.preventDefault();
     const em=$("addEmail").value.trim().toLowerCase(),m=$("addMsg");

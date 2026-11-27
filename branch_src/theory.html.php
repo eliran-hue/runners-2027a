@@ -4,7 +4,7 @@
 <title>תורת האימון · קורס ענפי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127f" defer></script><script src="/sync.js?v=20261127d" defer></script><style>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127g" defer></script><script src="/sync.js?v=20261127d" defer></script><style>
 .sched{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .sched h2{margin:0 0 4px;font:400 24px var(--display)}
 .sched-lead{margin:0 0 12px;color:var(--muted)}
