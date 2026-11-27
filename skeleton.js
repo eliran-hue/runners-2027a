@@ -202,6 +202,7 @@
     + ".sk-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}"
     + ".sk-list button small{font-weight:400;color:var(--muted);margin-inline-start:6px;font-size:12px}.sk-list button.on small{color:#fff}.sk-list button{font:600 13.5px var(--body);padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;min-height:34px}"
     + ".sk-list button.on{background:var(--accent);border-color:var(--accent);color:#fff}"
+    + ".sk-again{font:700 15px var(--body);color:#fff;background:var(--accent);border:0;border-radius:999px;padding:8px 18px;cursor:pointer}"
     + ".sk-quizonly{display:none}.sk.quiz .sk-quizonly{display:inline-flex}.sk.quiz .sk-list{display:none}"
     + "@media (max-width:520px){.sk-grid{grid-template-columns:minmax(0,1fr) 118px}.sk-panel h4{font-size:20px}}";
 
@@ -273,11 +274,24 @@
       sel = id; mark(id, "on"); panel.innerHTML = info(id); showTip(id, ev);
       root.querySelectorAll(".sk-list button").forEach(function(b){ b.classList.toggle("on", b.dataset.pick === id); });
     }
+    /* Each round asks every bone exactly once, in random order (a shuffled deck), so questions don't repeat. */
+    function deal(){
+      var d = ORDER.slice();
+      for (var i = d.length - 1; i > 0; i--) { var j = (Math.random() * (i + 1)) | 0, t = d[i]; d[i] = d[j]; d[j] = t; }
+      if (quiz.last && d[d.length - 1] === quiz.last && d.length > 1) { var t2 = d[0]; d[0] = d[d.length - 1]; d[d.length - 1] = t2; }
+      quiz.deck = d;
+    }
     function newQ(){
-      var pool = ORDER.filter(function(id){ return id !== (quiz && quiz.target); });
-      quiz.target = pool[(Math.random() * pool.length) | 0]; quiz.tries = 0; tip.classList.remove("show");
+      if (!quiz.deck) deal();
+      if (!quiz.deck.length) {
+        tip.classList.remove("show"); mark(null, "ok"); mark(null, "bad"); mark(null, "on");
+        panel.innerHTML = '<p class="sk-q">🏁 סיימת סבב: כל ' + ORDER.length + ' העצמות!</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + ' (נכון בניסיון הראשון)</p>'
+          + '<p><button type="button" class="sk-again" data-again>סבב חדש</button></p>';
+        return;
+      }
+      quiz.target = quiz.deck.pop(); quiz.last = quiz.target; quiz.tries = 0; tip.classList.remove("show");
       mark(null, "ok"); mark(null, "bad"); mark(null, "on");
-      panel.innerHTML = '<p class="sk-q">איפה נמצא/ת: <b>' + B[quiz.target].pr + '</b>?</p><p class="sk-hint">לוחצים על העצם בשלד' + (/spine|sacrum|coccyx/.test(quiz.target) ? ' (אפשר גם במבט מהצד)' : '') + '.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
+      panel.innerHTML = '<p class="sk-q">איפה נמצא/ת: <b>' + B[quiz.target].pr + '</b>?</p><p class="sk-hint">לוחצים על העצם בשלד' + (/spine|sacrum|coccyx/.test(quiz.target) ? ' (אפשר גם במבט מהצד)' : '') + '.</p><p class="sk-score">שאלה ' + (ORDER.length - quiz.deck.length) + ' מתוך ' + ORDER.length + ' · ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>';
     }
     function answer(id, ev){
       if (!quiz.target) return;
@@ -308,6 +322,7 @@
         root.querySelectorAll("[data-mode]").forEach(function(b){ b.setAttribute("aria-pressed", String(b === m)); });
         if (mode === "quiz") { quiz = {right:0, asked:0, target:null}; newQ(); } else { mark(null, "ok"); mark(null, "bad"); start(); } return; }
       if (e.target.closest && e.target.closest("[data-groups]")) { var on = root.classList.toggle("groups"); e.target.closest("[data-groups]").setAttribute("aria-pressed", String(on)); return; }
+      if (e.target.closest && e.target.closest("[data-again]") && quiz) { quiz.right = 0; quiz.asked = 0; quiz.deck = null; deal(); newQ(); return; }
       if (e.target.closest && e.target.closest("[data-skip]") && quiz) { quiz.asked++; mark(quiz.target, "ok"); var t = quiz.target; quiz.target = null; panel.innerHTML = '<p class="sk-q"><bdi>' + B[t].pr + '</bdi> מסומן/ת בירוק.</p><p class="sk-score">ניקוד: ' + quiz.right + ' מתוך ' + quiz.asked + '</p>'; setTimeout(newQ, 1800); }
     });
     root.addEventListener("keydown", function(e){ if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("sk-bone")) { e.preventDefault(); pick(e.target.dataset.b); } });
