@@ -4,7 +4,7 @@
 <title>קורס ענפי · קורס מדריכי ריצות ארוכות</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127a" defer></script><script src="/sync.js?v=20261127a" defer></script><style>
+<script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><style>
 .sched{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .sched h2{margin:0 0 4px;font:400 24px var(--display)}
 .sched-lead{margin:0 0 12px;color:var(--muted)}
@@ -47,6 +47,11 @@
     <a class="topic" href="/branch/?p=training" style="--c:var(--d4)">
       <h2>תורת האימון</h2><p>גורמי ההישג, מרכיבי הכושר, עקרונות ותכנון האימון, הערכת עצימות, שיטות האימון וטכניקת ריצה.</p><ul><li>גורמי ההישג ומשולש הכושר</li><li>9 עקרונות האימון ופיצוי יסף</li><li>מחזורי אימון, יחידת אימון וחימום</li><li>סולם בורג, קרבונן ו-6 אזורי האימון</li><li>שיטות האימון: רצף, הפוגות וחזרות</li><li>טכניקת ריצה ותרגילי ריצה, עם סרטונים</li></ul>
       <div class="prog" data-keys="train:13"><div class="bar"><i></i></div><div class="t"><span class="st">13 פרקים</span><span class="go">לנושא ←</span></div></div>
+    </a>
+
+    <a class="topic" href="/branch/?p=planning" style="--c:var(--d2)">
+      <h2>תכנון אימונים</h2><p>איך בונים תוכנית: מיחידת האימון, דרך המחזור השבועי והחודשי, ועד מחזור הפסגה.</p><ul><li>יחידת האימון: ארגון, מטלות ועומס</li><li>מבנה יחידת האימון ואימוני מפתח</li><li>המחזור השבועי (מיקרו)</li><li>המחזור החודשי (מזו)</li><li>מחזור הפסגה והשנה (מאקרו)</li></ul>
+      <div class="prog" data-keys="plan:5"><div class="bar"><i></i></div><div class="t"><span class="st">5 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
 
     <a class="topic" href="/branch/?p=methodology" style="--c:var(--boneInk)">

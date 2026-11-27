@@ -226,7 +226,7 @@ figcaption a{color:var(--accent)}
 .mmap small{font-weight:400;color:var(--muted);font-size:12.5px}
 .ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap;display:inline-block}
 .linkbtn{font:inherit;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
-</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127a" defer></script><script src="/sync.js?v=20261127a" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261123f"></script><script src="/nav.js?v=20261127b" defer></script><script src="/sync.js?v=20261127b" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">תורת האימון</span></nav>
   <h1>תורת האימון</h1>
@@ -1029,7 +1029,7 @@ html:()=>`
 <tr><td class="num">2–12 דק׳</td><td class="num">30–120 שנ׳</td><td class="num"><span class="ltr">1:2–3</span></td><td class="num">5C</td></tr>
 <tr><td><b>הספק</b></td><td>בנייה מאוחרת וקדם תחרות</td><td class="num">1</td><td class="num">1–6</td><td class="num">10–30 שנ׳</td><td class="num"><span class="ltr">1:2–3</span></td><td class="num">5C</td></tr>
 </table></div>
-<p class="warn" style="margin-top:10px"><b>שים לב:</b> בטבלה במצגת, "זמן אימון ביחידה" של מהירות ושל הספק הוא "1–6" בלי יחידות. וזון 5C לא מופיע בפרק אזורי האימון, שבו הזונים מגיעים עד 5B. זה הזון העצים ביותר בשיטה של פרייל (מאמץ מרבי, הספק).</p></div>
+<p class="warn" style="margin-top:10px"><b>שים לב:</b> בטבלה במצגת, "זמן אימון ביחידה" של מהירות ושל הספק הוא "1–6" בלי יחידות. במצגת "תכנון אימונים" אותה טבלה מופיעה עם "1–6 דק׳" למהירות, כלומר דקות. וזון 5C לא מופיע בפרק אזורי האימון, שבו הזונים מגיעים עד 5B. זה הזון העצים ביותר בשיטה של פרייל (מאמץ מרבי, הספק).</p></div>
 
 <div class="block"><h3>איזו שיטה מפתחת איזה מרכיב כושר (לפי פרייל)</h3>
 <div class="tbl"><table class="wide mmap">

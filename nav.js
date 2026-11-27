@@ -9,6 +9,7 @@
     ["/branch/?p=anatomy", "האנטומיה של הריצה"],
     ["/branch/?p=physiology", "הפיזיולוגיה של הריצה"],
     ["/branch/?p=training", "תורת האימון"],
+    ["/branch/?p=planning", "תכנון אימונים"],
     ["/branch/?p=methodology", "מתודיקה באימון"]
   ];
   var SCIENCE = [
