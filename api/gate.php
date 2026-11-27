@@ -27,6 +27,9 @@ if ($path !== '' && substr($path, -1) !== '/' && is_dir($base . '/' . $path) && 
     exit;
 }
 if ($path === '' || substr($path, -1) === '/') $path .= 'index.html';
+/* כתובת בלי סיומת (/branch/training): Nginx של Cloudways מגיש בעצמו כל כתובת ‎.html (ומחזיר 404 כשהקובץ לא קיים),
+   ולכן הקישורים באתר הם בלי סיומת, וכך הם מגיעים לכאן. */
+if (!preg_match('/\.[a-z0-9]+$/i', $path) && is_file($base . '/' . $path . '.html.php')) $path .= '.html';
 /* הדפים שמורים ב-<קורס>_src/ בשם <קובץ>.php, עם שורת הגנה ראשונה (בקשה ישירה מחזירה 404). */
 $file = realpath($base . '/' . $path . '.php');
 if ($file === false || strpos($file, $base . DIRECTORY_SEPARATOR) !== 0 || !is_file($file)
