@@ -77,9 +77,20 @@ td.num{color:var(--ink)}
 .tabs .badge{font-size:12.5px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--accent);color:var(--paper);display:inline-grid;place-items:center}
 .tabs .badge[hidden]{display:none}
 [role=tabpanel][hidden]{display:none}
-.nyc{margin-top:18px}.nyc>h3{font:800 18px var(--body);margin:0 0 4px}
-.nyp{border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:10px}
-.nyp h4{margin:0 0 6px;font:700 16px var(--body)}.nyp h4 small{color:var(--muted);font-weight:600}
+.nyc{margin-top:14px;border:1px solid var(--line);border-radius:16px;padding:0 14px}
+.nyc>summary,.nyp>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px}
+.nyc>summary::-webkit-details-marker,.nyp>summary::-webkit-details-marker{display:none}
+.nyc>summary{font:800 18px var(--body);padding:14px 0}
+.nyc>summary::before,.nyp>summary::before{content:"";width:8px;height:8px;border-right:2.5px solid var(--accent);border-bottom:2.5px solid var(--accent);transform:rotate(135deg);transition:transform .2s;flex:none;margin:0 2px}
+.nyc[open]>summary::before,.nyp[open]>summary::before{transform:rotate(45deg) translate(-2px,-2px)}
+.nyc>summary small,.nyp>summary small{color:var(--muted);font:600 13.5px var(--body)}
+.nyc[open]{padding-bottom:12px}
+@media (max-width:560px){.nyc>summary,.nyp>summary{flex-wrap:wrap;row-gap:2px}.nyc>summary small,.nyp>summary small{flex-basis:100%;padding-inline-start:22px}.nyc{padding:0 10px}.nyp{padding:0 10px}}
+.nyp{border:1px solid var(--line);border-radius:14px;padding:0 14px;margin-top:8px;background:var(--paper)}
+.nyp>summary{font:700 16px var(--body);padding:11px 0}
+.nyp[open]{padding-bottom:6px}
+.nyc>summary:hover,.nyp>summary:hover{color:var(--accent)}
+.nyc>summary:focus-visible,.nyp>summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
 .nyi{display:flex;align-items:center;gap:10px;padding:6px 4px;border-top:1px dashed var(--line);font-size:15.5px;flex-wrap:wrap}
 .nyi:first-of-type{border-top:0}
 .nyi .n{color:var(--muted);font-variant-numeric:tabular-nums;min-width:1.6em}
@@ -301,6 +312,9 @@ td .sw + .sp{margin-top:4px}
   let NYC=null,NYM={},LRN={};
   function nyCount(){const n=Object.values(NYM).reduce((a,v)=>a+v.length,0);$("nyBadge").hidden=!n;$("nyBadge").textContent=n}
   const ST=[["done","נלמד"],["learning","בלימוד"],["notyet","עוד לא נלמד"]];
+  /* אילו אקורדיונים פתוחים, כדי שיישארו פתוחים אחרי כל שמירה */
+  const NYO=new Set();
+  $("nyList").addEventListener("toggle",e=>{const d=e.target;if(!d.dataset||!d.dataset.k)return;d.open?NYO.add(d.dataset.k):NYO.delete(d.dataset.k)},true);
   function loadNy(){
     fetch("/api/notyet.php?catalog=1",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{
       if(!j.ok||!j.catalog)return;NYC=j.catalog;NYM=j.notyet||{};LRN=j.learning||{};nyCount();drawNy();
@@ -308,13 +322,14 @@ td .sw + .sp{margin-top:4px}
   }
   function drawNy(){
     const CN={branch:"קורס ענפי",science:"קורס מדעי"};
+    const S=(lr,on)=>[lr?lr+" בלימוד":"",on?on+" עוד לא נלמדו":""].filter(Boolean).join(" · ")||"הכול נלמד";
     $("nyList").innerHTML=["branch","science"].map(c=>{const pg=NYC.filter(p=>p.course===c);if(!pg.length)return"";
-      return `<div class="nyc"><h3>${CN[c]}</h3>`+pg.map(p=>{const on=NYM[p.url]||[],lr=LRN[p.url]||[];
-        const sum=[lr.length?lr.length+" בלימוד":"",on.length?on.length+" עוד לא נלמדו":""].filter(Boolean).join(" · ")||"הכול נלמד";
-        return `<div class="nyp"><h4>${esc(p.title)} <small>· ${sum}</small></h4>`+
+      const cl=pg.reduce((a,p)=>a+(LRN[p.url]||[]).length,0),cn=pg.reduce((a,p)=>a+(NYM[p.url]||[]).length,0);
+      return `<details class="nyc" data-k="${c}"${NYO.has(c)?" open":""}><summary>${CN[c]} <small>· ${pg.length} נושאים · ${S(cl,cn)}</small></summary>`+pg.map(p=>{const on=NYM[p.url]||[],lr=LRN[p.url]||[];
+        return `<details class="nyp" data-k="${esc(p.url)}"${NYO.has(p.url)?" open":""}><summary>${esc(p.title)} <small>· ${p.chapters.length} פרקים · ${S(lr.length,on.length)}</small></summary>`+
           p.chapters.map((ch,i)=>{const cur=on.includes(ch.id)?"notyet":lr.includes(ch.id)?"learning":"done";
             return `<div class="nyi"><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="seg" role="group" aria-label="מצב בכיתה: ${esc(ch.title)}">`+
-              ST.map(([k,l])=>`<button type="button" data-u="${esc(p.url)}" data-c="${esc(ch.id)}" data-s="${k}" aria-pressed="${k===cur}">${l}</button>`).join("")+`</span></div>`}).join("")+`</div>`}).join("")+`</div>`}).join("");
+              ST.map(([k,l])=>`<button type="button" data-u="${esc(p.url)}" data-c="${esc(ch.id)}" data-s="${k}" aria-pressed="${k===cur}">${l}</button>`).join("")+`</span></div>`}).join("")+`</details>`}).join("")+`</details>`}).join("");
   }
   $("nyList").addEventListener("click",e=>{
     const x=e.target.closest("button[data-s]");if(!x||x.getAttribute("aria-pressed")==="true")return;
