@@ -112,7 +112,7 @@ document.querySelectorAll(".prog").forEach(p=>{
     if(!(d>0&&hr>0)){$("zOut").innerHTML='<div class="out"><div class="res">הזן מרחק ודופק.</div></div>';return}
     const p=1800/d;
     $("zOut").innerHTML=`<div class="out"><div class="res key"><div>קצב הטסט</div><div class="big">${m(mmss(p))}</div><div class="how">דקות לק״מ · ${m(`30 ÷ ${d} = ${mmss(p)}`)}</div></div></div>`+
-      `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${z[3]?m(`${mmss(p*z[2])}–${mmss(p*z[3])}`):"איטי מ-"+m(mmss(p*z[2]))}</div><div class="how">דופק ${m(`${Math.round(hr*z[4])}–${Math.round(hr*z[5])}`)}</div></div>`).join("")+`</div>`;
+      `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${z[3]?m(`${mmss(p*z[2])}–${mmss(p*z[3])}`):"איטי מ-"+m(mmss(p*z[2]))}</div><div class="how">דופק ${z[0]==="1"?"עד "+m(Math.round(hr*z[5])):m(`${Math.round(hr*z[4])}–${Math.round(hr*z[5])}`)}</div></div>`).join("")+`</div>`;
   }
   ["zDist","zHr"].forEach(k=>{$(k).addEventListener("input",calc);$(k).addEventListener("change",calc)});calc();
 })();

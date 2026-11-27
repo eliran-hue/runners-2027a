@@ -1326,7 +1326,7 @@ function wireZones(){
     h+=`<div class="tbl" style="margin-top:10px"><table><tr><th>זון</th><th>קצב (דק׳/ק״מ)</th><th>דופק</th></tr>`;
     PACE.forEach((z,i)=>{
       const pace=z[2]?`<span class="m" dir="ltr">${mmss(p*z[1])}–${mmss(p*z[2])}</span>`:`איטי מ-<span class="m" dir="ltr">${mmss(p*z[1])}</span>`;
-      h+=`<tr><td><b>${z[0]}</b> · ${ZONES[i][1]}</td><td class="num">${pace}</td><td class="num"><span class="m" dir="ltr">${Math.round(hr*HRP[i][0])}–${Math.round(hr*HRP[i][1])}</span></td></tr>`;
+      h+=`<tr><td><b>${z[0]}</b> · ${ZONES[i][1]}</td><td class="num">${pace}</td><td class="num">${i===0?`עד <span class="m" dir="ltr">${Math.round(hr*HRP[i][1])}</span>`:`<span class="m" dir="ltr">${Math.round(hr*HRP[i][0])}–${Math.round(hr*HRP[i][1])}</span>`}</td></tr>`;
     });
     $("zOut").innerHTML=h+`</table></div>`;
   }
