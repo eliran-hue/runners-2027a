@@ -19,6 +19,21 @@ details.tool[open]>summary{padding-bottom:4px}
 details.tool>:not(summary){margin-inline:22px}
 details.tool>:last-child{margin-bottom:20px}
 .usage{display:inline-block;color:var(--ink);background:var(--accent-soft);border-radius:6px;padding:1px 8px;margin-inline-end:4px}
+.zt-tests{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px}
+.zt{border:1px solid var(--line);border-radius:12px;padding:10px 14px 14px;margin:0;background:var(--bg)}
+.zt legend{font-weight:800;padding:0 6px;display:flex;gap:8px;align-items:center}
+.zt legend .tag{font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
+.zt .row{margin-top:4px}
+.zt .zt-rm{font:600 13.5px var(--body);color:var(--muted);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;margin-top:8px}
+.zt-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.zt-add{font:700 15px var(--body);color:var(--accent);background:var(--paper);border:1.5px dashed var(--accent);border-radius:999px;padding:8px 16px;cursor:pointer}
+.zt-view{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14.5px;color:var(--muted)}
+.zt-view[hidden]{display:none}
+.zt-view button{font:700 14.5px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.zt-view button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.zt-imp{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:14px}
+.zt-imp .res b.up{color:var(--ok)}.zt-imp .res b.down{color:#d9534f}
+.zt-was{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 </style><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/branch/">קורס ענפי</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">מחשבונים וכלי עזר</span></nav>
@@ -46,10 +61,14 @@ details.tool>:last-child{margin-bottom:20px}
       <p class="note">החיזוי לפי גיל הוא הערכה גסה. אם יש דופק מרבי ממבדק, עדיף להזין אותו. ההסבר המלא נמצא בפרק <a href="/branch/physiology/">"לב ודופק" בפיזיולוגיה</a>, והערכים שמוזנים כאן משותפים למחשבון שבפרק.</p>
     </details>
       <details class="tool" id="zCalc" style="border-top-color:var(--d4)">
-      <summary><span class="sumt"><h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3><p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים.</p></span><span class="chev" aria-hidden="true"></span></summary>
-      <div class="row">
-        <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" id="zDist" min="2" max="12" step="0.01" inputmode="decimal"></label>
-        <label>דופק ממוצע ב-20 הדק׳ האחרונות (דופק סח״ח)<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
+      <summary><span class="sumt"><h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3><p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים. אפשר להוסיף טסט חוזר ולראות את השיפור.</p></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="zt-tests" id="zTests"></div>
+      <div class="zt-bar">
+        <button type="button" class="zt-add" id="zAdd">+ הוספת טסט נוסף (להשוואה)</button>
+        <div class="zt-view" id="zView" role="group" aria-label="מה להציג" hidden>
+          <span>מה להציג:</span>
+          <button type="button" data-v="cmp">השוואה</button><button type="button" data-v="1">רק טסט 1</button><button type="button" data-v="2">רק טסט 2</button>
+        </div>
       </div>
       <div id="zOut" aria-live="polite"></div>
       <p class="note">הקצבים לפי אחוז מקצב הטסט (פרייל), והדופק לפי אחוז מדופק הסף שבמצגת. ההסבר המלא בפרק <a href="/branch/training/">"אזורי אימון" בתורת האימון</a>.</p>
@@ -98,23 +117,72 @@ document.querySelectorAll(".prog").forEach(p=>{
   calc();
 })();
 
-/* מחשבון זונים לפי טסט 30 דקות. אותו מפתח שמירה כמו בפרק "אזורי אימון" (train.zcalc). */
+/* מחשבון זונים לפי טסט 30 דקות, עם אפשרות לטסט חוזר והשוואה.
+   נשמר ב-train.ztests (נשמר גם בחשבון, דרך sync.js): {t1:{d,hr,date}, t2:{...}|null, view:"cmp"|"1"|"2"}.
+   הטסט העדכני (2 אם יש, אחרת 1) נכתב גם ל-train.zcalc, שממנו קורא המחשבון שבפרק "אזורי אימון". */
 (function(){
   const $=id=>document.getElementById(id);
   const Z=[["1","התאוששות",1.29,null,.65,.84],["2","סבולת נרחבת",1.14,1.29,.85,.91],["3","סבולת עצימה",1.06,1.13,.92,.95],["4","סף אנאירובי",.99,1.05,.96,1],["5A","מעל הסף",.97,1,1,1.02],["5B","סבולת אנאירובית",.9,.96,1.03,1.05]];
   const mmss=x=>{x=Math.round(x);return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
   const m=t=>`<span class="m">${t}</span>`;
-  let v={zDist:6,zHr:170};try{v=Object.assign(v,JSON.parse(localStorage.getItem("train.zcalc")||"{}"))}catch(e){}
-  $("zDist").value=v.zDist;$("zHr").value=v.zHr;
-  function calc(){
-    const d=+$("zDist").value,hr=+$("zHr").value;
-    try{localStorage.setItem("train.zcalc",JSON.stringify({zDist:$("zDist").value,zHr:$("zHr").value}))}catch(e){}
-    if(!(d>0&&hr>0)){$("zOut").innerHTML='<div class="out"><div class="res">הזן מרחק ודופק.</div></div>';return}
-    const p=1800/d;
-    $("zOut").innerHTML=`<div class="out"><div class="res key"><div>קצב הטסט</div><div class="big">${m(mmss(p))}</div><div class="how">דקות לק״מ · ${m(`30 ÷ ${d} = ${mmss(p)}`)}</div></div></div>`+
-      `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${z[3]?m(`${mmss(p*z[2])}–${mmss(p*z[3])}`):"איטי מ-"+m(mmss(p*z[2]))}</div><div class="how">דופק ${z[0]==="1"?"עד "+m(Math.round(hr*z[5])):m(`${Math.round(hr*z[4])}–${Math.round(hr*z[5])}`)}</div></div>`).join("")+`</div>`;
+  const fmtDate=s=>{const a=(s||"").split("-");return a.length===3?`${a[2]}/${a[1]}/${a[0]}`:""};
+  let st=null;try{st=JSON.parse(localStorage.getItem("train.ztests")||"null")}catch(e){}
+  if(!st||!st.t1){let v={zDist:6,zHr:170};try{v=Object.assign(v,JSON.parse(localStorage.getItem("train.zcalc")||"{}"))}catch(e){}st={t1:{d:v.zDist,hr:v.zHr,date:""},t2:null,view:"1"}}
+  function save(){
+    try{localStorage.setItem("train.ztests",JSON.stringify(st));const L=st.t2&&ok(st.t2)?st.t2:st.t1;localStorage.setItem("train.zcalc",JSON.stringify({zDist:String(L.d),zHr:String(L.hr)}))}catch(e){}
   }
-  ["zDist","zHr"].forEach(k=>{$(k).addEventListener("input",calc);$(k).addEventListener("change",calc)});calc();
+  const ok=t=>t&&+t.d>0&&+t.hr>0;
+  function testBox(n){
+    const t=st["t"+n];
+    return `<fieldset class="zt" data-t="${n}"><legend>טסט ${n}${n===2?'<span class="tag">טסט חוזר</span>':""}</legend><div class="row">
+      <label>תאריך (לא חובה)<input type="date" data-k="date" value="${t.date||""}"></label>
+      <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" data-k="d" min="2" max="12" step="0.01" inputmode="decimal" value="${t.d??""}"${n===1?' id="zDist"':""}></label>
+      <label>דופק ממוצע ב-20 הדק׳ האחרונות (דופק סח״ח)<input type="number" data-k="hr" min="100" max="210" inputmode="numeric" value="${t.hr??""}"${n===1?' id="zHr"':""}></label></div>
+      ${n===2?'<button type="button" class="zt-rm" data-rm>הסרת הטסט החוזר</button> · <button type="button" class="zt-rm" data-shift>טסט חדש: טסט 2 הופך לטסט 1</button>':""}</fieldset>`;
+  }
+  function drawInputs(){
+    $("zTests").innerHTML=testBox(1)+(st.t2?testBox(2):"");
+    $("zAdd").hidden=!!st.t2; $("zView").hidden=!st.t2;
+    $("zTests").querySelectorAll("input").forEach(i=>{const f=()=>{const n=i.closest(".zt").dataset.t;st["t"+n][i.dataset.k]=i.value;save();calc()};i.addEventListener("input",f);i.addEventListener("change",f)});
+    const rm=$("zTests").querySelector("[data-rm]");if(rm)rm.onclick=()=>{if(!confirmish("להסיר את הטסט החוזר?"))return;st.t2=null;st.view="1";save();drawInputs();calc()};
+    const sh=$("zTests").querySelector("[data-shift]");if(sh)sh.onclick=()=>{if(!confirmish("טסט 2 יהפוך לטסט 1, ויתפנה מקום לטסט חדש. להמשיך?"))return;st.t1=st.t2;st.t2={d:"",hr:st.t1.hr,date:""};st.view="cmp";save();drawInputs();calc()};
+  }
+  /* window.confirm blocks some embedded browsers; fall back to "yes" when it isn't available. */
+  function confirmish(q){try{return window.confirm(q)}catch(e){return true}}
+  function zonesHTML(t,prev){
+    const p=1800/t.d,hr=+t.hr,pp=prev?1800/prev.d:0,ph=prev?+prev.hr:0;
+    const pace=(x,z)=>z[3]?`${mmss(x*z[2])}–${mmss(x*z[3])}`:"איטי מ-"+mmss(x*z[2]);
+    const hrs=(h,z)=>z[0]==="1"?"עד "+Math.round(h*z[5]):`${Math.round(h*z[4])}–${Math.round(h*z[5])}`;
+    return `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${m(pace(p,z))}</div>${prev?`<span class="zt-was">בטסט 1: ${m(pace(pp,z))}</span>`:""}<div class="how">דופק ${m(hrs(hr,z))}${prev?` <span class="zt-was" style="display:inline">(בטסט 1: ${m(hrs(ph,z))})</span>`:""}</div></div>`).join("")+`</div>`;
+  }
+  function single(n){
+    const t=st["t"+n];
+    if(!ok(t))return `<div class="out"><div class="res">הזן מרחק ודופק${st.t2?" לטסט "+n:""}.</div></div>`;
+    const p=1800/t.d;
+    return `<div class="out"><div class="res key"><div>קצב הטסט${st.t2?" · טסט "+n:""}${t.date?" · "+fmtDate(t.date):""}</div><div class="big">${m(mmss(p))}</div><div class="how">דקות לק״מ · ${m(`30 ÷ ${t.d} = ${mmss(p)}`)}</div></div></div>`+zonesHTML(t,null);
+  }
+  function compare(){
+    const a=st.t1,b=st.t2;
+    if(!ok(a)||!ok(b))return `<div class="out"><div class="res">כדי להשוות, צריך מרחק ודופק בשני הטסטים.</div></div>`+(ok(a)?single(1):"");
+    const pa=1800/a.d,pb=1800/b.d,ds=Math.round(pa)-Math.round(pb),pct=(pa-pb)/pa*100,dm=Math.round((b.d-a.d)*1000),dh=b.hr-a.hr;
+    let days="";if(a.date&&b.date){const n=Math.round((new Date(b.date)-new Date(a.date))/864e5);if(n>0)days=`בתוך ${n} ימים`}
+    const cls=ds>0?"up":ds<0?"down":"";
+    const verdict=ds>0?`✓ מהר יותר בכל ק״מ`:ds<0?`איטי יותר בכל ק״מ`:"הקצב לא השתנה";
+    return `<div class="zt-imp">
+      <div class="res key"><div>השיפור${days?" · "+days:""}</div><div class="big"><b class="${cls}">${m(Math.abs(ds))} שנ׳</b></div><div class="how">${verdict} (${m((pct>=0?"":"−")+Math.abs(pct).toFixed(1)+"%")})</div></div>
+      <div class="res"><div>קצב הטסט</div><div class="big" style="font-size:22px">${m(mmss(pa))} ← ${m(mmss(pb))}</div><div class="how">טסט 1 ← טסט 2 (דקות לק״מ)</div></div>
+      <div class="res"><div>מרחק ב-30 דק׳</div><div class="big" style="font-size:22px">${m(a.d)} ← ${m(b.d)}</div><div class="how">${dm===0?"אותו מרחק":`${dm>0?"עוד":"פחות"} ${m(Math.abs(dm))} מ׳`}</div></div>
+      <div class="res"><div>דופק סח״ח</div><div class="big" style="font-size:22px">${m(a.hr)} ← ${m(b.hr)}</div><div class="how">${dh===0?"אותו דופק":`${dh>0?"+":"−"}${m(Math.abs(dh))} פעימות. הזונים של הדופק מתעדכנים בהתאם`}</div></div>
+    </div><p class="note" style="margin:10px 0 0">הזונים לפי הטסט העדכני (טסט 2). מתחת לכל זון מופיע הערך מטסט 1.</p>`+zonesHTML(b,a);
+  }
+  function calc(){
+    const v=st.t2?st.view||"cmp":"1";
+    $("zView").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.v===v)));
+    $("zOut").innerHTML=v==="cmp"?compare():single(+v);
+  }
+  $("zAdd").onclick=()=>{st.t2={d:"",hr:st.t1.hr||"",date:""};st.view="cmp";save();drawInputs();calc();const i=$("zTests").querySelector('[data-t="2"] input[data-k="d"]');if(i)i.focus()};
+  $("zView").addEventListener("click",e=>{const x=e.target.closest("[data-v]");if(!x)return;st.view=x.dataset.v;save();calc()});
+  drawInputs();calc();
 })();
 
 /* מחשבון אחוז קצב מטסט: כמו בגיליון, INT(שניות הייחוס / (אחוז/100)). */

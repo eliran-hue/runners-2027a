@@ -818,7 +818,7 @@ ${more("הרחבת מידע: תוצאות המחקר",figs(fig("t30v","מהיר�
 <p><b>דוגמה מהמצגת:</b> 6 ק״מ ב-30 דק׳ ← 5:00 דק׳/ק״מ = 300 שניות. זון 1: מעל 300 × 129% = 387 שנ׳ = <b>6:27</b>. זון 2: 342–387 שנ׳ = <b>5:42–6:27</b>. זון 5B: 270–288 שנ׳ = <b>4:30–4:48</b>.</p></div>
 
 <div class="calc" id="zcalc"><h3>מחשבון זונים לפי טסט 30 דקות</h3>
-<p style="margin:0;color:var(--muted);font-size:15px">מזינים את המרחק שעברת ב-30 דקות ואת הדופק הממוצע של 20 הדקות האחרונות. ברירת המחדל היא הדוגמה מהמצגת.</p>
+<p style="margin:0 0 6px;color:var(--muted);font-size:15px">עשית טסט חוזר? בעמוד <a href="/branch/tools/" style="color:var(--accent)">המחשבונים</a> אפשר להזין שני טסטים ולראות את השיפור.</p><p style="margin:0;color:var(--muted);font-size:15px">מזינים את המרחק שעברת ב-30 דקות ואת הדופק הממוצע של 20 הדקות האחרונות. ברירת המחדל היא הדוגמה מהמצגת.</p>
 <div class="row">
 <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" id="zDist" min="2" max="12" step="0.01" inputmode="decimal"></label>
 <label>דופק ממוצע ב-20 הדק׳ האחרונות (דופק סח״ח)<input type="number" id="zHr" min="100" max="210" inputmode="numeric"></label>
