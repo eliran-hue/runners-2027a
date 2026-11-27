@@ -181,13 +181,47 @@ return json_decode(<<<'JSON'
   "url": "/science/anatomy/unit1/",
   "course": "science",
   "title": "יחידה 1: מבנה מערכות הגוף",
-  "chapters": []
+  "chapters": [
+   {
+    "id": "cell",
+    "title": "מבוא: מהאטום ועד האדם, והתא"
+   },
+   {
+    "id": "tissues",
+    "title": "רקמות: אפיתל ורקמת חיבור, רצועה וגיד"
+   },
+   {
+    "id": "bone",
+    "title": "עצם, סחוס ומפרק סינוביאלי"
+   }
+  ]
  },
  {
   "url": "/science/anatomy/unit3/",
   "course": "science",
   "title": "יחידות 2–3: מערכת שלד-שריר ומפרקים",
-  "chapters": []
+  "chapters": [
+   {
+    "id": "skeleton",
+    "title": "מבנה השלד"
+   },
+   {
+    "id": "spine",
+    "title": "עמוד השדרה, הדיסק והצלעות"
+   },
+   {
+    "id": "jointtypes",
+    "title": "6 סוגי המפרקים"
+   },
+   {
+    "id": "limbjoints",
+    "title": "מפרקי הגפיים העליונות והתחתונות"
+   },
+   {
+    "id": "planes",
+    "title": "עמידה אנטומית, מישורים ותנועות"
+   }
+  ]
  },
  {
   "url": "/science/anatomy/unit4/",

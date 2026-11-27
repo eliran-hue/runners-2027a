@@ -8,8 +8,10 @@ out=[]
 for area,src,url in pages:
     s=open(f'{root}/{area}_src/{src}.html.php').read()
     h1=re.search(r'<h1>([^<]*)',s).group(1).strip()
-    ch=re.findall(r'\{id:"([a-z0-9_-]+)",short:"[^"]*",title:"([^"]*)"',s)
+    # each chapter object opens with {id:"..." and has a title:"..." field (with other fields like unit: possibly before it)
+    ch=re.findall(r'\{id:"([a-z0-9_-]+)",(?:[a-z]+:"[^"]*",)*?title:"([^"]*)"',s)
     out.append({'url':url,'course':'branch' if area=='branch' else 'science','title':h1,'chapters':[{'id':i,'title':t} for i,t in ch]})
 php="<?php\n/* נוצר אוטומטית (catalog.py): כל עמודי הנושא עם הפרקים שלהם. משמש את עמוד הניהול לסימון 'עוד לא נלמד בכיתה'. */\nreturn json_decode(<<<'JSON'\n" + json.dumps(out,ensure_ascii=False,indent=1) + "\nJSON, true);\n"
 open(f'{root}/api/_catalog.php','w').write(php)
+for p in out: print(p['url'],len(p['chapters']))
 print(sum(len(p['chapters']) for p in out),'chapters')
