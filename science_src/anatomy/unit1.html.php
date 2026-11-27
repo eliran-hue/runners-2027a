@@ -233,7 +233,7 @@ details.more[open] summary::before{content:"−"}
 .jfacts>div{display:grid;grid-template-columns:70px 1fr;gap:8px;font-size:15px}
 .jfacts span{color:var(--muted);font-weight:600}
 .unitTag{color:var(--accent)}
-</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127g" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+</style><script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127h" defer></script><script src="/sync.js?v=20261127d" defer></script><script src="/lightbox.js?v=20261123f" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 
 <header class="top wrap"><nav class="sb" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><a href="/science/">קורס מדעי</a><span class="sep" aria-hidden="true">‹</span><a href="/science/anatomy/">אנטומיה</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">יחידה 1</span></nav>
   <div class="eyebrow">אנטומיה · שיעור מיום <bdi>16/11/2026</bdi></div>

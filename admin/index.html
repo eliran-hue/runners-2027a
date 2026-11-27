@@ -80,11 +80,17 @@ td.num{color:var(--ink)}
 .nyc{margin-top:18px}.nyc>h3{font:800 18px var(--body);margin:0 0 4px}
 .nyp{border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:10px}
 .nyp h4{margin:0 0 6px;font:700 16px var(--body)}.nyp h4 small{color:var(--muted);font-weight:600}
-.nyi{display:flex;align-items:center;gap:10px;padding:6px 4px;border-top:1px dashed var(--line);cursor:pointer;font-size:15.5px}
-.nyi:first-of-type{border-top:0}.nyi input{width:20px;height:20px;accent-color:#2E9E6A;flex:none}
+.nyi{display:flex;align-items:center;gap:10px;padding:6px 4px;border-top:1px dashed var(--line);font-size:15.5px;flex-wrap:wrap}
+.nyi:first-of-type{border-top:0}
 .nyi .n{color:var(--muted);font-variant-numeric:tabular-nums;min-width:1.6em}
-.nyi .tg{margin-inline-start:auto;font:700 12px var(--body);color:#1b1400;background:#E0A100;border-radius:999px;padding:1px 8px}
-.nyi:not(.on) .tg{display:none}
+.nyi .seg{margin-inline-start:auto;display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
+.nyi .seg button{font:700 13px var(--body);border:0;background:none;color:var(--muted);padding:5px 12px;cursor:pointer}
+.nyi .seg button+button{border-inline-start:1px solid var(--line)}
+.nyi .seg button:hover{color:var(--ink)}
+.nyi .seg button[aria-pressed=true][data-s=done]{background:#2E9E6A;color:#fff}
+.nyi .seg button[aria-pressed=true][data-s=learning]{background:#3B82F6;color:#fff}
+.nyi .seg button[aria-pressed=true][data-s=notyet]{background:#E0A100;color:#1b1400}
+.nyi .seg button:disabled{opacity:.6;cursor:wait}
 
 form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .stat.hot{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
@@ -102,7 +108,7 @@ form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid va
 .tag.wait{border-color:var(--accent);color:var(--accent)}
 td .sw + .sp{margin-top:4px}
 </style>
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127g" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127h" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -164,7 +170,7 @@ td .sw + .sp{margin-top:4px}
     <section role="tabpanel" id="pNy" aria-labelledby="tabNy" hidden>
     <div class="panel" style="margin-top:18px">
       <h2>פרקים שעוד לא נלמדו בכיתה</h2>
-      <p>V מסומן = הפרק נלמד בכיתה. פרק בלי V יוצג למשתמשים עם סרט "עוד לא נלמד בכיתה" בכרטיס הפרק וליד הכותרת שלו (הפרק נשאר פתוח לקריאה). מסמנים V אחרי שהפרק נלמד.</p>
+      <p>לכל פרק בוחרים מצב: <b>נלמד</b> (ברירת המחדל, בלי סימון אצל המשתמשים), <b>בלימוד</b> (סרט כחול "בלימוד בכיתה") או <b>עוד לא נלמד</b> (סרט צהוב "עוד לא נלמד בכיתה"). הסרט מופיע בכרטיס הפרק וליד הכותרת שלו, והפרק נשאר פתוח לקריאה.</p>
       <div id="nyList"><p class="empty">טוען...</p></div>
       <div class="msg" id="nyMsg" role="status"></div>
     </div>
@@ -292,27 +298,30 @@ td .sw + .sp{margin-top:4px}
   $("vDays").onchange=loadViews;
   /* לשוניות: ניהול משתמשים / מונה כניסות. הלשונית הפתוחה נשמרת בכתובת (#views), כך שרענון נשאר בה. */
   /* פרקים שעוד לא נלמדו בכיתה: רשימת כל הפרקים, וסימון לכל פרק נשמר מיד בשרת. */
-  let NYC=null,NYM={};
+  let NYC=null,NYM={},LRN={};
   function nyCount(){const n=Object.values(NYM).reduce((a,v)=>a+v.length,0);$("nyBadge").hidden=!n;$("nyBadge").textContent=n}
+  const ST=[["done","נלמד"],["learning","בלימוד"],["notyet","עוד לא נלמד"]];
   function loadNy(){
     fetch("/api/notyet.php?catalog=1",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json()).then(j=>{
-      if(!j.ok||!j.catalog)return;NYC=j.catalog;NYM=j.notyet||{};nyCount();drawNy();
+      if(!j.ok||!j.catalog)return;NYC=j.catalog;NYM=j.notyet||{};LRN=j.learning||{};nyCount();drawNy();
     }).catch(()=>{$("nyList").innerHTML='<p class="empty">הטעינה נכשלה.</p>'});
   }
   function drawNy(){
     const CN={branch:"קורס ענפי",science:"קורס מדעי"};
     $("nyList").innerHTML=["branch","science"].map(c=>{const pg=NYC.filter(p=>p.course===c);if(!pg.length)return"";
-      return `<div class="nyc"><h3>${CN[c]}</h3>`+pg.map(p=>{const on=NYM[p.url]||[];
-        return `<div class="nyp"><h4>${esc(p.title)} <small>· ${on.length?on.length+" עוד לא נלמדו":"הכול נלמד"}</small></h4>`+
-          p.chapters.map((ch,i)=>{const ny=on.includes(ch.id);
-            return `<label class="nyi${ny?" on":""}"><input type="checkbox" data-u="${esc(p.url)}" data-c="${esc(ch.id)}"${ny?"":" checked"} aria-label="נלמד בכיתה"><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="tg">עוד לא נלמד</span></label>`}).join("")+`</div>`}).join("")+`</div>`}).join("");
+      return `<div class="nyc"><h3>${CN[c]}</h3>`+pg.map(p=>{const on=NYM[p.url]||[],lr=LRN[p.url]||[];
+        const sum=[lr.length?lr.length+" בלימוד":"",on.length?on.length+" עוד לא נלמדו":""].filter(Boolean).join(" · ")||"הכול נלמד";
+        return `<div class="nyp"><h4>${esc(p.title)} <small>· ${sum}</small></h4>`+
+          p.chapters.map((ch,i)=>{const cur=on.includes(ch.id)?"notyet":lr.includes(ch.id)?"learning":"done";
+            return `<div class="nyi"><span class="n">${i+1}.</span><span>${esc(ch.title)}</span><span class="seg" role="group" aria-label="מצב בכיתה: ${esc(ch.title)}">`+
+              ST.map(([k,l])=>`<button type="button" data-u="${esc(p.url)}" data-c="${esc(ch.id)}" data-s="${k}" aria-pressed="${k===cur}">${l}</button>`).join("")+`</span></div>`}).join("")+`</div>`}).join("")+`</div>`}).join("");
   }
-  $("nyList").addEventListener("change",e=>{
-    const x=e.target.closest("input[data-u]");if(!x)return;
-    const url=x.dataset.u,ch=x.dataset.c,on=!x.checked,m=$("nyMsg");x.disabled=true;
-    fetch("/api/notyet.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({url,chapter:ch,on})})
-      .then(r=>r.json()).then(j=>{if(!j.ok)throw 0;NYM=j.notyet||{};nyCount();drawNy();m.className="msg";m.textContent="נשמר.";})
-      .catch(()=>{x.checked=on;x.disabled=false;m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
+  $("nyList").addEventListener("click",e=>{
+    const x=e.target.closest("button[data-s]");if(!x||x.getAttribute("aria-pressed")==="true")return;
+    const url=x.dataset.u,ch=x.dataset.c,state=x.dataset.s,m=$("nyMsg"),bs=x.parentNode.querySelectorAll("button");bs.forEach(b=>b.disabled=true);
+    fetch("/api/notyet.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({url,chapter:ch,state})})
+      .then(r=>r.json()).then(j=>{if(!j.ok)throw 0;NYM=j.notyet||{};LRN=j.learning||{};nyCount();drawNy();m.className="msg";m.textContent="נשמר.";})
+      .catch(()=>{bs.forEach(b=>b.disabled=false);m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
   });
   const TABS=[["tabUsers","pUsers",""],["tabViews","pViews","views"],["tabNy","pNy","class"]];
   function showTab(i,focus){

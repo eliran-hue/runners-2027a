@@ -309,6 +309,8 @@
     + ".chx-card{overflow:hidden}"
     + ".chx-card.ny{opacity:.92}"
     + ".chx-card .ny-rib{position:absolute;top:22px;left:-46px;width:190px;transform:rotate(-35deg);background:#E0A100;color:#1b1400;font:800 12.5px var(--body);text-align:center;padding:5px 0;box-shadow:0 2px 6px rgba(0,0,0,.3);pointer-events:none}"
+    + ".chx-card .ny-rib.lr{background:#3B82F6;color:#fff}"
+    + ".ny-badge.lr,.cp-panel .ny-tag.lr{background:#3B82F6;color:#fff}"
     + ".ny-badge{display:inline-flex;align-items:center;gap:4px;vertical-align:middle;margin-inline-start:10px;font:800 13px var(--body);color:#1b1400;background:#E0A100;border-radius:999px;padding:3px 10px;white-space:nowrap}"
     + ".cp-panel .ny-tag{margin-inline-start:auto;font:700 11.5px var(--body);color:#1b1400;background:#E0A100;border-radius:999px;padding:1px 7px;white-space:nowrap}"
     + "@media (max-width:560px){.cp .cp-l,.cp .cp-t{display:none}.cp button{padding:0 12px}.chx-grid{grid-template-columns:1fr}.chx-card b{font-size:17px}}";
@@ -415,37 +417,42 @@
   }).observe(rail, {childList: true, subtree: true, attributes: true, attributeFilter: ["aria-selected", "class"]});
   /* Chapters the teacher hasn't reached in class yet (set in the admin page): a diagonal ribbon on the card,
      a badge beside the chapter title, and a tag in the drop-down list. */
-  var NY = [];
-  function isNY(id){ return NY.indexOf(id) >= 0; }
+  /* NY = עוד לא נלמד, LR = בלימוד עכשיו */
+  var NY = [], LR = [];
+  var NYS = {ny: {rib: "עוד לא נלמד בכיתה", tag: "עוד לא נלמד", badge: "🕓 עוד לא נלמד בכיתה", cls: ""},
+             lr: {rib: "בלימוד בכיתה", tag: "בלימוד", badge: "📖 בלימוד בכיתה", cls: " lr"}};
+  function stateOf(b){ if (!b) return null; var id = b.getAttribute("data-id"); return NY.indexOf(id) >= 0 ? "ny" : LR.indexOf(id) >= 0 ? "lr" : null; }
   function decorate(){
     var t = tabs();
     idx.querySelectorAll(".chx-card[data-i]").forEach(function(c){
-      var b = t[+c.getAttribute("data-i")], on = !!(b && isNY(b.getAttribute("data-id")));
-      c.classList.toggle("ny", on);
+      var s = stateOf(t[+c.getAttribute("data-i")]);
+      c.classList.toggle("ny", s === "ny");
       var r = c.querySelector(".ny-rib");
-      if (on && !r) c.insertAdjacentHTML("afterbegin", '<span class="ny-rib" aria-hidden="true">עוד לא נלמד בכיתה</span>');
-      if (!on && r) r.remove();
-      var stx = c.querySelector(".st"); if (on && stx && !/עוד לא נלמד/.test(stx.textContent)) stx.textContent += " · עוד לא נלמד בכיתה";
+      if (r && r.getAttribute("data-s") !== s) { r.remove(); r = null; }
+      if (s && !r) c.insertAdjacentHTML("afterbegin", '<span class="ny-rib' + NYS[s].cls + '" data-s="' + s + '" aria-hidden="true">' + NYS[s].rib + '</span>');
+      var stx = c.querySelector(".st");
+      if (stx) { stx.textContent = stx.textContent.replace(/ · (עוד לא נלמד|בלימוד) בכיתה$/, ""); if (s) stx.textContent += " · " + NYS[s].rib; }
     });
     panel.querySelectorAll("[data-p]").forEach(function(x){
-      var b = t[+x.getAttribute("data-p")], on = !!(b && isNY(b.getAttribute("data-id")));
-      if (on && !x.querySelector(".ny-tag")) x.insertAdjacentHTML("beforeend", '<span class="ny-tag">עוד לא נלמד</span>');
+      var s = stateOf(t[+x.getAttribute("data-p")]), g = x.querySelector(".ny-tag");
+      if (g && g.getAttribute("data-s") !== s) { g.remove(); g = null; }
+      if (s && !g) x.insertAdjacentHTML("beforeend", '<span class="ny-tag' + NYS[s].cls + '" data-s="' + s + '">' + NYS[s].tag + '</span>');
     });
     var h = main.querySelector(".chap-head h2"), cur = t.length && t[sel(t)];
     if (h) {
-      var on2 = !!(cur && isNY(cur.getAttribute("data-id"))), bd = h.querySelector(".ny-badge");
-      if (on2 && !bd) h.insertAdjacentHTML("beforeend", '<span class="ny-badge">🕓 עוד לא נלמד בכיתה</span>');
-      if (!on2 && bd) bd.remove();
+      var s2 = stateOf(cur), bd = h.querySelector(".ny-badge");
+      if (bd && bd.getAttribute("data-s") !== s2) { bd.remove(); bd = null; }
+      if (s2 && !bd) h.insertAdjacentHTML("beforeend", '<span class="ny-badge' + NYS[s2].cls + '" data-s="' + s2 + '">' + NYS[s2].badge + '</span>');
     }
   }
-  new MutationObserver(function(){ if (NY.length) decorate(); }).observe(main, {childList: true});
-  new MutationObserver(function(){ if (NY.length) decorate(); }).observe(idx, {childList: true});
-  new MutationObserver(function(){ if (NY.length) decorate(); }).observe(panel, {childList: true, subtree: true});
+  new MutationObserver(function(){ if (NY.length || LR.length) decorate(); }).observe(main, {childList: true});
+  new MutationObserver(function(){ if (NY.length || LR.length) decorate(); }).observe(idx, {childList: true});
+  new MutationObserver(function(){ if (NY.length || LR.length) decorate(); }).observe(panel, {childList: true, subtree: true});
   drawBar(); route();
   try {
     fetch("/api/notyet.php", {credentials: "same-origin", cache: "no-store"})
       .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(j){ if (j && j.notyet) { NY = j.notyet[location.pathname] || []; decorate(); } })
+      .then(function(j){ if (j && j.notyet) { NY = j.notyet[location.pathname] || []; LR = (j.learning || {})[location.pathname] || []; decorate(); } })
       .catch(function(){});
   } catch(e) {}
 })();
