@@ -45,8 +45,8 @@
     </a>
 
     <a class="topic" href="/branch/training.html" style="--c:var(--d4)">
-      <h2>תורת האימון</h2><p>גורמי ההישג, מרכיבי הכושר, עקרונות ותכנון האימון, הערכת עצימות וטכניקת ריצה.</p><ul><li>גורמי ההישג ומשולש הכושר</li><li>9 עקרונות האימון ופיצוי יסף</li><li>מחזורי אימון, יחידת אימון וחימום</li><li>סולם בורג, קרבונן ו-6 אזורי האימון</li><li>טכניקת ריצה ותרגילי ריצה, עם סרטונים</li></ul>
-      <div class="prog" data-keys="train:10"><div class="bar"><i></i></div><div class="t"><span class="st">10 פרקים</span><span class="go">לנושא ←</span></div></div>
+      <h2>תורת האימון</h2><p>גורמי ההישג, מרכיבי הכושר, עקרונות ותכנון האימון, הערכת עצימות, שיטות האימון וטכניקת ריצה.</p><ul><li>גורמי ההישג ומשולש הכושר</li><li>9 עקרונות האימון ופיצוי יסף</li><li>מחזורי אימון, יחידת אימון וחימום</li><li>סולם בורג, קרבונן ו-6 אזורי האימון</li><li>שיטות האימון: רצף, הפוגות וחזרות</li><li>טכניקת ריצה ותרגילי ריצה, עם סרטונים</li></ul>
+      <div class="prog" data-keys="train:13"><div class="bar"><i></i></div><div class="t"><span class="st">13 פרקים</span><span class="go">לנושא ←</span></div></div>
     </a>
 
     <a class="topic" href="/branch/methodology.html" style="--c:var(--boneInk)">

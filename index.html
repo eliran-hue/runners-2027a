@@ -80,7 +80,7 @@ main > section[hidden]{display:none}
   <div class="grid">
     <a class="topic" href="/branch/" id="branchCard" hidden style="--c:var(--d1)">
       <h2>קורס ענפי</h2><p>הקורס ללימודי מדריכי ריצות ארוכות.</p><ul><li>מחשבונים וכלי עזר</li><li>האנטומיה של הריצה</li><li>הפיזיולוגיה של הריצה</li><li>תורת האימון</li><li>מתודיקה באימון</li></ul>
-      <div class="prog" data-keys="anat:5,phys:7,train:10,meth:5"><div class="bar"><i></i></div><div class="t"><span class="st">27 פרקים</span><span class="go">לקורס ←</span></div></div>
+      <div class="prog" data-keys="anat:5,phys:7,train:13,meth:5"><div class="bar"><i></i></div><div class="t"><span class="st">30 פרקים</span><span class="go">לקורס ←</span></div></div>
     </a>
 
     <a class="topic" href="/science/" id="sciCard" hidden style="--c:var(--d2)">
@@ -112,7 +112,7 @@ main > section[hidden]{display:none}
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
 <script>
-/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7,train:10,meth:5"). */
+/* פסי התקדמות: סופרים פרקים שהושלמו בכל המפתחות שבכרטיס (data-keys="anat:5,phys:7,train:13,meth:5"). */
 document.querySelectorAll(".prog").forEach(p=>{
   let n=0,t=0;
   p.dataset.keys.split(",").forEach(kv=>{const [k,c]=kv.split(":");t+=+c;
