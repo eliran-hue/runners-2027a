@@ -108,6 +108,7 @@ td.num{color:var(--ink)}
 .nyi .ctl{margin-inline-start:auto;display:inline-flex;align-items:center;gap:8px;flex:none}
 .nyi .ctl .exb,.nyi .ctl .seg{margin-inline-start:0}
 
+form.add input.nm{flex:1 1 180px;direction:rtl;text-align:right}
 form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .stat.hot{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 #pend{border-top:5px solid var(--accent)}
@@ -154,8 +155,8 @@ td .sw + .sp{margin-top:4px}
     </div>
     <div class="panel">
       <h2>אישור מראש</h2>
-      <p>מזינים כתובת מייל של משתתף ובוחרים קורס. הוא לא יצטרך להירשם: כשייכנס עם המייל הזה, הקורס ייפתח לו מיד. אם המשתמש כבר קיים, הגישה שבחרת תתווסף לו.</p>
-      <form class="add" id="addForm" novalidate><input id="addEmail" type="email" placeholder="name@example.com" aria-label="כתובת מייל לאישור" autocomplete="off"><select id="addCourse" aria-label="קורס"><option value="branch">קורס ענפי</option><option value="science">קורס מדעי</option><option value="both">גם וגם</option></select><button class="btn" type="submit">אישור גישה</button></form>
+      <p>מזינים כתובת מייל של משתתף, ואם רוצים גם את השם שלו, ובוחרים קורס. הוא לא יצטרך להירשם: כשייכנס עם המייל הזה, הקורס ייפתח לו מיד. אם המשתמש כבר קיים, הגישה שבחרת תתווסף לו.</p>
+      <form class="add" id="addForm" novalidate><input id="addName" class="nm" type="text" maxlength="40" placeholder="שם (לא חובה)" aria-label="שם המשתתף (לא חובה)" autocomplete="off"><input id="addEmail" type="email" placeholder="name@example.com" aria-label="כתובת מייל לאישור" autocomplete="off"><select id="addCourse" aria-label="קורס"><option value="branch">קורס ענפי</option><option value="science">קורס מדעי</option><option value="both" selected>גם וגם</option></select><button class="btn" type="submit">אישור גישה</button></form>
       <div class="msg" id="addMsg" role="status"></div>
     </div>
     <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי שם או מייל" aria-label="חיפוש לפי שם או מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
@@ -289,7 +290,7 @@ const say=(t,h)=>window.runnersAlert?window.runnersAlert(t,h):Promise.resolve(wi
       .then(r=>r.json()).then(j=>{
         if(!j.ok)throw new Error(j.error);
         const u=users.find(x=>x.email===j.email);
-        if(u){u.branch=j.branch;u.science=j.science}else users.unshift({email:j.email,created_at:new Date().toISOString().slice(0,19).replace("T"," "),last_login_at:null,done:{},branch:j.branch,science:j.science,admin:false});
+        if(u){u.branch=j.branch;u.science=j.science;if(j.name!==undefined)u.name=j.name}else users.unshift({email:j.email,name:j.name||null,created_at:new Date().toISOString().slice(0,19).replace("T"," "),last_login_at:null,done:{},branch:j.branch,science:j.science,admin:false});
         render();return j;
       }).catch(e=>{if(cb){cb.checked=!cb.checked;cb.disabled=false}throw e});
   }
@@ -366,8 +367,9 @@ const say=(t,h)=>window.runnersAlert?window.runnersAlert(t,h):Promise.resolve(wi
     const em=$("addEmail").value.trim().toLowerCase(),m=$("addMsg");
     if(!/^\S+@\S+\.\S+$/.test(em)){m.className="msg err";m.textContent="כתובת המייל לא נראית תקינה.";return}
     m.className="msg";m.textContent="שומר...";
-    const c=$("addCourse").value,ch=c==="both"?{branch:true,science:true}:{[c]:true};
-    setAccess(em,ch).then(j=>{m.textContent=`${em} אושר ל${COURSE[c]}.`+(j.notified?" נשלח אליו מייל.":"");$("addEmail").value=""}).catch(()=>{m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
+    const c=$("addCourse").value,ch=c==="both"?{branch:true,science:true}:{[c]:true},nm=$("addName").value.trim();
+    if(nm)ch.name=nm;
+    setAccess(em,ch).then(j=>{m.textContent=`${nm?nm+" ("+em+")":em} אושר ל${COURSE[c]}.`+(j.notified?" נשלח אליו מייל.":"");$("addEmail").value="";$("addName").value=""}).catch(()=>{m.className="msg err";m.textContent="השמירה נכשלה. נסה שוב."});
   };
   /* נטען מחדש אחרי כניסה או התנתקות דרך כפתור "כניסה / הרשמה". */
   document.addEventListener("runners:auth",load);

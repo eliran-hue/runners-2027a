@@ -4,6 +4,7 @@ require __DIR__ . '/_helpers.php';
 require_post();
 
 /* מתן או ביטול גישה לקורס הענפי ו/או לקורס המדעי (שולחים רק את מה שמשתנה: branch / science).
+   name (לא חובה, מהאישור מראש): קובע את השם של המשתמש. שם ריק לא מוחק שם קיים.
    מייל שעוד לא נרשם נוסף לרשימה כמאושר מראש. כשמשתמש שחיכה לאישור מקבל גישה, נשלח אליו מייל. */
 require_admin();
 ensure_schema();
@@ -12,6 +13,8 @@ $email = normalize_email((string)($in['email'] ?? ''));
 if (strlen($email) > 190 || !filter_var($email, FILTER_VALIDATE_EMAIL)) json_error('bad_email');
 $set = [];
 foreach (['branch', 'science'] as $k) if (array_key_exists($k, $in)) $set[$k . '_access'] = !empty($in[$k]) ? 1 : 0;
+$name = clean_name((string)($in['name'] ?? ''));
+if ($name !== null) $set['display_name'] = $name;
 if (!$set) json_error('nothing_to_change');
 
 $pdo = get_pdo();
@@ -22,8 +25,8 @@ if ($before) {
     $sql = implode(', ', array_map(fn($c) => "$c = ?", array_keys($set)));
     $pdo->prepare("UPDATE users SET $sql WHERE email = ?")->execute([...array_values($set), $email]);
 } else {
-    $pdo->prepare('INSERT INTO users (email, created_at, branch_access, science_access) VALUES (?, ?, ?, ?)')
-        ->execute([$email, now_sql(), $set['branch_access'] ?? 0, $set['science_access'] ?? 0]);
+    $pdo->prepare('INSERT INTO users (email, created_at, branch_access, science_access, display_name) VALUES (?, ?, ?, ?, ?)')
+        ->execute([$email, now_sql(), $set['branch_access'] ?? 0, $set['science_access'] ?? 0, $name]);
 }
 $q->execute([$email]);
 $u = $q->fetch();
@@ -35,4 +38,4 @@ if ($before && !empty($before['last_login_at']) && (int)$before['branch_access']
     notify_approved($email, $u['display_name'] ?: null, $branch, $science);
     $notified = true;
 }
-json_out(['ok' => true, 'email' => $email, 'branch' => $branch, 'science' => $science, 'notified' => $notified]);
+json_out(['ok' => true, 'email' => $email, 'name' => $u['display_name'] ?? null, 'branch' => $branch, 'science' => $science, 'notified' => $notified]);
