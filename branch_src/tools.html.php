@@ -24,7 +24,15 @@ details.tool>:last-child{margin-bottom:20px}
 .zt legend{font-weight:800;padding:0 6px;display:flex;gap:8px;align-items:center}
 .zt legend .tag{font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 .zt .row{margin-top:4px;align-items:end}
-.zt .zt-rm{font:600 13.5px var(--body);color:var(--muted);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;margin-top:8px}
+.zt{position:relative}
+.zt-acts{position:absolute;top:-16px;left:12px;display:flex;gap:6px}
+.zt-act{display:inline-flex;align-items:center;gap:5px;font:700 13px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 11px;cursor:pointer;line-height:1.3}
+.zt-act svg{width:15px;height:15px;flex:none}
+.zt-act:hover{border-color:var(--accent);color:var(--accent)}
+.zt-act.del:hover{border-color:#E5484D;color:#E5484D}
+.zt-act:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.zt[data-t="2"]{margin-top:10px}
+@media (max-width:400px){.zt-act{padding:4px 8px;font-size:12.5px}}
 .zt-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .zt-add{font:700 15px var(--body);color:var(--accent);background:var(--paper);border:1.5px dashed var(--accent);border-radius:999px;padding:8px 16px;cursor:pointer}
 .zt-view{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14.5px;color:var(--muted)}
@@ -134,20 +142,23 @@ document.querySelectorAll(".prog").forEach(p=>{
   const ok=t=>t&&+t.d>0&&+t.hr>0;
   function testBox(n){
     const t=st["t"+n];
-    return `<fieldset class="zt" data-t="${n}"><legend>טסט ${n}${n===2?'<span class="tag">טסט חוזר</span>':""}</legend><div class="row">
+    return `<fieldset class="zt" data-t="${n}"><legend>טסט ${n}${n===2?'<span class="tag">טסט חוזר</span>':""}</legend>${n===2?ACTS:""}<div class="row">
       <label>תאריך (לא חובה)<input type="date" data-k="date" value="${t.date||""}"></label>
       <label>מרחק ב-30 דק׳ (ק״מ)<input type="number" data-k="d" min="2" max="12" step="0.01" inputmode="decimal" value="${t.d??""}"${n===1?' id="zDist"':""}></label>
       <label>דופק ממוצע ב-20 הדק׳ האחרונות (דופק סח״ח)<input type="number" data-k="hr" min="100" max="210" inputmode="numeric" value="${t.hr??""}"${n===1?' id="zHr"':""}></label></div>
-      ${n===2?'<button type="button" class="zt-rm" data-rm>הסרת הטסט החוזר</button> · <button type="button" class="zt-rm" data-shift>טסט חדש: טסט 2 הופך לטסט 1</button>':""}</fieldset>`;
+      </fieldset>`;
   }
   function drawInputs(){
     $("zTests").innerHTML=testBox(1)+(st.t2?testBox(2):"");
     $("zAdd").hidden=!!st.t2; $("zView").hidden=!st.t2;
     $("zTests").querySelectorAll("input").forEach(i=>{const f=()=>{const n=i.closest(".zt").dataset.t;st["t"+n][i.dataset.k]=i.value;save();calc()};i.addEventListener("input",f);i.addEventListener("change",f)});
-    const rm=$("zTests").querySelector("[data-rm]");if(rm)rm.onclick=async()=>{if(!await confirmish({title:"להסיר את הטסט החוזר?",text:"הנתונים של טסט 2 יימחקו, ויוצג רק טסט 1.",ok:"להסיר",danger:true}))return;st.t2=null;st.view="1";save();drawInputs();calc()};
+    const rm=$("zTests").querySelector("[data-rm]");if(rm)rm.onclick=async()=>{if(!await confirmish({title:"למחוק את טסט 2?",text:"הנתונים של טסט 2 יימחקו, ויוצג רק טסט 1.",ok:"למחוק",danger:true}))return;st.t2=null;st.view="1";save();drawInputs();calc()};
     const sh=$("zTests").querySelector("[data-shift]");if(sh)sh.onclick=async()=>{if(!await confirmish({title:"להתחיל טסט חדש?",text:"טסט 2 יהפוך לטסט 1, ויתפנה מקום לטסט חדש. הנתונים של טסט 1 הנוכחי יימחקו.",ok:"להמשיך",icon:"🔄"}))return;st.t1=st.t2;st.t2={d:"",hr:st.t1.hr,date:""};st.view="cmp";save();drawInputs();calc()};
   }
   /* window.confirm blocks some embedded browsers; fall back to "yes" when it isn't available. */
+  const ACTS='<div class="zt-acts">'
+    +'<button type="button" class="zt-act" data-shift title="טסט 2 הופך לטסט 1, ומתפנה מקום לטסט חדש" aria-label="טסט חדש: טסט 2 הופך לטסט 1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg><span class="lbl">טסט חדש</span></button>'
+    +'<button type="button" class="zt-act del" data-rm title="מחיקת טסט 2" aria-label="מחיקת טסט 2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg><span class="lbl">מחיקה</span></button></div>';
   function confirmish(o){if(window.runnersDialog)return window.runnersDialog(o);try{return Promise.resolve(window.confirm(o.text))}catch(e){return Promise.resolve(true)}}
   function zonesHTML(t,prev){
     const p=1800/t.d,hr=+t.hr,pp=prev?1800/prev.d:0,ph=prev?+prev.hr:0;
