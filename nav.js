@@ -1,3 +1,46 @@
+/* Site dialogs instead of the browser's alert()/confirm():
+   runnersDialog({title, text, ok, cancel, danger}) → Promise<boolean>   (cancel:false = message with one button)
+   runnersAlert(text, title) → Promise */
+(function(){
+  "use strict";
+  if (window.runnersDialog) return;
+  var css = ".rd{border:0;padding:0;background:transparent;max-width:min(440px,calc(100vw - 32px));width:100%;color:var(--ink,#111)}"
+    + ".rd::backdrop{background:rgba(6,10,24,.55);backdrop-filter:blur(3px)}"
+    + ".rd .rd-box{background:var(--paper,#fff);border:1px solid var(--line,#ddd);border-radius:20px;padding:22px 22px 18px;box-shadow:0 24px 60px rgba(0,0,0,.35);font-family:var(--body,inherit);direction:rtl;text-align:right}"
+    + ".rd[open] .rd-box{animation:rdIn .18s ease-out}@keyframes rdIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}"
+    + ".rd .rd-ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--accent,#4f7cff) 16%,transparent);margin-bottom:12px}"
+    + ".rd.danger .rd-ic{background:rgba(229,72,77,.16)}"
+    + ".rd h3{margin:0 0 6px;font:800 19px var(--body,inherit)}"
+    + ".rd p{margin:0;color:var(--muted,#555);font-size:16px;line-height:1.6;white-space:pre-line}"
+    + ".rd .rd-act{display:flex;gap:10px;justify-content:flex-start;margin-top:20px;flex-wrap:wrap}"
+    + ".rd button{font:700 15.5px var(--body,inherit);border-radius:999px;padding:9px 20px;cursor:pointer;border:1px solid var(--line,#ccc);background:transparent;color:var(--ink,#111)}"
+    + ".rd button.ok{background:var(--accent,#4f7cff);border-color:var(--accent,#4f7cff);color:#fff}"
+    + ".rd.danger button.ok{background:#E5484D;border-color:#E5484D}"
+    + ".rd button:focus-visible{outline:3px solid var(--accent,#4f7cff);outline-offset:2px}"
+    + "@media (prefers-reduced-motion:reduce){.rd[open] .rd-box{animation:none}}";
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+  function esc(x){ return String(x == null ? "" : x).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  window.runnersDialog = function(o){
+    o = o || {};
+    return new Promise(function(res){
+      var d = document.createElement("dialog");
+      if (!d.showModal) { res(o.cancel === false ? (window.alert(o.text), true) : window.confirm(o.text)); return; }
+      d.className = "rd" + (o.danger ? " danger" : "");
+      d.setAttribute("aria-labelledby", "rdT"); d.setAttribute("aria-describedby", "rdP");
+      d.innerHTML = '<form method="dialog" class="rd-box"><div class="rd-ic" aria-hidden="true">' + (o.icon || (o.danger ? "⚠️" : o.cancel === false ? "ℹ️" : "❓")) + '</div>'
+        + '<h3 id="rdT">' + esc(o.title || (o.cancel === false ? "הודעה" : "לאשר?")) + '</h3><p id="rdP">' + esc(o.text) + '</p>'
+        + '<div class="rd-act"><button value="ok" class="ok">' + esc(o.ok || (o.cancel === false ? "הבנתי" : "אישור")) + '</button>'
+        + (o.cancel === false ? "" : '<button value="cancel">' + esc(o.cancel || "ביטול") + '</button>') + '</div></form>';
+      document.body.appendChild(d);
+      d.addEventListener("click", function(e){ if (e.target === d) d.close("cancel"); });
+      d.addEventListener("close", function(){ var v = d.returnValue === "ok"; d.remove(); res(o.cancel === false ? true : v); });
+      d.showModal();
+      var f = d.querySelector(o.danger ? 'button[value=cancel]' : "button.ok"); if (f) f.focus();
+    });
+  };
+  window.runnersAlert = function(text, title){ return window.runnersDialog({text: text, title: title, cancel: false}); };
+})();
+
 /* Sticky header for every page: logo, hamburger menu with the site tree, and the theme/account buttons.
    Each course is shown as a locked item (no sub-items) unless the visitor has access to it; logged-out or pending visitors see only the home page (see sync.js → runners:auth). */
 (function(){

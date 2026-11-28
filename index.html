@@ -3,7 +3,7 @@
 <title>קורס מדריכי ריצות ארוכות · סמסטר 2027א</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127i" defer></script><script src="/sync.js?v=20261127d" defer></script><style>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261128a" defer></script><script src="/sync.js?v=20261127d" defer></script><style>
 .hello{font:400 26px var(--display);color:var(--accent);margin:6px 0 4px}
 .hello[hidden]{display:none}
 .lockcard{display:flex;flex-direction:column;gap:10px;background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:14px;padding:20px 22px}
@@ -146,7 +146,7 @@ document.querySelectorAll(".prog").forEach(p=>{
     /* הגיעו מקישור לעמוד בקורס בלי להיות מחוברים: פותחים מיד את חלון הכניסה. */
     if(!a.email&&!a.offline&&qs.get("next")&&!apply.opened&&window.runnersAccount){apply.opened=true;window.runnersAccount.open("login")}
   }
-  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{if(window.runnersAccount)window.runnersAccount.open(b.dataset.open);else alert("הכניסה זמינה רק באתר עצמו (runners2027.fyi).")});
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{if(window.runnersAccount)window.runnersAccount.open(b.dataset.open);else (window.runnersAlert?runnersAlert("הכניסה זמינה רק באתר עצמו (runners2027.fyi)."):alert("הכניסה זמינה רק באתר עצמו (runners2027.fyi)."))});
   document.querySelectorAll("[data-logout]").forEach(b=>b.onclick=()=>window.runnersAccount&&window.runnersAccount.logout());
   document.addEventListener("runners:auth",e=>apply(e.detail));
   apply(window.runnersAuth);

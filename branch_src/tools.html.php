@@ -4,7 +4,7 @@
 <title>מחשבונים וכלי עזר · קורס ענפי</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="/site.css?v=20261123f">
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127i" defer></script><script src="/sync.js?v=20261127d" defer></script><style>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261128a" defer></script><script src="/sync.js?v=20261127d" defer></script><style>
 .tools{display:flex;flex-direction:column;gap:14px}
 details.tool{padding:0}
 details.tool>summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:center;padding:18px 22px;border-radius:14px}
@@ -144,11 +144,11 @@ document.querySelectorAll(".prog").forEach(p=>{
     $("zTests").innerHTML=testBox(1)+(st.t2?testBox(2):"");
     $("zAdd").hidden=!!st.t2; $("zView").hidden=!st.t2;
     $("zTests").querySelectorAll("input").forEach(i=>{const f=()=>{const n=i.closest(".zt").dataset.t;st["t"+n][i.dataset.k]=i.value;save();calc()};i.addEventListener("input",f);i.addEventListener("change",f)});
-    const rm=$("zTests").querySelector("[data-rm]");if(rm)rm.onclick=()=>{if(!confirmish("להסיר את הטסט החוזר?"))return;st.t2=null;st.view="1";save();drawInputs();calc()};
-    const sh=$("zTests").querySelector("[data-shift]");if(sh)sh.onclick=()=>{if(!confirmish("טסט 2 יהפוך לטסט 1, ויתפנה מקום לטסט חדש. להמשיך?"))return;st.t1=st.t2;st.t2={d:"",hr:st.t1.hr,date:""};st.view="cmp";save();drawInputs();calc()};
+    const rm=$("zTests").querySelector("[data-rm]");if(rm)rm.onclick=async()=>{if(!await confirmish({title:"להסיר את הטסט החוזר?",text:"הנתונים של טסט 2 יימחקו, ויוצג רק טסט 1.",ok:"להסיר",danger:true}))return;st.t2=null;st.view="1";save();drawInputs();calc()};
+    const sh=$("zTests").querySelector("[data-shift]");if(sh)sh.onclick=async()=>{if(!await confirmish({title:"להתחיל טסט חדש?",text:"טסט 2 יהפוך לטסט 1, ויתפנה מקום לטסט חדש. הנתונים של טסט 1 הנוכחי יימחקו.",ok:"להמשיך",icon:"🔄"}))return;st.t1=st.t2;st.t2={d:"",hr:st.t1.hr,date:""};st.view="cmp";save();drawInputs();calc()};
   }
   /* window.confirm blocks some embedded browsers; fall back to "yes" when it isn't available. */
-  function confirmish(q){try{return window.confirm(q)}catch(e){return true}}
+  function confirmish(o){if(window.runnersDialog)return window.runnersDialog(o);try{return Promise.resolve(window.confirm(o.text))}catch(e){return Promise.resolve(true)}}
   function zonesHTML(t,prev){
     const p=1800/t.d,hr=+t.hr,pp=prev?1800/prev.d:0,ph=prev?+prev.hr:0;
     const pace=(x,z)=>z[3]?`${mmss(x*z[2])}–${mmss(x*z[3])}`:"איטי מ-"+mmss(x*z[2]);

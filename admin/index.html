@@ -124,7 +124,7 @@ form.add select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid va
 .tag.wait{border-color:var(--accent);color:var(--accent)}
 td .sw + .sp{margin-top:4px}
 </style>
-<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261127i" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
+<script src="/theme.js?v=20261127c"></script><script src="/nav.js?v=20261128a" defer></script><script src="/sync.js?v=20261127d" defer></script><link rel="preload" href="/fonts/Assistant-Variable.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/design.css?v=5"></head><body>
 <header class="wrap">
   <nav class="sb" id="acct" aria-label="ניווט באתר"><a class="home" href="/">קורס מדריכי ריצות ארוכות</a><span class="sep" aria-hidden="true">‹</span><span aria-current="page">ניהול</span></nav>
   <div class="eyebrow">למנהל האתר בלבד</div>
@@ -195,6 +195,8 @@ td .sw + .sp{margin-top:4px}
 </main>
 <footer class="wrap"><span class="credit">המצגות מבוססות על תוכן של המכללה האקדמית לוינסקי-וינגייט.</span></footer>
 <script>
+const ask=o=>window.runnersDialog?window.runnersDialog(o):Promise.resolve(confirm(o.text));
+const say=(t,h)=>window.runnersAlert?window.runnersAlert(t,h):Promise.resolve(window.alert(t));
 (function(){
   const $=id=>document.getElementById(id);
   const BRANCH_TOTAL=35; /* anat 5 + phys 7 + train 13 + plan 5 + meth 5 */
@@ -222,7 +224,7 @@ td .sw + .sp{margin-top:4px}
     f.onsubmit=e=>{e.preventDefault();inp.disabled=true;
       fetch("/api/admin_name.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:em,name:inp.value})})
         .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);u.name=j.name;render()})
-        .catch(()=>{inp.disabled=false;alert("שמירת השם נכשלה. נסה שוב.")});
+        .catch(()=>{inp.disabled=false;say("שמירת השם נכשלה. נסה שוב.")});
     };
   }
   function render(){
@@ -242,7 +244,7 @@ td .sw + .sp{margin-top:4px}
       <button type="button" class="rej" data-del="${esc(u.email)}">דחייה ומחיקה</button></div></div>`).join("");
     $("pendList").querySelectorAll("[data-ap]").forEach(bt=>bt.onclick=()=>{
       const c=bt.dataset.c;bt.closest(".acts").querySelectorAll("button").forEach(x=>x.disabled=true);
-      setAccess(bt.dataset.ap,{branch:c!=="science",science:c!=="branch"}).catch(()=>{alert("האישור נכשל. נסה שוב.");render()});
+      setAccess(bt.dataset.ap,{branch:c!=="science",science:c!=="branch"}).catch(()=>{say("האישור נכשל. נסה שוב.");render()});
     });
     $("sWeek").textContent=users.filter(u=>u.last_login_at&&new Date(u.last_login_at.replace(" ","T"))>week).length;
     $("shown").textContent=q?`מוצגים ${list.length} מתוך ${users.length}`:"";
@@ -258,23 +260,23 @@ td .sw + .sp{margin-top:4px}
         <td><label class="sw"><input type="checkbox" data-email="${esc(u.email)}" data-k="science" ${u.science?"checked":""} ${u.admin?"disabled":""} aria-label="גישה לקורס המדעי עבור ${esc(u.email)}"><span></span><em>${u.admin?"תמיד":u.science?"מאושר":"חסום"}</em></label>${(u.science||sd)?`<div class="sp" title="${sTitle}">${sd} / ${SCI_TOTAL} פרקים</div>`:""}</td>
         <td>${u.admin?"":`<button class="del" type="button" data-del="${esc(u.email)}" aria-label="מחיקת ${esc(u.email)}">מחיקה</button>`}</td></tr>`}).join("")
       :`<tr><td colspan="7" class="empty">${q?"אין תוצאות לחיפוש הזה.":"עוד אין משתמשים רשומים."}</td></tr>`;
-    $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,{[cb.dataset.k]:cb.checked},cb).catch(()=>alert("השמירה נכשלה. נסה שוב.")));
+    $("rows").querySelectorAll("input[type=checkbox]").forEach(cb=>cb.onchange=()=>setAccess(cb.dataset.email,{[cb.dataset.k]:cb.checked},cb).catch(()=>say("השמירה נכשלה. נסה שוב.")));
     $("rows").querySelectorAll("[data-name]").forEach(bt=>bt.onclick=()=>editName(bt));
-    document.querySelectorAll("#rows [data-del],#pendList [data-del]").forEach(bt=>bt.onclick=()=>{
+    document.querySelectorAll("#rows [data-del],#pendList [data-del]").forEach(bt=>bt.onclick=async()=>{
       const em=bt.dataset.del;
-      if(!confirm(`למחוק את ${em} לצמיתות?\nיימחקו המשתמש, ההתקדמות השמורה, ההרשאות לקורסים והחיבורים הפעילים שלו. אי אפשר לבטל את זה.`))return;
+      if(!await ask({title:"למחוק את המשתמש לצמיתות?",text:`${em}\nיימחקו המשתמש, ההתקדמות השמורה, ההרשאות לקורסים והחיבורים הפעילים שלו. אי אפשר לבטל את זה.`,ok:"למחוק",danger:true}))return;
       bt.disabled=true;
       fetch("/api/admin_delete.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:em})})
         .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);users=users.filter(x=>x.email!==em);render()})
-        .catch(()=>{bt.disabled=false;alert("המחיקה נכשלה. נסה שוב.")});
+        .catch(()=>{bt.disabled=false;say("המחיקה נכשלה. נסה שוב.")});
     });
-    $("rows").querySelectorAll("[data-reset]").forEach(bt=>bt.onclick=()=>{
+    $("rows").querySelectorAll("[data-reset]").forEach(bt=>bt.onclick=async()=>{
       const em=bt.dataset.reset;
-      if(!confirm(`למחוק את כל ההתקדמות השמורה בשרת של ${em}?`))return;
+      if(!await ask({title:"לאפס את ההתקדמות?",text:`כל ההתקדמות השמורה בשרת של ${em} תימחק.`,ok:"לאפס",danger:true}))return;
       bt.disabled=true;
       fetch("/api/admin_reset.php",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:em})})
         .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error);const u=users.find(x=>x.email===em);if(u){u.done={};u.progress_at=null}render()})
-        .catch(()=>{bt.disabled=false;alert("האיפוס נכשל. נסה שוב.")});
+        .catch(()=>{bt.disabled=false;say("האיפוס נכשל. נסה שוב.")});
     });
   }
   /* נרשם ואימת את המייל, אבל עוד לא קיבל גישה לאף קורס. */
