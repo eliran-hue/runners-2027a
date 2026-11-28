@@ -1,5 +1,5 @@
 # Only the PHP endpoints are reachable; schema and examples stay private.
-<FilesMatch "\.(sql|md)$|^config|^_helpers">
+<FilesMatch "\.(sql|md)$|^config|^_">
   Require all denied
 </FilesMatch>
 

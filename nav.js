@@ -521,3 +521,266 @@
       .catch(function(){});
   } catch(e) {}
 })();
+
+/* Site search (inside a course only): a 🔍 button in the header (also "/" or Ctrl+K) opens a search dialog.
+   The index of the current course (all chapter text, split into sections) comes from /api/search_index.php,
+   which serves it only to users with access to that course; it is built with scripts/build_search.js.
+   Matching is done here: every word must appear; Hebrew niqqud, quote marks and final letters are ignored.
+   Choosing a result opens the chapter, scrolls to the passage and highlights the word. */
+(function(){
+  "use strict";
+  var m = location.pathname.match(/^\/(branch|science)\//);
+  if (!m || !document.getElementById("topbar")) return;
+  var COURSE = m[1], NAME = COURSE === "branch" ? "בקורס הענפי" : "בקורס המדעי";
+  var FIND = "runners.find";
+
+  var css = ""
+    + ".ss-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line,#D3DCE3);background:var(--paper,#fff);color:var(--ink,#1A2530);cursor:pointer;display:grid;place-items:center;flex:none}"
+    + ".ss-btn:hover{border-color:var(--accent,#1F5FD6);color:var(--accent,#1F5FD6)}.ss-btn:focus-visible{outline:3px solid var(--accent,#1F5FD6);outline-offset:2px}"
+    + ".ss-btn svg{width:20px;height:20px}"
+    + ".ss{border:0;padding:0;background:transparent;width:min(680px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 40px);margin:min(9vh,80px) auto auto;color:var(--ink,#111);overflow:visible}"
+    + ".ss::backdrop{background:rgba(6,10,24,.55);backdrop-filter:blur(3px)}"
+    + ".ss-box{background:var(--paper,#fff);border:1px solid var(--line,#ddd);border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.35);direction:rtl;text-align:right;display:flex;flex-direction:column;max-height:calc(100dvh - min(9vh,80px) - 24px);overflow:hidden;font-family:var(--body,'Assistant',system-ui,sans-serif)}"
+    + ".ss[open] .ss-box{animation:rdIn .18s ease-out}"
+    + ".ss-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line,#ddd)}"
+    + ".ss-top svg{width:20px;height:20px;flex:none;color:var(--muted,#5B6B78)}"
+    + ".ss-in{flex:1;min-width:0;font:600 18px var(--body,'Assistant',system-ui,sans-serif);border:0;background:transparent;color:inherit;padding:8px 2px;outline:none}"
+    + ".ss-in::-webkit-search-cancel-button{display:none}"
+    + ".ss-x{width:36px;height:36px;border-radius:10px;border:1px solid var(--line,#ddd);background:none;color:inherit;font-size:20px;cursor:pointer;line-height:1;flex:none}"
+    + ".ss-x:focus-visible,.ss-r:focus-visible{outline:3px solid var(--accent,#1F5FD6);outline-offset:2px}"
+    + ".ss-st{padding:8px 16px;font-size:14px;color:var(--muted,#5B6B78);min-height:20px}"
+    + ".ss-list{overflow:auto;padding:0 10px 12px;overscroll-behavior:contain}"
+    + ".ss-pg{font:800 13px var(--body,'Assistant',system-ui,sans-serif);color:var(--muted,#5B6B78);padding:12px 8px 4px;display:flex;gap:6px;align-items:center}"
+    + ".ss-r{display:block;text-decoration:none;color:inherit;padding:10px 12px;border-radius:12px;border:1px solid transparent}"
+    + ".ss-r:hover,.ss-r:focus{background:var(--accent-soft,#E8EEF8);border-color:color-mix(in srgb,var(--accent,#1F5FD6) 30%,transparent);outline:none}"
+    + ".ss-w{font:700 15.5px var(--body,'Assistant',system-ui,sans-serif);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}"
+    + ".ss-w .sec{color:var(--accent,#1F5FD6)}.ss-w .ch{color:var(--muted,#5B6B78);font-weight:600;font-size:13.5px}"
+    + ".ss-k{font:700 11.5px var(--body,'Assistant',system-ui,sans-serif);border:1px solid var(--line,#ddd);border-radius:999px;padding:0 7px;color:var(--muted,#5B6B78)}"
+    + ".ss-sn{font-size:14.5px;line-height:1.55;color:var(--muted,#5B6B78);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}"
+    + ".ss mark,mark.ss-hit{background:color-mix(in srgb,#F5C242 55%,transparent);color:inherit;border-radius:3px;padding:0 1px}"
+    + "mark.ss-hit{animation:ssHit 2.2s ease-out 1;box-shadow:0 0 0 3px color-mix(in srgb,#F5C242 45%,transparent)}"
+    + "@keyframes ssHit{0%,40%{box-shadow:0 0 0 7px color-mix(in srgb,#F5C242 65%,transparent)}100%{box-shadow:0 0 0 3px color-mix(in srgb,#F5C242 45%,transparent)}}"
+    + ".ss-ft{border-top:1px solid var(--line,#ddd);padding:8px 16px;font-size:12.5px;color:var(--muted,#5B6B78);display:flex;gap:14px;flex-wrap:wrap}"
+    + "@media (max-width:560px){.ss{margin-top:8px;width:calc(100vw - 16px)}.ss-box{max-height:calc(100dvh - 16px)}.ss-ft{display:none}.ss-in{font-size:17px}}"
+    + "@media (prefers-reduced-motion:reduce){.ss[open] .ss-box,mark.ss-hit{animation:none}}";
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+
+  function esc(x){ return String(x == null ? "" : x).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  var FIN = {"ך":"כ","ם":"מ","ן":"נ","ף":"פ","ץ":"צ"};
+  /* Normalised text + map from each normalised char back to its index in the original. */
+  function norm(s){
+    s = String(s || ""); var out = "", map = [], sp = true;
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i], code = c.charCodeAt(0);
+      if (code >= 0x591 && code <= 0x5C7 && code !== 0x5BE) continue;           /* niqqud and cantillation */
+      if (/["'׳״`’‘“”]/.test(c)) continue;                                      /* quote marks: צח״מ = צחמ */
+      if (/[\s\-–—־_\/·|,.:;!?()\[\]{}«»]/.test(c)) { if (!sp) { out += " "; map.push(i); sp = true; } continue; }
+      c = FIN[c] || c.toLowerCase(); out += c; map.push(i); sp = false;
+    }
+    return {s: out, map: map};
+  }
+  function terms(q){
+    var n = norm(q).s.trim();
+    return n ? n.split(" ").filter(function(t, i, a){ return t && a.indexOf(t) === i; }).sort(function(a, b){ return b.length - a.length; }) : [];
+  }
+
+  /* ---------- index ---------- */
+  var IDX = null, loading = null;
+  function load(){
+    if (IDX) return Promise.resolve(IDX);
+    if (loading) return loading;
+    loading = fetch("/api/search_index.php?course=" + COURSE, {credentials: "same-origin"})
+      .then(function(r){ return r.json().catch(function(){ return {ok: false}; }).then(function(j){ if (!r.ok || !j.ok) throw new Error(j.error || r.status); return j.items; }); })
+      .then(function(items){
+        IDX = items.map(function(r){
+          return {r: r, x: norm(r.x), h: norm(r.s + " " + r.t).s, s: norm(r.s).s, t: norm(r.t).s};
+        });
+        return IDX;
+      })
+      .catch(function(e){ loading = null; throw e; });
+    return loading;
+  }
+  function count(hay, t){ var n = 0, i = hay.indexOf(t); while (i >= 0 && n < 6) { n++; i = hay.indexOf(t, i + t.length); } return n; }
+  function search(q){
+    var T = terms(q); if (!T.length || !IDX) return [];
+    var phrase = norm(q).s.trim(), multi = T.length > 1, res = [];
+    IDX.forEach(function(e){
+      var sc = 0;
+      for (var i = 0; i < T.length; i++) {
+        var t = T[i], inX = count(e.x.s, t), inS = e.s.indexOf(t) >= 0, inT = e.t.indexOf(t) >= 0;
+        if (!inX && !inS && !inT) return;
+        sc += inX + (inS ? 6 : 0) + (inT ? 3 : 0) + (e.x.s.indexOf(" " + t) >= 0 || e.x.s.indexOf(t) === 0 ? 1 : 0);
+      }
+      if (multi && (e.x.s.indexOf(phrase) >= 0 || e.s.indexOf(phrase) >= 0)) sc += 8;
+      if (e.r.k === "quiz") sc *= 0.55; else if (e.r.k === "cards") sc *= 0.7;
+      res.push({e: e, sc: sc});
+    });
+    res.sort(function(a, b){ return b.sc - a.sc; });
+    return res.slice(0, 60);
+  }
+  /* A short passage around the first match, with every search word marked. */
+  function snippet(e, T, ph){
+    var n = e.x, raw = e.r.x, at = ph ? n.s.indexOf(ph) : -1;
+    if (at >= 0) T = [ph].concat(T);
+    for (var i = 0; i < T.length && at < 0; i++) at = n.s.indexOf(T[i]);
+    if (at < 0) return esc(raw.slice(0, 150)) + (raw.length > 150 ? "…" : "");
+    var a = Math.max(0, n.map[at] - 55), b = Math.min(raw.length, n.map[at] + 150);
+    if (a > 0) { var sp = raw.indexOf(" ", a); if (sp > 0 && sp < n.map[at]) a = sp + 1; }
+    var marks = [];
+    T.forEach(function(t){
+      var p = n.s.indexOf(t);
+      while (p >= 0) {
+        var s0 = n.map[p], s1 = n.map[p + t.length - 1] + 1;
+        if (s0 >= a && s1 <= b) marks.push([s0, s1]);
+        p = n.s.indexOf(t, p + t.length);
+      }
+    });
+    marks.sort(function(x, y){ return x[0] - y[0] || y[1] - x[1]; });
+    var html = a > 0 ? "…" : "", pos = a;
+    marks.forEach(function(mk){ if (mk[0] < pos) return; html += esc(raw.slice(pos, mk[0])) + "<mark>" + esc(raw.slice(mk[0], mk[1])) + "</mark>"; pos = mk[1]; });
+    return html + esc(raw.slice(pos, b)) + (b < raw.length ? "…" : "");
+  }
+
+  /* ---------- dialog ---------- */
+  var ICON_S = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+  var btn = document.createElement("button");
+  btn.type = "button"; btn.className = "ss-btn"; btn.setAttribute("aria-label", "חיפוש " + NAME); btn.title = "חיפוש " + NAME + " (/)";
+  btn.innerHTML = ICON_S;
+  var host = document.getElementById("topActions");
+  if (host) host.insertBefore(btn, host.firstChild);
+
+  var dlg = null, inp, list, stat, timer = null;
+  var KIND = {quiz: "בוחן", cards: "כרטיסיות", tool: "כלי"};
+  function build(){
+    dlg = document.createElement("dialog");
+    dlg.className = "ss"; dlg.setAttribute("aria-label", "חיפוש " + NAME);
+    dlg.innerHTML = '<div class="ss-box"><div class="ss-top">' + ICON_S
+      + '<input class="ss-in" type="search" placeholder="מה לחפש ' + NAME + '?" aria-label="חיפוש ' + NAME + '" autocomplete="off" enterkeyhint="search">'
+      + '<button type="button" class="ss-x" aria-label="סגירת החיפוש">×</button></div>'
+      + '<div class="ss-st" role="status" aria-live="polite"></div><div class="ss-list"></div>'
+      + '<div class="ss-ft"><span>↑ ↓ מעבר בין תוצאות</span><span>Enter לפתיחה</span><span>Esc לסגירה</span></div></div>';
+    document.body.appendChild(dlg);
+    inp = dlg.querySelector(".ss-in"); list = dlg.querySelector(".ss-list"); stat = dlg.querySelector(".ss-st");
+    dlg.querySelector(".ss-x").onclick = function(){ dlg.close(); };
+    dlg.addEventListener("click", function(e){ if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("close", function(){ document.documentElement.classList.remove("tb-lock"); btn.focus({preventScroll: true}); });
+    inp.addEventListener("input", function(){ clearTimeout(timer); timer = setTimeout(run, 120); });
+    inp.addEventListener("keydown", function(e){
+      if (e.key === "ArrowDown") { var f = list.querySelector(".ss-r"); if (f) { e.preventDefault(); f.focus(); } }
+      if (e.key === "Enter") { var g = list.querySelector(".ss-r"); if (g) { e.preventDefault(); g.click(); } }
+    });
+    list.addEventListener("keydown", function(e){
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      var all = Array.prototype.slice.call(list.querySelectorAll(".ss-r")), i = all.indexOf(document.activeElement);
+      if (i < 0) return; e.preventDefault();
+      if (e.key === "ArrowUp" && i === 0) { inp.focus(); return; }
+      var n = all[i + (e.key === "ArrowDown" ? 1 : -1)]; if (n) n.focus();
+    });
+    list.addEventListener("click", function(e){
+      var a = e.target.closest && e.target.closest(".ss-r"); if (!a) return;
+      e.preventDefault(); go(+a.getAttribute("data-i"));
+    });
+  }
+  var last = [];
+  function run(){
+    var q = inp.value.trim();
+    if (norm(q).s.trim().length < 2) { list.innerHTML = ""; stat.textContent = q ? "כותבים לפחות 2 אותיות." : "מחפשים בכל הפרקים, הבחנים והכרטיסיות " + NAME + "."; last = []; return; }
+    if (!IDX) { stat.textContent = "טוען..."; load().then(run, fail); return; }
+    var T = terms(q); last = search(q);
+    if (!last.length) { list.innerHTML = ""; stat.textContent = "לא נמצאו תוצאות ל\"" + q + "\". נסו מילה אחרת או חלק ממנה."; return; }
+    stat.textContent = last.length >= 60 ? "נמצאו יותר מ-60 תוצאות. מוצגות הטובות ביותר." : "נמצאו " + last.length + " תוצאות.";
+    /* group by page, pages ordered by their best result */
+    var order = [], groups = {};
+    last.forEach(function(h, i){ var u = h.e.r.u; if (!groups[u]) { groups[u] = []; order.push(u); } groups[u].push(i); });
+    list.innerHTML = order.map(function(u){
+      var g = groups[u];
+      return '<div class="ss-pg">' + esc(last[g[0]].e.r.p) + ' <span aria-hidden="true">·</span> ' + g.length + '</div>' + g.map(function(i){
+        var r = last[i].e.r, chap = r.n ? "פרק " + r.n + ": " + r.t : "";
+        var sec = r.s && r.s !== r.t ? r.s : "";
+        return '<a class="ss-r" href="' + esc(r.u + (r.c ? "#c=" + r.c : "")) + '" data-i="' + i + '"><div class="ss-w">'
+          + (sec ? '<span class="sec">' + esc(sec) + '</span>' : "") + (chap ? '<span class="ch">' + esc(chap) + '</span>' : "")
+          + (KIND[r.k] ? '<span class="ss-k">' + KIND[r.k] + '</span>' : "") + '</div>'
+          + '<div class="ss-sn">' + snippet(last[i].e, T, T.length > 1 ? norm(q).s.trim() : "") + '</div></a>';
+      }).join("");
+    }).join("");
+  }
+  function fail(e){
+    var s = String(e && e.message || e);
+    stat.textContent = s === "401" || s === "not_logged_in" ? "צריך להתחבר כדי לחפש." : s === "403" || s === "forbidden" ? "אין לך גישה לחיפוש בקורס הזה." : "החיפוש לא נטען. בדקו את החיבור ונסו שוב.";
+  }
+  function open(){
+    if (!dlg) build();
+    if (!dlg.open) { dlg.showModal(); document.documentElement.classList.add("tb-lock"); }
+    inp.focus(); inp.select();
+    run();
+    load().then(function(){ if (dlg.open) run(); }, function(e){ if (dlg.open && inp.value.trim()) fail(e); });
+  }
+  btn.onclick = open;
+  document.addEventListener("keydown", function(e){
+    var t = e.target, typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    if ((e.key === "k" || e.key === "K") && (e.ctrlKey || e.metaKey)) { e.preventDefault(); open(); return; }
+    if (e.key === "/" && !typing && !e.ctrlKey && !e.metaKey && !e.altKey && !(dlg && dlg.open)) { e.preventDefault(); open(); }
+  });
+
+  /* ---------- go to a result ---------- */
+  function go(i){
+    var h = last[i]; if (!h) return;
+    var r = h.e.r;
+    try { sessionStorage.setItem(FIND, JSON.stringify({u: r.u, c: r.c, s: r.s, k: r.k, q: inp.value.trim()})); } catch (e) {}
+    dlg.close();
+    if (r.u !== location.pathname) { location.href = r.u + (r.c ? "#c=" + r.c : ""); return; }
+    var want = r.c ? "#c=" + r.c : "";
+    if (location.hash !== want) location.hash = want; else setTimeout(spot, 60);
+  }
+  /* Find the passage on the page: start from the section heading, mark the first search word after it. */
+  function spot(){
+    var f; try { f = JSON.parse(sessionStorage.getItem(FIND) || "null"); } catch (e) { f = null; }
+    if (!f || f.u !== location.pathname) return;
+    if (f.c && location.hash !== "#c=" + f.c) return;
+    sessionStorage.removeItem(FIND);
+    document.querySelectorAll("mark.ss-hit").forEach(function(mk){ mk.replaceWith(document.createTextNode(mk.textContent)); });
+    var root = (f.c && document.getElementById("main")) || document.querySelector("main") || document.body;
+    var T = terms(f.q), ns = norm(f.s).s.trim();
+    var start = null;
+    if (f.k === "quiz") start = root.querySelector(".quiz");
+    else if (f.k === "cards") start = document.getElementById("fcCard");
+    if (!start && ns) {
+      var hs = root.querySelectorAll("h2,h3,summary");
+      for (var j = 0; j < hs.length && !start; j++) if (norm(hs[j].textContent).s.trim() === ns) start = hs[j];
+    }
+    if (f.k === "cards" && start) { reveal(start); return; }
+    var ph = norm(f.q).s.trim(), P = T.length > 1 && ph ? [ph].concat(T) : T;   /* the whole phrase first, then single words */
+    var hit = T.length ? mark(root, start, P) : null;
+    reveal(hit || start);
+  }
+  function mark(root, start, T){
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode: function(n){
+      var p = n.parentNode; if (!p || /^(SCRIPT|STYLE|BUTTON)$/.test(p.nodeName) || p.closest(".ss,.cp-panel,nav")) return NodeFilter.FILTER_REJECT;
+      return n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+    }});
+    var first = null, n;
+    while ((n = w.nextNode())) {
+      if (start && !(start.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_FOLLOWING) && !start.contains(n)) continue;
+      var nn = norm(n.nodeValue);
+      for (var i = 0; i < T.length; i++) {
+        var p = nn.s.indexOf(T[i]);
+        if (p < 0) continue;
+        var a = nn.map[p], b = nn.map[p + T[i].length - 1] + 1;
+        var mid = n.splitText(a); mid.splitText(b - a);
+        var mk = document.createElement("mark"); mk.className = "ss-hit"; mid.parentNode.replaceChild(mk, mid); mk.appendChild(mid);
+        return mk;
+      }
+      if (!first) first = n;
+    }
+    return null;
+  }
+  function reveal(el){
+    if (!el) return;
+    for (var d = el.parentNode; d && d !== document.body; d = d.parentNode) if (d.tagName === "DETAILS" && !d.open) d.open = true;
+    el.scrollIntoView({block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+    setTimeout(function(){ document.querySelectorAll("mark.ss-hit").forEach(function(mk){ mk.classList.add("done"); }); }, 6000);
+  }
+  function later(){ setTimeout(spot, 250); }
+  window.addEventListener("hashchange", later);
+  if (document.readyState === "complete") later(); else window.addEventListener("load", later);
+})();
