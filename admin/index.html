@@ -24,6 +24,15 @@ body .wrap{max-width:1040px}
 table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px}
 th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
 th{background:var(--accent-soft);font-size:13.5px;font-weight:700;white-space:nowrap}
+/* sortable user table headers */
+button.srt{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+button.srt:hover{color:var(--accent)}
+button.srt:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+button.srt .ar{font-size:11px;opacity:.35;min-width:10px}
+button.srt .ar::after{content:"↕"}
+th[aria-sort] button.srt .ar{opacity:1}
+th[aria-sort=ascending] button.srt .ar::after{content:"▲"}
+th[aria-sort=descending] button.srt .ar::after{content:"▼"}
 tr:last-child td{border-bottom:0}
 td.em{direction:ltr;text-align:right;font-weight:600;overflow-wrap:anywhere;min-width:170px}
 td.dt,td.num{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted)}
@@ -161,7 +170,7 @@ td .sw + .sp{margin-top:4px}
     </div>
     <div class="tools-row"><input id="q" type="search" placeholder="חיפוש לפי שם או מייל" aria-label="חיפוש לפי שם או מייל"><span class="count" id="shown" style="color:var(--muted);font-size:14px"></span></div>
     <div class="tbl"><table>
-      <thead><tr><th>שם</th><th>מייל</th><th>נרשם</th><th>כניסה אחרונה</th><th>קורס ענפי</th><th>קורס מדעי</th><th><span class="sr">פעולות</span></th></tr></thead>
+      <thead id="uHead"><tr><th data-sort="name"><button type="button" class="srt">שם<span class="ar" aria-hidden="true"></span></button></th><th data-sort="email"><button type="button" class="srt">מייל<span class="ar" aria-hidden="true"></span></button></th><th data-sort="created"><button type="button" class="srt">נרשם<span class="ar" aria-hidden="true"></span></button></th><th data-sort="login"><button type="button" class="srt">כניסה אחרונה<span class="ar" aria-hidden="true"></span></button></th><th data-sort="branch"><button type="button" class="srt">קורס ענפי<span class="ar" aria-hidden="true"></span></button></th><th data-sort="science"><button type="button" class="srt">קורס מדעי<span class="ar" aria-hidden="true"></span></button></th><th><span class="sr">פעולות</span></th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
     </section>
@@ -228,9 +237,43 @@ const say=(t,h)=>window.runnersAlert?window.runnersAlert(t,h):Promise.resolve(wi
         .catch(()=>{inp.disabled=false;say("שמירת השם נכשלה. נסה שוב.")});
     };
   }
+  /* ---------- מיון טבלת המשתמשים (ברירת מחדל: לפי שם, א׳–ת׳) ---------- */
+  const brDone=u=>(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0)+(u.done.plan||0)+(u.done.meth||0);
+  const sciDone=u=>SCI_TOPICS.reduce((a,t)=>a+Math.min(u.done[t[1]]||0,t[2]),0);
+  let sortKey="name",sortDir=1;
+  const coll=new Intl.Collator("he",{sensitivity:"base",numeric:true});
+  /* ערך למיון; null = ריק, ותמיד בסוף הרשימה בשני הכיוונים */
+  const SORT_VAL={
+    name:u=>u.name||null,
+    email:u=>u.email,
+    created:u=>u.created_at||null,
+    login:u=>u.last_login_at||null,
+    branch:u=>(u.admin||u.branch?1e4:0)+brDone(u),
+    science:u=>(u.admin||u.science?1e4:0)+sciDone(u)
+  };
+  function sortUsers(arr){
+    const f=SORT_VAL[sortKey];
+    return arr.slice().sort((a,b)=>{
+      const x=f(a),y=f(b);
+      if(x===null||y===null){if(x!==y)return x===null?1:-1}
+      else{const c=typeof x==="number"?x-y:coll.compare(x,y);if(c)return c*sortDir}
+      return coll.compare(a.name||a.email,b.name||b.email);
+    });
+  }
+  function paintSort(){
+    $("uHead").querySelectorAll("th[data-sort]").forEach(th=>{
+      if(th.dataset.sort===sortKey)th.setAttribute("aria-sort",sortDir>0?"ascending":"descending");else th.removeAttribute("aria-sort");
+    });
+  }
+  $("uHead").querySelectorAll("th[data-sort] button").forEach(bt=>bt.onclick=()=>{
+    const k=bt.parentElement.dataset.sort;
+    if(k===sortKey)sortDir=-sortDir;else{sortKey=k;sortDir=(k==="name"||k==="email")?1:-1}
+    paintSort();render();
+  });
+  paintSort();
   function render(){
     const q=$("q").value.trim().toLowerCase();
-    const list=users.filter(u=>!q||u.email.includes(q)||(u.name||"").toLowerCase().includes(q));
+    const list=sortUsers(users.filter(u=>!q||u.email.includes(q)||(u.name||"").toLowerCase().includes(q)));
     const week=Date.now()-7*864e5;
     const pend=users.filter(isPending);
     $("sTotal").textContent=users.length;
@@ -250,9 +293,9 @@ const say=(t,h)=>window.runnersAlert?window.runnersAlert(t,h):Promise.resolve(wi
     $("sWeek").textContent=users.filter(u=>u.last_login_at&&new Date(u.last_login_at.replace(" ","T"))>week).length;
     $("shown").textContent=q?`מוצגים ${list.length} מתוך ${users.length}`:"";
     $("rows").innerHTML=list.length?list.map((u,i)=>{
-      const b=(u.done.anat||0)+(u.done.phys||0)+(u.done.train||0)+(u.done.plan||0)+(u.done.meth||0);
+      const b=brDone(u);
       const pending=!u.last_login_at,wait=isPending(u);
-      const sd=SCI_TOPICS.reduce((a,t)=>a+Math.min(u.done[t[1]]||0,t[2]),0);
+      const sd=sciDone(u);
       const sTitle=SCI_TOPICS.map(t=>`${t[0]}: ${u.done[t[1]]||0} מתוך ${t[2]}`).join(" · ");
       return `<tr><td class="nmc"><span class="nmv">${u.name?esc(u.name):'<span class="none">—</span>'}</span><button class="ed" type="button" data-name="${esc(u.email)}" aria-label="עריכת השם של ${esc(u.email)}" title="עריכת שם">✎</button></td><td class="em">${esc(u.email)}${u.admin?'<span class="tag">מנהל</span>':""}${wait?'<span class="tag wait">ממתין לאישור</span>':""}${pending?'<span class="tag">טרם התחבר</span>':""}</td>
         <td class="dt">${fmt(u.created_at)}</td><td class="dt">${fmt(u.last_login_at)}</td>
