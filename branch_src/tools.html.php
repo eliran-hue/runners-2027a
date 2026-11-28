@@ -32,6 +32,9 @@ details.tool>:last-child{margin-bottom:20px}
 .zt-act.del:hover{border-color:#E5484D;color:#E5484D}
 .zt-act:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .zt[data-t="2"]{margin-top:10px}
+.zt-pct{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.zt-lt{margin:12px 0 0;padding:10px 14px;border-radius:12px;background:var(--accent-soft);font-size:15px;line-height:1.6}
+.zt-lt a{color:var(--accent);font-weight:700}
 @media (max-width:400px){.zt-act{padding:4px 8px;font-size:12.5px}}
 .zt-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
 .zt-add{font:700 15px var(--body);color:var(--accent);background:var(--paper);border:1.5px dashed var(--accent);border-radius:999px;padding:8px 16px;cursor:pointer}
@@ -70,6 +73,7 @@ details.tool>:last-child{margin-bottom:20px}
     </details>
       <details class="tool" id="zCalc" style="border-top-color:var(--d4)">
       <summary><span class="sumt"><h3>מחשבון אזורי אימון (זונים) לפי טסט 30 דקות</h3><p class="desc">רצים 30 דקות בקצב הממוצע הגבוה ביותר. מזינים את המרחק ואת הדופק הממוצע של 20 הדקות האחרונות, ומקבלים קצב ודופק לכל אחד מ-6 הזונים. אפשר להוסיף טסט חוזר ולראות את השיפור.</p></span><span class="chev" aria-hidden="true"></span></summary>
+      <p class="zt-lt"><b>מה הטסט מודד?</b> הטסט נותן הערכה של <b>סף 2</b> (סף הלקטאט, או הסף האנאירובי): הדופק הממוצע ב-20 הדקות האחרונות הוא דופק הסף, וכל הזונים מחושבים כאחוזים ממנו. כדי להגדיר את הזונים בשעון, מגדירים אותם לפי דופק סף, ולא לפי אחוז מהדופק המרבי. הרחבה בפרק <a href="/branch/training/#c=zones">"אזורי אימון"</a> בעקרונות תורת האימון, ועל הספים בפרק <a href="/branch/physiology/#c=lactate">"סף ויעילות"</a> בפיזיולוגיה. בשעון עם 5 זונים, זון 5 מתחיל מ-5A (מעל 100% מדופק הסף).</p>
       <div class="zt-tests" id="zTests"></div>
       <div class="zt-bar">
         <button type="button" class="zt-add" id="zAdd">+ הוספת טסט נוסף (להשוואה)</button>
@@ -164,7 +168,8 @@ document.querySelectorAll(".prog").forEach(p=>{
     const p=1800/t.d,hr=+t.hr,pp=prev?1800/prev.d:0,ph=prev?+prev.hr:0;
     const pace=(x,z)=>z[3]?`${mmss(x*z[2])}–${mmss(x*z[3])}`:"איטי מ-"+mmss(x*z[2]);
     const hrs=(h,z)=>z[0]==="1"?"עד "+Math.round(h*z[5]):`${Math.round(h*z[4])}–${Math.round(h*z[5])}`;
-    return `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${m(pace(p,z))}</div>${prev?`<span class="zt-was">בטסט 1: ${m(pace(pp,z))}</span>`:""}<div class="how">דופק ${m(hrs(hr,z))}${prev?` <span class="zt-was" style="display:inline">(בטסט 1: ${m(hrs(ph,z))})</span>`:""}</div></div>`).join("")+`</div>`;
+    const pct=z=>z[0]==="1"?`עד ${Math.round(z[5]*100)}%`:`${Math.round(z[4]*100)}–${Math.round(z[5]*100)}%`;
+    return `<div class="out">`+Z.map(z=>`<div class="res"><div><b>זון ${z[0]}</b> · ${z[1]}</div><div class="big" style="font-size:22px">${m(pace(p,z))}</div>${prev?`<span class="zt-was">בטסט 1: ${m(pace(pp,z))}</span>`:""}<div class="how">דופק ${m(hrs(hr,z))}${prev?` <span class="zt-was" style="display:inline">(בטסט 1: ${m(hrs(ph,z))})</span>`:""}<span class="zt-pct">${m(pct(z))} מדופק הסף</span></div></div>`).join("")+`</div>`;
   }
   function single(n){
     const t=st["t"+n];
